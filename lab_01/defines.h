@@ -1,0 +1,2 @@
+#define MAX_MANTISSA_SIZE 40
+#define MAX_ORDER_SIZE 5
