@@ -1,5 +1,7 @@
 #pragma once
 
+#include "defines.h"
+#include <ctype.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -7,10 +9,10 @@
 
 typedef struct
 {
-    bool mantissa_sign;
-    char *mantissa;
-    bool order_sign;
-    long long order;
+    bool sign;
+    char mantissa[MAX_MANTISSA_SIZE + 1];
+    int order;
+    size_t point_pos;
 } long_number_t;
 
 /*
@@ -26,6 +28,12 @@ typedef struct
  *   ____
  *      0
  */
+
+int read_long_number(char *number, long_number_t *new_number);
+
+void trim_mantissa(long_number_t *number);
+
+int normalize(long_number_t *number);
 
 int divide(long_number_t *dividend, long_number_t *divider, long_number_t **result);
 
