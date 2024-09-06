@@ -35,6 +35,10 @@ void trim_mantissa(long_number_t *number);
 
 int normalize(long_number_t *number);
 
-int divide(long_number_t *dividend, long_number_t *divider, long_number_t **result);
+bool is_less_mantissa(long_number_t *first, long_number_t *second);
+
+int subtract_mantissa(long_number_t *first, long_number_t *second);
+
+int divide(long_number_t *dividend, long_number_t *divider, long_number_t *result);
 
 void print_long_number(long_number_t *number);
