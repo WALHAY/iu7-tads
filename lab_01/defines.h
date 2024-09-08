@@ -1,5 +1,5 @@
 #define MAX_MANTISSA_SIZE 40
-#define MAX_ORDER_SIZE 5
+#define MAX_EXPONENT_SIZE 5
 
 #define SUCCESS 0
 #define MEM_ALLOC_ERROR 1
@@ -7,4 +7,4 @@
 #define DOUBLE_E_ERROR 3
 #define DOUBLE_POINT_ERROR 4
 #define INVALID_FORMAT_ERROR 5
-#define CHECK_ORDER 6
+#define CHECK_EXPONENT 6

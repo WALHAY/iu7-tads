@@ -11,7 +11,7 @@ typedef struct
 {
     bool sign;
     char mantissa[MAX_MANTISSA_SIZE + 1];
-    int order;
+    int exponent;
     size_t point_pos;
 } long_number_t;
 

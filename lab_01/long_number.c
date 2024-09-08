@@ -27,18 +27,18 @@ int read_long_number(char *ptr, long_number_t *new_number)
     printf("Point position: %zu\n", new_number->point_pos);
 #endif
 
-    int order = 0;
+    int exponent = 0;
     for (; *ptr != '\0'; ++ptr)
     {
         if (isdigit(*ptr))
-            order = order * 10 + (*ptr - '0');
+            exponent = exponent * 10 + (*ptr - '0');
         else
             return INVALID_FORMAT_ERROR;
     }
 #ifdef DEBUG
-    printf("Order read: %d\n", order);
+    printf("exponent read: %d\n", exponent);
 #endif
-    new_number->order = order;
+    new_number->exponent = exponent;
     return SUCCESS;
 }
 
@@ -88,7 +88,7 @@ int normalize(long_number_t *number)
     }
     else if (number->point_pos != 0)
     {
-        number->order += number->point_pos;
+        number->exponent += number->point_pos;
         number->point_pos = 0;
     }
     return 0;
@@ -104,44 +104,12 @@ bool is_less_mantissa(long_number_t *first, long_number_t *second)
  */
 int subtract_mantissa(long_number_t *first, long_number_t *second)
 {
-    int len = strlen(second->mantissa);
-
-    bool subtract_next = false;
-    for (int i = len - 1; i >= 0; --i)
-    {
-        int current = first->mantissa[i] - second->mantissa[i] - subtract_next;
-        subtract_next = false;
-        if (current < 0)
-        {
-            subtract_next = true;
-            current += 10;
-        }
-        first->mantissa[i] = '0' + current;
-    }
 
     return SUCCESS;
 }
 
 int divide(long_number_t *dividend, long_number_t *divider, long_number_t *result)
 {
-    char new_mantissa[MAX_MANTISSA_SIZE + 1];
-    for (size_t i = 0; i < MAX_MANTISSA_SIZE; ++i)
-        new_mantissa[i] = '0';
-    new_mantissa[MAX_MANTISSA_SIZE] = '\0';
-
-    size_t ptr = 0;
-    while (ptr < MAX_MANTISSA_SIZE && is_less_mantissa(divider, dividend))
-    {
-        subtract_mantissa(dividend, divider);
-        new_mantissa[ptr]++;
-#ifdef DEBUG
-        printf("Division step: ");
-        print_long_number(dividend);
-        printf("Current mantissa pointer: %zu\n", ptr);
-#endif
-        ptr += normalize(dividend);
-    }
-    strcpy(dividend->mantissa, new_mantissa);
     return SUCCESS;
 }
 
@@ -162,5 +130,5 @@ void print_long_number(long_number_t *number)
     for (; number->mantissa[i] != '\0'; ++i)
         printf("%c", number->mantissa[i]);
 
-    printf("e%d\n", number->order);
+    printf("e%d\n", number->exponent);
 }
