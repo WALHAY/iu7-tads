@@ -71,7 +71,6 @@ int main(void)
     normalize(&number2);
 
     long_number_t *result;
-    divide(&number, &number2, result);
     printf("Result after division: ");
     print_long_number(&number);
     return 0;

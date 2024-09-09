@@ -1,5 +1,7 @@
 #include "long_number.h"
 
+void move_mantissa_left(int *mantissa, size_t offset);
+
 int read_long_number(char *ptr, long_number_t *new_number)
 {
     size_t mantissa_ptr = 0;
@@ -42,14 +44,8 @@ int read_long_number(char *ptr, long_number_t *new_number)
     return SUCCESS;
 }
 
-/*
- * Negative - left, positive - right
- */
-void move_str_left(char *str, size_t offset)
+void move_str_left(int *data, size_t offset)
 {
-    char buf[MAX_MANTISSA_SIZE];
-    strcpy(buf, str + offset);
-    strcpy(str, buf);
 }
 
 /*
@@ -92,25 +88,6 @@ int normalize(long_number_t *number)
         number->point_pos = 0;
     }
     return 0;
-}
-
-bool is_less_mantissa(long_number_t *first, long_number_t *second)
-{
-    return strcmp(first->mantissa, second->mantissa) <= 0;
-}
-
-/*
- * first mantissa should be bigger than second
- */
-int subtract_mantissa(long_number_t *first, long_number_t *second)
-{
-
-    return SUCCESS;
-}
-
-int divide(long_number_t *dividend, long_number_t *divider, long_number_t *result)
-{
-    return SUCCESS;
 }
 
 void print_long_number(long_number_t *number)
