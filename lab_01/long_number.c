@@ -7,8 +7,11 @@ int read_long_number(char *ptr, long_number_t *new_number)
     size_t mantissa_ptr = 0;
     size_t point_counter = 0;
     size_t sign_counter = 0;
-    for (; *ptr != '\0'; ++ptr)
+    for (; *ptr != '\0' && *ptr != '\n'; ++ptr)
     {
+        if (mantissa_ptr >= MAX_MANTISSA_SIZE)
+            return MANTISSA_OVERFLOW;
+
         if (isdigit(*ptr))
             new_number->mantissa[mantissa_ptr++] = *ptr;
         else if (*ptr == '+' || *ptr == '-')
@@ -16,12 +19,12 @@ int read_long_number(char *ptr, long_number_t *new_number)
             if (*ptr == '-')
                 new_number->sign = true;
             if (sign_counter++)
-                return INVALID_FORMAT_ERROR;
+                return MANTISSA_SIGN_COUNT_ERROR;
         }
         else if (*ptr == '.')
         {
             if (point_counter++)
-                return DOUBLE_POINT_ERROR;
+                return POINT_COUNT_ERROR;
 
             new_number->point_pos = mantissa_ptr;
         }
@@ -31,13 +34,13 @@ int read_long_number(char *ptr, long_number_t *new_number)
             break;
         }
         else
-            return INVALID_FORMAT_ERROR;
+            return WRONG_SYMBOL_ERROR;
     }
 
     int exponent = 0;
     sign_counter = 0;
     bool exponent_sign = false;
-    for (; *ptr != '\0'; ++ptr)
+    for (; *ptr != '\0' && *ptr != '\n'; ++ptr)
     {
         if (isdigit(*ptr))
             exponent = exponent * 10 + (*ptr - '0');
@@ -46,10 +49,10 @@ int read_long_number(char *ptr, long_number_t *new_number)
             if (*ptr == '-')
                 exponent_sign = true;
             if (sign_counter++)
-                return INVALID_FORMAT_ERROR;
+                return EXPONENT_SIGN_COUNT_ERROR;
         }
         else
-            return INVALID_FORMAT_ERROR;
+            return WRONG_SYMBOL_ERROR;
     }
     new_number->exponent = exponent * (exponent_sign ? -1 : 1);
     return SUCCESS;
@@ -60,15 +63,11 @@ void move_str_left(char *data, size_t offset)
     strcpy(data, data + offset);
 }
 
-/*
- * 00005.10 -> 5.10
- * 0005e10 -> 5e10
- */
 void trim_mantissa(long_number_t *number)
 {
     size_t ptr = 0;
     while (number->mantissa[ptr] == '0' && ptr < number->point_pos)
-        ++ptr;
+        ptr++;
 
     size_t len = strlen(number->mantissa);
     while (len >= 0 && number->mantissa[--len] == '0')
@@ -78,9 +77,6 @@ void trim_mantissa(long_number_t *number)
     number->point_pos -= ptr;
 }
 
-/*
- * 00503e10 -> 0.503e12
- */
 int normalize(long_number_t *number)
 {
     trim_mantissa(number);
@@ -147,11 +143,16 @@ void apply_zeroes(long_number_t *number)
     number->mantissa[MAX_MANTISSA_SIZE] = '\0';
 }
 
-/*
- * Works fine only with normalized numbers
- */
+bool is_zero(char *number)
+{
+    return strpbrk(number, "123456789") == NULL;
+}
+
 int divide(long_number_t *dividend, long_number_t *divider)
 {
+    if (is_zero(divider->mantissa))
+        return ZERO_DIVISION;
+
     char result[MAX_MANTISSA_SIZE + 1];
     for (size_t i = 0; i < MAX_MANTISSA_SIZE; ++i)
         result[i] = '0';
@@ -171,6 +172,7 @@ int divide(long_number_t *dividend, long_number_t *divider)
         else
             ptr++;
     }
+
     strcpy(dividend->mantissa, result);
     dividend->exponent -= divider->exponent;
     dividend->sign ^= divider->sign;
