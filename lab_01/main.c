@@ -71,11 +71,9 @@ int main(void)
     normalize(&number);
     normalize(&number2);
 
-    char mantissa[MAX_MANTISSA_SIZE] = "123321";
-    subtract_divider(mantissa, "123", 3);
-    printf("New mantissa %s\n", mantissa);
+    printf("Is less %d\n", is_less_divider(number.mantissa, number2.mantissa, 0));
 
-    long_number_t *result;
+    divide(&number, &number2);
     printf("Result after division: ");
     print_long_number(&number);
     return 0;

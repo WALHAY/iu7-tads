@@ -2,6 +2,7 @@
 
 #include "defines.h"
 #include <ctype.h>
+#include <math.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -35,8 +36,10 @@ void trim_mantissa(long_number_t *number);
 
 int normalize(long_number_t *number);
 
-bool is_less_divider(char *dividend, char *divider);
+bool is_less_divider(char *dividend, char *divider, size_t pos);
 
 void subtract_divider(char *dividend, char *divider, size_t pos);
+
+void divide(long_number_t *dividend, long_number_t *divider);
 
 void print_long_number(long_number_t *number);

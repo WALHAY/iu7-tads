@@ -93,8 +93,23 @@ int normalize(long_number_t *number)
     return 0;
 }
 
-bool is_less_divider(char *dividend, char *divider)
+bool is_less_divider(char *dividend, char *divider, size_t pos)
 {
+    for (size_t i = 0; i < pos; ++i)
+    {
+        if (dividend[i] > '0')
+            return true;
+    }
+
+    size_t divider_len = strlen(divider);
+    for (size_t i = 0; i < divider_len; ++i)
+    {
+        if (dividend[pos + i] > divider[i])
+            return true;
+        if (dividend[pos + i] < divider[i])
+            return false;
+    }
+
     return true;
 }
 
@@ -114,6 +129,36 @@ void subtract_divider(char *dividend, char *divider, size_t pos)
         }
         dividend[i] = current + '0';
     }
+}
+
+void divide(long_number_t *dividend, long_number_t *divider)
+{
+    char result[41];
+    size_t i = 0;
+    for (; i < 40; ++i)
+        result[i] = '0';
+    result[i] = '\0';
+
+    for (size_t i = strlen(dividend->mantissa); i < 40; ++i)
+        dividend->mantissa[i] = '0';
+    dividend->mantissa[40] = 0;
+
+    size_t iterations = 100;
+    size_t ptr = 0;
+    size_t iteration = 0;
+    while (ptr <= 40 && iteration++ < iterations)
+    {
+        if (is_less_divider(dividend->mantissa, divider->mantissa, ptr))
+        {
+            subtract_divider(dividend->mantissa, divider->mantissa, ptr);
+            result[ptr]++;
+            printf("Current ");
+            print_long_number(dividend);
+        }
+        else
+            ptr++;
+    }
+    printf("res %s\n", result);
 }
 
 void print_long_number(long_number_t *number)
