@@ -58,12 +58,12 @@ int main(void)
     // long_number_t ln2 = {false, "00012343", 10, 3};
     // normalize(&ln2);
     // print_long_number(&ln2);
-    char *number_str = "123.321e101";
+    char *number_str = "-534534.136445e101";
     long_number_t number;
     if (!read_long_number(number_str, &number))
         print_long_number(&number);
 
-    char *number2_str = ".123e5";
+    char *number2_str = "-1632.1234e-5";
     long_number_t number2;
     if (!read_long_number(number2_str, &number2))
         print_long_number(&number2);

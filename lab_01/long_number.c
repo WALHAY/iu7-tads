@@ -6,10 +6,18 @@ int read_long_number(char *ptr, long_number_t *new_number)
 {
     size_t mantissa_ptr = 0;
     size_t point_counter = 0;
+    size_t sign_counter = 0;
     for (; *ptr != '\0'; ++ptr)
     {
         if (isdigit(*ptr))
             new_number->mantissa[mantissa_ptr++] = *ptr;
+        else if (*ptr == '+' || *ptr == '-')
+        {
+            if (*ptr == '-')
+                new_number->sign = true;
+            if (sign_counter++)
+                return INVALID_FORMAT_ERROR;
+        }
         else if (*ptr == '.')
         {
             if (point_counter++)
@@ -32,17 +40,26 @@ int read_long_number(char *ptr, long_number_t *new_number)
 #endif
 
     int exponent = 0;
+    sign_counter = 0;
+    bool exponent_sign = false;
     for (; *ptr != '\0'; ++ptr)
     {
         if (isdigit(*ptr))
             exponent = exponent * 10 + (*ptr - '0');
+        else if (*ptr == '+' || *ptr == '-')
+        {
+            if (*ptr == '-')
+                exponent_sign = true;
+            if (sign_counter++)
+                return INVALID_FORMAT_ERROR;
+        }
         else
             return INVALID_FORMAT_ERROR;
     }
 #ifdef DEBUG
     printf("exponent read: %d\n", exponent);
 #endif
-    new_number->exponent = exponent;
+    new_number->exponent = exponent * (exponent_sign ? -1 : 1);
     return SUCCESS;
 }
 
@@ -131,22 +148,25 @@ void subtract_divider(char *dividend, char *divider, size_t pos)
     }
 }
 
+void apply_zeroes(long_number_t *number)
+{
+    for (size_t i = strlen(number->mantissa); i < MAX_MANTISSA_SIZE; ++i)
+        number->mantissa[i] = '0';
+    number->mantissa[MAX_MANTISSA_SIZE] = '\0';
+}
+
 void divide(long_number_t *dividend, long_number_t *divider)
 {
-    char result[41];
-    size_t i = 0;
-    for (; i < 40; ++i)
+    char result[MAX_MANTISSA_SIZE + 1];
+    for (size_t i = 0; i < MAX_MANTISSA_SIZE; ++i)
         result[i] = '0';
-    result[i] = '\0';
+    result[MAX_MANTISSA_SIZE] = '\0';
 
-    for (size_t i = strlen(dividend->mantissa); i < 40; ++i)
-        dividend->mantissa[i] = '0';
-    dividend->mantissa[40] = 0;
+    apply_zeroes(dividend);
 
-    size_t iterations = 100;
     size_t ptr = 0;
-    size_t iteration = 0;
-    while (ptr <= 40 && iteration++ < iterations)
+    size_t max_mantissa = MAX_MANTISSA_SIZE - strlen(divider->mantissa) + 1;
+    while (ptr <= max_mantissa)
     {
         if (is_less_divider(dividend->mantissa, divider->mantissa, ptr))
         {
@@ -158,7 +178,10 @@ void divide(long_number_t *dividend, long_number_t *divider)
         else
             ptr++;
     }
-    printf("res %s\n", result);
+    strcpy(dividend->mantissa, result);
+    dividend->exponent -= divider->exponent;
+    dividend->sign ^= divider->sign;
+    normalize(dividend);
 }
 
 void print_long_number(long_number_t *number)
