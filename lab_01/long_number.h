@@ -10,7 +10,7 @@
 typedef struct
 {
     bool sign;
-    int mantissa[MAX_MANTISSA_SIZE + 1];
+    char mantissa[MAX_MANTISSA_SIZE + 1];
     int exponent;
     size_t point_pos;
 } long_number_t;
@@ -34,5 +34,9 @@ int read_long_number(char *number, long_number_t *new_number);
 void trim_mantissa(long_number_t *number);
 
 int normalize(long_number_t *number);
+
+bool is_less_divider(char *dividend, char *divider);
+
+void subtract_divider(char *dividend, char *divider, size_t pos);
 
 void print_long_number(long_number_t *number);

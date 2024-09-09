@@ -1,3 +1,4 @@
+#include "defines.h"
 #include "long_number.h"
 
 #ifdef TEST
@@ -69,6 +70,10 @@ int main(void)
 
     normalize(&number);
     normalize(&number2);
+
+    char mantissa[MAX_MANTISSA_SIZE] = "123321";
+    subtract_divider(mantissa, "123", 3);
+    printf("New mantissa %s\n", mantissa);
 
     long_number_t *result;
     printf("Result after division: ");

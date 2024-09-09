@@ -22,6 +22,8 @@ int read_long_number(char *ptr, long_number_t *new_number)
             ptr++;
             break;
         }
+        else
+            return INVALID_FORMAT_ERROR;
     }
 
 #ifdef DEBUG
@@ -44,8 +46,9 @@ int read_long_number(char *ptr, long_number_t *new_number)
     return SUCCESS;
 }
 
-void move_str_left(int *data, size_t offset)
+void move_str_left(char *data, size_t offset)
 {
+    strcpy(data, data + offset);
 }
 
 /*
@@ -62,7 +65,7 @@ void trim_mantissa(long_number_t *number)
     printf("Mantissa trimmed: %zu zeroes will be deleted!\n", ptr);
 #endif
 
-    move_str_left(number->mantissa, -ptr);
+    move_str_left(number->mantissa, ptr);
     number->point_pos -= ptr;
 }
 
@@ -88,6 +91,29 @@ int normalize(long_number_t *number)
         number->point_pos = 0;
     }
     return 0;
+}
+
+bool is_less_divider(char *dividend, char *divider)
+{
+    return true;
+}
+
+void subtract_divider(char *dividend, char *divider, size_t pos)
+{
+    size_t divider_len = strlen(divider);
+    bool take_next = false;
+    for (int i = pos + divider_len - 1; i >= 0; --i)
+    {
+        int current = dividend[i] - (i >= pos ? divider[i - pos] : '0') - take_next;
+
+        take_next = false;
+        if (current < 0)
+        {
+            current += 10;
+            take_next = true;
+        }
+        dividend[i] = current + '0';
+    }
 }
 
 void print_long_number(long_number_t *number)
