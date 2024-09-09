@@ -11,6 +11,26 @@ int read_number_wrapper(long_number_t *number)
     return read_long_number(number_str, number);
 }
 
+void print_len_line(int offset, int len)
+{
+    for (size_t i = 0; i < offset; ++i)
+        printf(" ");
+
+    for (size_t i = 0; i <= len; ++i)
+        if (i % 5 == 0)
+            printf("|");
+        else
+            printf("-");
+
+    printf("\n");
+
+    for (size_t i = 0; i < offset; ++i)
+        printf(" ");
+
+    for (size_t i = 0; i <= len; i += 5)
+        printf("%zu%s", i, i < 10 ? "    " : "   ");
+}
+
 void print_err(int rc)
 {
     switch (rc)

@@ -20,7 +20,8 @@ int main(void)
         return rc;
 
     rc = divide(&first, &second);
-    printf("Result: ");
+    printf("Result:\n");
     print_long_number(&first);
+    print_len_line(2, 40);
     return rc;
 }
