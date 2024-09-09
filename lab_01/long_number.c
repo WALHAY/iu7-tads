@@ -34,11 +34,6 @@ int read_long_number(char *ptr, long_number_t *new_number)
             return INVALID_FORMAT_ERROR;
     }
 
-#ifdef DEBUG
-    printf("Mantissa read: %s\n", new_number->mantissa);
-    printf("Point position: %zu\n", new_number->point_pos);
-#endif
-
     int exponent = 0;
     sign_counter = 0;
     bool exponent_sign = false;
@@ -56,9 +51,6 @@ int read_long_number(char *ptr, long_number_t *new_number)
         else
             return INVALID_FORMAT_ERROR;
     }
-#ifdef DEBUG
-    printf("exponent read: %d\n", exponent);
-#endif
     new_number->exponent = exponent * (exponent_sign ? -1 : 1);
     return SUCCESS;
 }
@@ -78,9 +70,9 @@ void trim_mantissa(long_number_t *number)
     while (number->mantissa[ptr] == '0' && ptr < number->point_pos)
         ++ptr;
 
-#ifdef DEBUG
-    printf("Mantissa trimmed: %zu zeroes will be deleted!\n", ptr);
-#endif
+    size_t len = strlen(number->mantissa);
+    while (len >= 0 && number->mantissa[--len] == '0')
+        number->mantissa[len] = '\0';
 
     move_str_left(number->mantissa, ptr);
     number->point_pos -= ptr;
@@ -155,7 +147,10 @@ void apply_zeroes(long_number_t *number)
     number->mantissa[MAX_MANTISSA_SIZE] = '\0';
 }
 
-void divide(long_number_t *dividend, long_number_t *divider)
+/*
+ * Works fine only with normalized numbers
+ */
+int divide(long_number_t *dividend, long_number_t *divider)
 {
     char result[MAX_MANTISSA_SIZE + 1];
     for (size_t i = 0; i < MAX_MANTISSA_SIZE; ++i)
@@ -172,8 +167,6 @@ void divide(long_number_t *dividend, long_number_t *divider)
         {
             subtract_divider(dividend->mantissa, divider->mantissa, ptr);
             result[ptr]++;
-            printf("Current ");
-            print_long_number(dividend);
         }
         else
             ptr++;
@@ -182,6 +175,7 @@ void divide(long_number_t *dividend, long_number_t *divider)
     dividend->exponent -= divider->exponent;
     dividend->sign ^= divider->sign;
     normalize(dividend);
+    return SUCCESS;
 }
 
 void print_long_number(long_number_t *number)
