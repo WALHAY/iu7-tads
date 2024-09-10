@@ -10,6 +10,8 @@ int read_long_number(char *ptr, long_number_t *new_number)
     size_t point_counter = 0;
     size_t sign_counter = 0;
     bool has_exponent = false;
+    bool skip_zeroes = true;
+    size_t last_zeroes = 0;
     for (; *ptr != '\0' && *ptr != '\n'; ++ptr)
     {
         if (mantissa_ptr >= MAX_MANTISSA_SIZE)
@@ -17,6 +19,27 @@ int read_long_number(char *ptr, long_number_t *new_number)
 
         if (isdigit(*ptr))
         {
+            if (*ptr == '0')
+            {
+                if (point_counter == 1)
+                {
+                    last_zeroes++;
+                    continue;
+                }
+                if (skip_zeroes)
+                    continue;
+                else
+                    skip_zeroes = false;
+            }
+            else
+            {
+                skip_zeroes = false;
+                if (last_zeroes != 0)
+                {
+                    for (size_t i = 0; i < last_zeroes; ++i)
+                        new_number->mantissa[mantissa_ptr++] = '0';
+                }
+            }
             new_number->mantissa[mantissa_ptr++] = *ptr;
         }
         else if (*ptr == '+' || *ptr == '-')
@@ -28,6 +51,7 @@ int read_long_number(char *ptr, long_number_t *new_number)
         }
         else if (*ptr == '.')
         {
+            skip_zeroes = false;
             if (point_counter++)
                 return POINT_COUNT_ERROR;
 
@@ -35,6 +59,7 @@ int read_long_number(char *ptr, long_number_t *new_number)
         }
         else if (*ptr == 'E' || *ptr == 'e')
         {
+            skip_zeroes = false;
             has_exponent = true;
             ptr++;
             break;
