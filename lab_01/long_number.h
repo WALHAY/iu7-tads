@@ -28,4 +28,4 @@ void subtract_divider(char *dividend, char *divider, size_t pos);
 
 int divide(long_number_t *dividend, long_number_t *divider);
 
-void print_long_number(long_number_t *number);
+void print_long_number(long_number_t *number, bool print_size);

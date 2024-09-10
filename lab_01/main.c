@@ -16,12 +16,14 @@ int main(void)
     printf("Enter second number: ");
     rc = read_number_wrapper(&second);
 
+    normalize(&first);
+    normalize(&second);
+
     if (rc)
         return rc;
 
     rc = divide(&first, &second);
     printf("Result:\n");
-    print_long_number(&first);
-    print_len_line(2, 40);
+    print_long_number(&first, true);
     return rc;
 }
