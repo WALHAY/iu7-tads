@@ -9,13 +9,16 @@ int read_long_number(char *ptr, long_number_t *new_number)
     size_t mantissa_ptr = 0;
     size_t point_counter = 0;
     size_t sign_counter = 0;
+    bool has_exponent = false;
     for (; *ptr != '\0' && *ptr != '\n'; ++ptr)
     {
         if (mantissa_ptr >= MAX_MANTISSA_SIZE)
             return MANTISSA_OVERFLOW;
 
         if (isdigit(*ptr))
+        {
             new_number->mantissa[mantissa_ptr++] = *ptr;
+        }
         else if (*ptr == '+' || *ptr == '-')
         {
             if (*ptr == '-')
@@ -32,12 +35,15 @@ int read_long_number(char *ptr, long_number_t *new_number)
         }
         else if (*ptr == 'E' || *ptr == 'e')
         {
+            has_exponent = true;
             ptr++;
             break;
         }
         else
             return WRONG_SYMBOL_ERROR;
     }
+
+    new_number->mantissa[mantissa_ptr] = '\0';
 
     if (point_counter == 0)
         new_number->point_pos = mantissa_ptr;
@@ -62,6 +68,9 @@ int read_long_number(char *ptr, long_number_t *new_number)
         else
             return WRONG_SYMBOL_ERROR;
     }
+
+    if (exponent > 99999 || exponent < -99999)
+        return EXPONENT_OVERFLOW;
     new_number->exponent = exponent * (exponent_sign ? -1 : 1);
     return SUCCESS;
 }
@@ -79,15 +88,16 @@ void trim_mantissa(long_number_t *number)
     while (number->mantissa[ptr] == '0' && ptr < number->point_pos)
         ptr++;
 
-    size_t len = strlen(number->mantissa);
+    move_str_left(number->mantissa, ptr);
+
+    int len = strlen(number->mantissa);
     while (len >= 0 && number->mantissa[--len] == '0')
         number->mantissa[len] = '\0';
 
-    move_str_left(number->mantissa, ptr);
     number->point_pos -= ptr;
 }
 
-int normalize(long_number_t *number)
+void normalize(long_number_t *number)
 {
     trim_mantissa(number);
 
@@ -97,15 +107,16 @@ int normalize(long_number_t *number)
         while (number->mantissa[count] == '0')
             count++;
         if (count > 0)
+        {
             move_str_left(number->mantissa, count);
-        return count;
+            number->exponent -= count;
+        }
     }
     else if (number->point_pos != 0)
     {
         number->exponent += number->point_pos;
         number->point_pos = 0;
     }
-    return 0;
 }
 
 bool is_less_divider(char *dividend, char *divider, size_t pos)
@@ -147,11 +158,11 @@ void subtract_divider(char *dividend, char *divider, size_t pos)
 
 void create_bigger_mantissa(char *mantissa, char *new_mantissa, size_t size)
 {
-    size_t len = strlen(mantissa);
+    int len = strlen(mantissa);
     strncpy(new_mantissa, mantissa, len);
-    for (size_t i = len - 1; i < size; ++i)
+    for (int i = len; i < size; ++i)
         new_mantissa[i] = '0';
-    new_mantissa[size] = '\0';
+    new_mantissa[size - 1] = '\0';
 }
 
 bool is_zero(char *number)
@@ -185,6 +196,7 @@ int divide(long_number_t *dividend, long_number_t *divider)
     }
 
     strcpy(dividend->mantissa, result);
+    dividend->mantissa[MAX_MANTISSA_SIZE] = '\0';
     dividend->exponent -= divider->exponent;
     dividend->sign ^= divider->sign;
     normalize(dividend);

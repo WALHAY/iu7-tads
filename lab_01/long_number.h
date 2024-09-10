@@ -20,7 +20,7 @@ int read_long_number(char *number, long_number_t *new_number);
 
 void trim_mantissa(long_number_t *number);
 
-int normalize(long_number_t *number);
+void normalize(long_number_t *number);
 
 bool is_less_divider(char *dividend, char *divider, size_t pos);
 

@@ -5,6 +5,7 @@ int read_number_wrapper(long_number_t *number)
     char *number_str = NULL;
     size_t size = 0;
     getline(&number_str, &size, stdin);
+
     if (number_str == NULL)
         return IO_ERR;
 
