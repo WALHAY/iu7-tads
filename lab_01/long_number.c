@@ -197,7 +197,7 @@ int divide(long_number_t *dividend, long_number_t *divider)
 
     strcpy(dividend->mantissa, result);
     dividend->mantissa[MAX_MANTISSA_SIZE] = '\0';
-    dividend->exponent -= divider->exponent;
+    dividend->exponent -= divider->exponent - 1;
     dividend->sign ^= divider->sign;
     normalize(dividend);
     return SUCCESS;
