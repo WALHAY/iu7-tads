@@ -26,6 +26,10 @@ bool is_less_divider(char *dividend, char *divider, size_t pos);
 
 void subtract_divider(char *dividend, char *divider, size_t pos);
 
+void create_bigger_mantissa(char *mantissa, char *new_mantissa, size_t size);
+
+bool is_zero(char *number);
+
 int divide(long_number_t *dividend, long_number_t *divider);
 
 void print_long_number(long_number_t *number, bool print_size);

@@ -38,14 +38,30 @@ void print_err(int rc)
     case SUCCESS:
         printf("Error: Everything is fine!");
         break;
-    case NULLPTR_ERROR:
-        printf("Error: Nullpointer used!");
-        break;
     case ZERO_DIVISION:
         printf("Error: Trying to divide on zero!");
         break;
     case MANTISSA_OVERFLOW:
         printf("Error: Mantissa is bigger than %d symbols!", MAX_MANTISSA_SIZE);
         break;
+    case IO_ERR:
+        printf("Error: IO Failed!");
+        break;
+    case MANTISSA_SIGN_COUNT_ERROR:
+        printf("Error: more than 1 sign symbol in mantissa!");
+        break;
+    case EXPONENT_SIGN_COUNT_ERROR:
+        printf("Error: more than 1 sign symbol in exponent!");
+        break;
+    case POINT_COUNT_ERROR:
+        printf("Error: more than 1 point in mantissa!");
+        break;
+    case WRONG_SYMBOL_ERROR:
+        printf("Error: entered wrong symbol in number!");
+        break;
+    case EMPTY_NUMBER_ERROR:
+        printf("Error: empty number!");
+        break;
     }
+    printf("\n");
 }

@@ -4,8 +4,6 @@ void print_len_line(int offset, int len);
 
 void move_mantissa_left(int *mantissa, size_t offset);
 
-void create_bigger_mantissa(char *mantissa, char *new_mantissa, size_t size);
-
 int read_long_number(char *ptr, long_number_t *new_number)
 {
     size_t mantissa_ptr = 0;
@@ -43,6 +41,9 @@ int read_long_number(char *ptr, long_number_t *new_number)
 
     if (point_counter == 0)
         new_number->point_pos = mantissa_ptr;
+
+    if (mantissa_ptr == 0)
+        return EMPTY_NUMBER_ERROR;
 
     int exponent = 0;
     sign_counter = 0;
