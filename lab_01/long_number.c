@@ -19,37 +19,65 @@ int validate_exponent(char *exponent)
 int read_long_number(char *ptr, long_number_t *new_number)
 {
     *strchr(ptr, '\n') = '\0';
-    // Select mantissa
-    size_t index = strcspn(ptr, "eE");
-    size_t exponent_index = index + 1;
-    char mantissa[MAX_MANTISSA_SIZE];
-    strncpy(mantissa, ptr, index);
-    mantissa[index] = '\0';
-
-    char *point_ptr = strchr(mantissa, '.');
-    if (point_ptr)
+    size_t len = strlen(ptr);
+    char *point_ptr = strchr(ptr, '.');
+    size_t point_index = len;
+    if (point_ptr != NULL)
     {
-        move_str_left(point_ptr, 1);
-        new_number->point_pos = point_ptr - mantissa - 1;
-        index--;
+        point_index = point_ptr - ptr;
+        strcpy(point_ptr, point_ptr + 1);
     }
 
-    if (*mantissa == '+' || *mantissa == '-')
-    {
-        if (*mantissa == '-')
-            new_number->sign = true;
+    // Trim left->right
+    size_t diff = 0;
+    while (ptr + diff < point_ptr && *(ptr + diff) == '0')
+        diff++;
 
-        move_str_left(mantissa, 1);
-        index--;
+    if (diff > 0)
+    {
+        point_index -= diff;
+        len -= diff;
+        strcpy(ptr, ptr + diff);
     }
 
-    int rc = validate_mantissa(mantissa);
-    if (rc)
-        return rc;
+    // Trim right->left
+    char *exponent_ptr = strpbrk(ptr, "eE");
+    bool has_exponent = false;
+    size_t exponent_index = len;
+    if (exponent_ptr != NULL)
+        exponent_index = exponent_ptr - ptr;
+    else
+        has_exponent = false;
 
-    strcpy(new_number->mantissa, mantissa);
+    size_t mantissa_end = exponent_index - 1;
 
-    // Select exponent
+    while (mantissa_end >= 1 && mantissa_end - 1 >= point_index && *(ptr + mantissa_end - 1) == '0')
+        mantissa_end--;
+
+    if (mantissa_end != exponent_index)
+    {
+        if (has_exponent)
+            strcpy(ptr + mantissa_end, exponent_ptr);
+        else
+            *(ptr + mantissa_end) = '\0';
+    }
+
+    // bool negative = *ptr == '-';
+    // if (negative || *ptr == '+')
+    // {
+    //     strcpy(ptr, ptr + 1);
+    // }
+
+    // size_t mantissa_len = end - ptr;
+    // if (mantissa_len > MAX_MANTISSA_SIZE)
+    //     return MANTISSA_OVERFLOW;
+
+    // start = ptr;
+    // while (start < end)
+    //     if (!isdigit(*start++))
+    //         return WRONG_SYMBOL_ERROR;
+
+    // Mantissa finished-Start exponent
 
     return SUCCESS;
 }
