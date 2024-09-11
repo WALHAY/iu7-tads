@@ -2,101 +2,55 @@
 
 void print_len_line(int offset, int len);
 
-void move_mantissa_left(int *mantissa, size_t offset);
+int validate_mantissa(char *mantissa)
+{
+    size_t len = strlen(mantissa);
+    for (size_t i = 0; i < len; ++i)
+        if (!isdigit(mantissa[i]))
+            return WRONG_SYMBOL_ERROR;
+    return SUCCESS;
+}
+
+int validate_exponent(char *exponent)
+{
+    return SUCCESS;
+}
 
 int read_long_number(char *ptr, long_number_t *new_number)
 {
-    size_t mantissa_ptr = 0;
-    size_t point_counter = 0;
-    size_t sign_counter = 0;
-    bool has_exponent = false;
-    bool skip_zeroes = true;
-    size_t last_zeroes = 0;
-    for (; *ptr != '\0' && *ptr != '\n'; ++ptr)
+    *strchr(ptr, '\n') = '\0';
+    // Select mantissa
+    size_t index = strcspn(ptr, "eE");
+    size_t exponent_index = index + 1;
+    char mantissa[MAX_MANTISSA_SIZE];
+    strncpy(mantissa, ptr, index);
+    mantissa[index] = '\0';
+
+    char *point_ptr = strchr(mantissa, '.');
+    if (point_ptr)
     {
-        if (mantissa_ptr >= MAX_MANTISSA_SIZE)
-            return MANTISSA_OVERFLOW;
-
-        if (isdigit(*ptr))
-        {
-            if (*ptr == '0')
-            {
-                if (point_counter == 1)
-                {
-                    last_zeroes++;
-                    continue;
-                }
-                if (skip_zeroes)
-                    continue;
-                else
-                    skip_zeroes = false;
-            }
-            else
-            {
-                skip_zeroes = false;
-                if (last_zeroes != 0)
-                {
-                    for (size_t i = 0; i < last_zeroes; ++i)
-                        new_number->mantissa[mantissa_ptr++] = '0';
-                }
-            }
-            new_number->mantissa[mantissa_ptr++] = *ptr;
-        }
-        else if (*ptr == '+' || *ptr == '-')
-        {
-            if (*ptr == '-')
-                new_number->sign = true;
-            if (sign_counter++)
-                return MANTISSA_SIGN_COUNT_ERROR;
-        }
-        else if (*ptr == '.')
-        {
-            skip_zeroes = false;
-            if (point_counter++)
-                return POINT_COUNT_ERROR;
-
-            new_number->point_pos = mantissa_ptr;
-        }
-        else if (*ptr == 'E' || *ptr == 'e')
-        {
-            skip_zeroes = false;
-            has_exponent = true;
-            ptr++;
-            break;
-        }
-        else
-            return WRONG_SYMBOL_ERROR;
+        move_str_left(point_ptr, 1);
+        new_number->point_pos = point_ptr - mantissa - 1;
+        index--;
     }
 
-    new_number->mantissa[mantissa_ptr] = '\0';
-
-    if (point_counter == 0)
-        new_number->point_pos = mantissa_ptr;
-
-    if (mantissa_ptr == 0)
-        return EMPTY_NUMBER_ERROR;
-
-    int exponent = 0;
-    sign_counter = 0;
-    bool exponent_sign = false;
-    for (; *ptr != '\0' && *ptr != '\n'; ++ptr)
+    if (*mantissa == '+' || *mantissa == '-')
     {
-        if (isdigit(*ptr))
-            exponent = exponent * 10 + (*ptr - '0');
-        else if (*ptr == '+' || *ptr == '-')
-        {
-            if (*ptr == '-')
-                exponent_sign = true;
-            if (sign_counter++)
-                return EXPONENT_SIGN_COUNT_ERROR;
-        }
-        else
-            return WRONG_SYMBOL_ERROR;
+        if (*mantissa == '-')
+            new_number->sign = true;
+
+        move_str_left(mantissa, 1);
+        index--;
     }
 
-    if (exponent > 99999 || exponent < -99999)
-        return EXPONENT_OVERFLOW;
-    new_number->exponent = exponent * (exponent_sign ? -1 : 1);
+    int rc = validate_mantissa(mantissa);
+    if (rc)
+        return rc;
+
+    strcpy(new_number->mantissa, mantissa);
+
+    // Select exponent
+
     return SUCCESS;
 }
 

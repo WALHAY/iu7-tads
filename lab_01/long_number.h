@@ -16,7 +16,13 @@ typedef struct
     size_t point_pos;
 } long_number_t;
 
+int validate_mantissa(char *mantissa);
+
+int validate_exponent(char *exponent);
+
 int read_long_number(char *number, long_number_t *new_number);
+
+void move_str_left(char *data, size_t offset);
 
 void trim_mantissa(long_number_t *number);
 

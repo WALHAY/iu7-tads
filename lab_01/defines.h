@@ -3,6 +3,7 @@
 #define _GNU_SOURCE
 
 #define MAX_MANTISSA_SIZE 40
+#define MAX_EXPONENT_SIZE 5
 
 #define SUCCESS 0
 #define ZERO_DIVISION 1
