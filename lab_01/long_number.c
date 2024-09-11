@@ -43,13 +43,15 @@ int read_long_number(char *ptr, long_number_t *new_number)
     // Trim right->left
     char *exponent_ptr = strpbrk(ptr, "eE");
     bool has_exponent = false;
-    size_t exponent_index = len;
-    if (exponent_ptr != NULL)
-        exponent_index = exponent_ptr - ptr;
-    else
-        has_exponent = false;
+    size_t exponent_index = len - 1;
 
-    size_t mantissa_end = exponent_index - 1;
+    if (exponent_ptr != NULL)
+    {
+        exponent_index = exponent_ptr - ptr;
+        has_exponent = true;
+    }
+
+    size_t mantissa_end = exponent_index;
 
     while (mantissa_end >= 1 && mantissa_end - 1 >= point_index && *(ptr + mantissa_end - 1) == '0')
         mantissa_end--;
@@ -62,20 +64,16 @@ int read_long_number(char *ptr, long_number_t *new_number)
             *(ptr + mantissa_end) = '\0';
     }
 
-    // bool negative = *ptr == '-';
-    // if (negative || *ptr == '+')
-    // {
-    //     strcpy(ptr, ptr + 1);
-    // }
+    bool negative = *ptr == '-';
+    if (negative || *ptr == '+')
+        strcpy(ptr, ptr + 1);
 
-    // size_t mantissa_len = end - ptr;
-    // if (mantissa_len > MAX_MANTISSA_SIZE)
-    //     return MANTISSA_OVERFLOW;
+    if (mantissa_end > MAX_MANTISSA_SIZE)
+        return MANTISSA_OVERFLOW;
 
-    // start = ptr;
-    // while (start < end)
-    //     if (!isdigit(*start++))
-    //         return WRONG_SYMBOL_ERROR;
+    for (size_t i = 0; i < mantissa_end; ++i)
+        if (!isdigit(*(ptr + i)))
+            return WRONG_SYMBOL_ERROR;
 
     // Mantissa finished-Start exponent
 
