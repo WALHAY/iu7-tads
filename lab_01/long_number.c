@@ -11,25 +11,26 @@ int read_long_number(char *ptr, long_number_t *new_number)
     if (point_ptr != NULL)
     {
         point_index = point_ptr - ptr;
-        strcpy(point_ptr, point_ptr + 1);
+        move_str_left(point_ptr, 1);
+        len--;
     }
 
     // Trim left->right
     size_t diff = 0;
-    while (ptr + diff < point_ptr && *(ptr + diff) == '0')
+    while (ptr + diff + 1 < point_ptr && *(ptr + diff + 1) == '0')
         diff++;
 
     if (diff > 0)
     {
         point_index -= diff;
         len -= diff;
-        strcpy(ptr, ptr + diff);
+        move_str_left(ptr, diff);
     }
 
     // Trim right->left
     char *exponent_ptr = strpbrk(ptr, "eE");
     bool has_exponent = false;
-    size_t exponent_index = len - 1;
+    size_t exponent_index = len;
 
     if (exponent_ptr != NULL)
     {
@@ -45,15 +46,19 @@ int read_long_number(char *ptr, long_number_t *new_number)
     if (mantissa_end != exponent_index)
     {
         if (has_exponent)
-            strcpy(ptr + mantissa_end, exponent_ptr);
+        {
+            char buf[MAX_MANTISSA_SIZE];
+            strcpy(buf, exponent_ptr);
+            strcpy(ptr + mantissa_end, buf);
+        }
         else
-            *(ptr + mantissa_end) = '\0';
+            ptr[mantissa_end] = '\0';
     }
 
     bool negative = *ptr == '-';
     if (negative || *ptr == '+')
     {
-        strcpy(ptr, ptr + 1);
+        move_str_left(ptr, 1);
         mantissa_end--;
     }
 
@@ -61,8 +66,11 @@ int read_long_number(char *ptr, long_number_t *new_number)
         return MANTISSA_OVERFLOW;
 
     for (size_t i = 0; i < mantissa_end; ++i)
-        if (!isdigit(*(ptr + i)))
+        if (!isdigit(ptr[i]))
+        {
+            printf("Size %zu Wrong symb %c\n", mantissa_end, *(ptr + i));
             return WRONG_SYMBOL_ERROR;
+        }
 
     strncpy(new_number->mantissa, ptr, mantissa_end);
     new_number->mantissa[mantissa_end] = '\0';
@@ -70,14 +78,14 @@ int read_long_number(char *ptr, long_number_t *new_number)
     new_number->point_pos = point_index;
 
     // Mantissa finished-Start exponent
-
+    new_number->exponent = 0;
     if (!has_exponent)
         return SUCCESS;
 
     char *exponent_start = ptr + mantissa_end + 1;
     negative = *ptr == '-';
     if (negative || *ptr == '+')
-        strcpy(exponent_start, exponent_start + 1);
+        move_str_left(exponent_start, 1);
 
     size_t exp_size = strlen(exponent_start);
     if (exp_size > MAX_EXPONENT_SIZE)
@@ -241,5 +249,5 @@ void print_long_number(long_number_t *number, bool print_size)
     printf("e%d\n", number->exponent);
 
     if (print_size)
-        print_len_line(2, strlen(number->mantissa));
+        print_len_line(1, strlen(number->mantissa));
 }
