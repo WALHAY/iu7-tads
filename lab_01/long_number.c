@@ -8,103 +8,101 @@ int read_long_number(char *ptr, long_number_t *new_number)
     if (new_line)
         *new_line = '\0';
     size_t len = strlen(ptr);
-    char *point_ptr = strchr(ptr, '.');
-    size_t point_index = len;
-    if (point_ptr != NULL)
+
+    char temp[len];
+    strcpy(temp, ptr);
+
+    // Check mantissa sign
+    bool negative = *temp == '-';
+    if (negative || *temp == '+')
     {
-        point_index = point_ptr - ptr;
+        move_str_left(temp, 1);
+        len--;
+    }
+
+    // Find pointer index
+    char *point_ptr = strchr(temp, '.');
+    size_t point_index = len;
+    if (point_ptr)
+    {
+        point_index = point_ptr - temp;
         move_str_left(point_ptr, 1);
         len--;
     }
 
-    // Trim left->right
+    // Trim leading zeroes
     size_t diff = 0;
-    while (ptr + diff < point_ptr && ptr[diff] == '0')
+    while (temp[diff] == '0' && temp[diff + 1] != '\0')
         diff++;
 
-    if (diff > 0)
+    if (diff)
     {
-        point_index -= diff;
+        move_str_left(temp, diff);
         len -= diff;
-        move_str_left(ptr, diff);
+        point_index -= diff;
     }
+    // Leading zeroes remove
 
-    // Trim right->left
-    char *exponent_ptr = strpbrk(ptr, "eE");
+    size_t mantissa_end = len;
+    char *exponent_ptr = strpbrk(temp, "eE");
     bool has_exponent = false;
-    size_t exponent_index = len;
-
-    if (exponent_ptr != NULL)
+    if (exponent_ptr)
     {
-        exponent_index = exponent_ptr - ptr;
         has_exponent = true;
+        mantissa_end = exponent_ptr - temp;
     }
 
-    size_t mantissa_end = exponent_index;
-
-    while (mantissa_end - 1 > point_index && ptr[mantissa_end - 1] == '0')
+    // Trim trailing zeroes
+    while (mantissa_end - 1 >= point_index && temp[mantissa_end - 1] == '0')
         mantissa_end--;
 
-    if (mantissa_end != exponent_index)
-    {
-        if (has_exponent)
-        {
-            char buf[MAX_MANTISSA_SIZE];
-            strcpy(buf, exponent_ptr);
-            strcpy(ptr + mantissa_end, buf);
-        }
-        else
-            ptr[mantissa_end] = '\0';
-    }
-
-    bool negative = *ptr == '-';
-    if (negative || *ptr == '+')
-    {
-        move_str_left(ptr, 1);
-        mantissa_end--;
-    }
-
-    if (mantissa_end > MAX_MANTISSA_SIZE)
+    // Mantissa end found | Validation next
+    if (mantissa_end >= MAX_MANTISSA_SIZE)
         return MANTISSA_OVERFLOW;
 
     for (size_t i = 0; i < mantissa_end; ++i)
-        if (!isdigit(ptr[i]))
+        if (!isdigit(temp[i]))
             return WRONG_SYMBOL_ERROR;
 
-    // error somewhere here
-    strncpy(new_number->mantissa, ptr, mantissa_end);
+    strncpy(new_number->mantissa, temp, mantissa_end);
     new_number->mantissa[mantissa_end] = '\0';
     new_number->sign = negative;
     new_number->point_pos = point_index;
 
-    // Mantissa finished-Start exponent
-    new_number->exponent = 0;
+    // Exponent start
     if (!has_exponent)
         return SUCCESS;
 
-    char *exponent_start = ptr + mantissa_end + 1;
-    negative = *ptr == '-';
-    if (negative || *ptr == '+')
-        move_str_left(exponent_start, 1);
+    exponent_ptr++;
+    bool exp_negative = *exponent_ptr == '-';
+    if (exp_negative || *exponent_ptr == '+')
+        exponent_ptr++;
 
-    size_t exp_size = strlen(exponent_start);
-    if (exp_size > MAX_EXPONENT_SIZE)
-        return EXPONENT_OVERFLOW;
-
-    for (size_t i = 0; i < exp_size; ++i)
-        if (!isdigit(*(exponent_start + i)))
+    char *exp_start = exponent_ptr;
+    while (*exp_start != '\0')
+        if (!isdigit(*exp_start++))
             return WRONG_SYMBOL_ERROR;
 
-    int exponent = atoi(exponent_start);
-    new_number->exponent = (negative ? -1 : 1) * exponent;
+    int exponent_value = (exp_negative ? -1 : 1) * atoi(exponent_ptr);
+    if (exponent_value < -99999 || exponent_value > 99999)
+        return EXPONENT_OVERFLOW;
+
+    new_number->exponent = exponent_value;
 
     return SUCCESS;
 }
 
 void move_str_left(char *data, size_t offset)
 {
-    for (size_t i = offset; data[i] != '\0'; ++i)
-        data[i - 1] = data[i];
+    if (data == NULL)
+        return;
+
+    if (offset < 1)
+        return;
+
+    char temp[strlen(data)];
+    strcpy(temp, data + offset);
+    strcpy(data, temp);
 }
 
 void trim_mantissa(long_number_t *number)
@@ -250,4 +248,3 @@ void print_long_number(long_number_t *number, bool print_size)
     if (print_size)
         print_len_line(1, strlen(number->mantissa));
 }
-
