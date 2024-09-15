@@ -1,9 +1,14 @@
 #include "defines.h"
 #include "long_number.h"
+#include "tests/test_long_number.h"
 #include "utils.h"
 
 int main(void)
 {
+#ifdef TEST
+    test_read_number();
+    return SUCCESS;
+#endif
     int rc = SUCCESS;
     long_number_t first;
     long_number_t second;

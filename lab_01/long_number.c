@@ -4,7 +4,9 @@ void print_len_line(int offset, int len);
 
 int read_long_number(char *ptr, long_number_t *new_number)
 {
-    *strchr(ptr, '\n') = '\0';
+    char *new_line = strchr(ptr, '\n');
+    if (new_line)
+        *new_line = '\0';
     size_t len = strlen(ptr);
     char *point_ptr = strchr(ptr, '.');
     size_t point_index = len;
@@ -17,7 +19,7 @@ int read_long_number(char *ptr, long_number_t *new_number)
 
     // Trim left->right
     size_t diff = 0;
-    while (ptr + diff + 1 < point_ptr && *(ptr + diff + 1) == '0')
+    while (ptr + diff < point_ptr && ptr[diff] == '0')
         diff++;
 
     if (diff > 0)
@@ -40,7 +42,7 @@ int read_long_number(char *ptr, long_number_t *new_number)
 
     size_t mantissa_end = exponent_index;
 
-    while (mantissa_end >= 1 && mantissa_end - 1 >= point_index && *(ptr + mantissa_end - 1) == '0')
+    while (mantissa_end - 1 > point_index && ptr[mantissa_end - 1] == '0')
         mantissa_end--;
 
     if (mantissa_end != exponent_index)
@@ -67,11 +69,9 @@ int read_long_number(char *ptr, long_number_t *new_number)
 
     for (size_t i = 0; i < mantissa_end; ++i)
         if (!isdigit(ptr[i]))
-        {
-            printf("Size %zu Wrong symb %c\n", mantissa_end, *(ptr + i));
             return WRONG_SYMBOL_ERROR;
-        }
 
+    // error somewhere here
     strncpy(new_number->mantissa, ptr, mantissa_end);
     new_number->mantissa[mantissa_end] = '\0';
     new_number->sign = negative;
@@ -103,9 +103,8 @@ int read_long_number(char *ptr, long_number_t *new_number)
 
 void move_str_left(char *data, size_t offset)
 {
-    char buf[MAX_MANTISSA_SIZE + 1];
-    strcpy(buf, data + offset);
-    strcpy(data, buf);
+    for (size_t i = offset; data[i] != '\0'; ++i)
+        data[i - 1] = data[i];
 }
 
 void trim_mantissa(long_number_t *number)
@@ -251,3 +250,4 @@ void print_long_number(long_number_t *number, bool print_size)
     if (print_size)
         print_len_line(1, strlen(number->mantissa));
 }
+
