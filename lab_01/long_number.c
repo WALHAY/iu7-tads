@@ -57,6 +57,9 @@ int read_long_number(char *ptr, long_number_t *new_number)
         mantissa_end--;
 
     // Mantissa end found | Validation next
+    if (mantissa_end == 0)
+        return EMPTY_NUMBER_ERROR;
+
     if (mantissa_end >= MAX_MANTISSA_SIZE)
         return MANTISSA_OVERFLOW;
 
@@ -71,7 +74,10 @@ int read_long_number(char *ptr, long_number_t *new_number)
 
     // Exponent start
     if (!has_exponent)
+    {
+        new_number->exponent = 0;
         return SUCCESS;
+    }
 
     exponent_ptr++;
     bool exp_negative = *exponent_ptr == '-';

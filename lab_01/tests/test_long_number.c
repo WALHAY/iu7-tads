@@ -11,6 +11,8 @@ bool equal_long_number(long_number_t number, char *mantissa, int exponent)
 void test_read_number()
 {
     long_number_t number;
+    printf("Empty test!\n");
+    assert(read_long_number("", &number) == EMPTY_NUMBER_ERROR);
     printf("Simple test!\n");
     assert(read_long_number("123", &number) == SUCCESS);
     assert(equal_long_number(number, "123", 3));
