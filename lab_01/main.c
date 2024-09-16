@@ -30,6 +30,8 @@ int main(void)
 
     normalize(&first);
     normalize(&second);
+    print_long_number(&first, false);
+    print_long_number(&second, false);
 
     rc = divide(&first, &second);
     if (!rc)

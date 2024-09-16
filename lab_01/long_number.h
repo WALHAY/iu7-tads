@@ -26,7 +26,7 @@ void move_str_left(char *data, size_t offset);
 
 void trim_mantissa(long_number_t *number);
 
-void normalize(long_number_t *number);
+int normalize(long_number_t *number);
 
 bool is_less_divider(char *dividend, char *divider, size_t pos);
 

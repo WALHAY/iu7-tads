@@ -70,7 +70,7 @@ int read_long_number(char *ptr, long_number_t *new_number)
     strncpy(new_number->mantissa, temp, mantissa_end);
     new_number->mantissa[mantissa_end] = '\0';
     new_number->sign = negative;
-    new_number->point_pos = point_index;
+    new_number->point_pos = point_ptr == NULL ? has_exponent ? mantissa_end - 1 : point_index : point_index;
 
     // Exponent start
     if (!has_exponent)
@@ -126,7 +126,7 @@ void trim_mantissa(long_number_t *number)
     number->point_pos -= ptr;
 }
 
-void normalize(long_number_t *number)
+int normalize(long_number_t *number)
 {
     trim_mantissa(number);
 
@@ -143,9 +143,13 @@ void normalize(long_number_t *number)
     }
     else if (number->point_pos != 0)
     {
+        printf("Ppos %zu\n", number->point_pos);
         number->exponent += number->point_pos;
         number->point_pos = 0;
     }
+    if (number->exponent > 99999 || number->exponent < -99999)
+        return NORMALIZATION_ERROR;
+    return SUCCESS;
 }
 
 bool is_less_divider(char *dividend, char *divider, size_t pos)
@@ -228,8 +232,7 @@ int divide(long_number_t *dividend, long_number_t *divider)
     dividend->mantissa[MAX_MANTISSA_SIZE] = '\0';
     dividend->exponent -= divider->exponent - 1;
     dividend->sign ^= divider->sign;
-    normalize(dividend);
-    return SUCCESS;
+    return normalize(dividend);
 }
 
 void print_long_number(long_number_t *number, bool print_size)

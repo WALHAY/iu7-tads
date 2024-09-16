@@ -37,31 +37,28 @@ void print_err(int rc)
     switch (rc)
     {
     case SUCCESS:
-        printf("Error: Everything is fine!");
-        break;
-    case ZERO_DIVISION:
-        printf("Error: Trying to divide on zero!");
-        break;
-    case MANTISSA_OVERFLOW:
-        printf("Error: Mantissa is bigger than %d symbols!", MAX_MANTISSA_SIZE);
+        printf("Error: everything is fine!");
         break;
     case IO_ERR:
         printf("Error: IO Failed!");
         break;
-    case MANTISSA_SIGN_COUNT_ERROR:
-        printf("Error: more than 1 sign symbol in mantissa!");
+    case MANTISSA_OVERFLOW:
+        printf("Error: mantissa is bigger than %d symbols!", MAX_MANTISSA_SIZE);
         break;
-    case EXPONENT_SIGN_COUNT_ERROR:
-        printf("Error: more than 1 sign symbol in exponent!");
+    case EXPONENT_OVERFLOW:
+        printf("Error: exponent is bigger than 5 symbols!");
         break;
-    case POINT_COUNT_ERROR:
-        printf("Error: more than 1 point in mantissa!");
+    case EMPTY_NUMBER_ERROR:
+        printf("Error: empty number!");
         break;
     case WRONG_SYMBOL_ERROR:
         printf("Error: entered wrong symbol in number!");
         break;
-    case EMPTY_NUMBER_ERROR:
-        printf("Error: empty number!");
+    case ZERO_DIVISION:
+        printf("Error: zero division!");
+        break;
+    case NORMALIZATION_ERROR:
+        printf("Error: normalization failed!");
         break;
     }
     printf("\n");
