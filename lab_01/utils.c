@@ -32,6 +32,27 @@ void print_len_line(int offset, int len)
         printf("%zu%s", i, i < 10 ? "    " : "   ");
 }
 
+void print_input_len_line(int offset, int len)
+{
+    for (size_t i = 0; i < offset; ++i)
+        printf(" ");
+
+    for (size_t i = 0; i <= len; i += 5)
+        printf("%zu%s", i, i < 10 ? "    " : "   ");
+
+    printf("\n");
+
+    for (size_t i = 0; i < offset; ++i)
+        printf(" ");
+
+    for (size_t i = 0; i <= len; ++i)
+        if (i % 5 == 0)
+            printf("|");
+        else
+            printf("-");
+    printf("\n");
+}
+
 void print_err(int rc)
 {
     switch (rc)

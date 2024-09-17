@@ -143,7 +143,6 @@ int normalize(long_number_t *number)
     }
     else if (number->point_pos != 0)
     {
-        printf("Ppos %zu\n", number->point_pos);
         number->exponent += number->point_pos;
         number->point_pos = 0;
     }

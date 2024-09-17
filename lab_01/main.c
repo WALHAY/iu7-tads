@@ -14,7 +14,8 @@ int main(void)
     long_number_t second;
     do
     {
-        printf("Enter first number: ");
+        print_input_len_line(21, 80);
+        printf("Enter first number:  ");
         rc = read_number_wrapper(&first);
         if (rc)
             print_err(rc);
@@ -22,6 +23,7 @@ int main(void)
 
     do
     {
+        print_input_len_line(21, 80);
         printf("Enter second number: ");
         rc = read_number_wrapper(&second);
         if (rc)
@@ -30,8 +32,6 @@ int main(void)
 
     normalize(&first);
     normalize(&second);
-    print_long_number(&first, false);
-    print_long_number(&second, false);
 
     rc = divide(&first, &second);
     if (!rc)
