@@ -26,6 +26,9 @@ int read_long_number(char *ptr, long_number_t *new_number)
     bool has_pointer = false;
     if (point_ptr)
     {
+        char *exp = strpbrk(temp, "eE");
+        if (exp && exp < point_ptr)
+            return WRONG_SYMBOL_ERROR;
         has_pointer = true;
         point_index = point_ptr - temp;
         move_str_left(point_ptr, 1);
@@ -157,7 +160,8 @@ int normalize(long_number_t *number)
         number->exponent += number->point_pos;
         number->point_pos = 0;
     }
-    if (is_zero(number->mantissa) && abs(number->exponent) > 99999)
+
+    if (!is_zero(number->mantissa) && abs(number->exponent) > 99999)
         return NORMALIZATION_ERROR;
     return SUCCESS;
 }
