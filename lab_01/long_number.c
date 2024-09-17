@@ -23,8 +23,10 @@ int read_long_number(char *ptr, long_number_t *new_number)
     // Find pointer index
     char *point_ptr = strchr(temp, '.');
     size_t point_index = len;
+    bool has_pointer = false;
     if (point_ptr)
     {
+        has_pointer = true;
         point_index = point_ptr - temp;
         move_str_left(point_ptr, 1);
         len--;
@@ -58,7 +60,8 @@ int read_long_number(char *ptr, long_number_t *new_number)
 
     // Mantissa end found | Validation next
     if (mantissa_end == 0)
-        return EMPTY_NUMBER_ERROR;
+        if (!diff)
+            return EMPTY_NUMBER_ERROR;
 
     if (mantissa_end > MAX_MANTISSA_SIZE)
         return MANTISSA_OVERFLOW;
@@ -67,8 +70,13 @@ int read_long_number(char *ptr, long_number_t *new_number)
         if (!isdigit(temp[i]))
             return WRONG_SYMBOL_ERROR;
 
-    strncpy(new_number->mantissa, temp, mantissa_end);
-    new_number->mantissa[mantissa_end] = '\0';
+    if (!mantissa_end && diff)
+        strcpy(new_number->mantissa, "0");
+    else
+    {
+        strncpy(new_number->mantissa, temp, mantissa_end);
+        new_number->mantissa[mantissa_end] = '\0';
+    }
     new_number->sign = negative;
     new_number->point_pos = point_ptr == NULL ? has_exponent ? mantissa_end - 1 : point_index : point_index;
 
@@ -86,8 +94,11 @@ int read_long_number(char *ptr, long_number_t *new_number)
 
     char *exp_start = exponent_ptr;
     while (*exp_start != '\0')
-        if (!isdigit(*exp_start++))
+    {
+        if (!isdigit(*exp_start))
             return WRONG_SYMBOL_ERROR;
+        exp_start++;
+    }
 
     int exponent_value = (exp_negative ? -1 : 1) * atoi(exponent_ptr);
     if (exponent_value < -99999 || exponent_value > 99999)
@@ -146,7 +157,7 @@ int normalize(long_number_t *number)
         number->exponent += number->point_pos;
         number->point_pos = 0;
     }
-    if (number->exponent > 99999 || number->exponent < -99999)
+    if (is_zero(number->mantissa) && abs(number->exponent) > 99999)
         return NORMALIZATION_ERROR;
     return SUCCESS;
 }
@@ -202,6 +213,22 @@ bool is_zero(char *number)
     return strpbrk(number, "123456789") == NULL;
 }
 
+void round_int(char *number)
+{
+    size_t end = strlen(number) - 1;
+
+    bool add = 1;
+    while (add)
+    {
+        int res = number[end] - '0' + add;
+        add = res / 10;
+        number[end] = '0' + res % 10;
+        if (!end)
+            break;
+        end--;
+    }
+}
+
 int divide(long_number_t *dividend, long_number_t *divider)
 {
     if (is_zero(divider->mantissa))
@@ -211,6 +238,12 @@ int divide(long_number_t *dividend, long_number_t *divider)
     for (size_t i = 0; i < MAX_MANTISSA_SIZE; ++i)
         result[i] = '0';
     result[MAX_MANTISSA_SIZE] = '\0';
+
+    if (is_zero(dividend->mantissa))
+    {
+        dividend->exponent = 0;
+        return SUCCESS;
+    }
 
     char new_mantissa[MAX_MANTISSA_SIZE * 2 + 1];
     create_bigger_mantissa(dividend->mantissa, new_mantissa, MAX_MANTISSA_SIZE * 2);
@@ -226,6 +259,10 @@ int divide(long_number_t *dividend, long_number_t *divider)
         else
             ptr++;
     }
+
+    if (strlen(result) == MAX_MANTISSA_SIZE)
+        if (result[MAX_MANTISSA_SIZE - 1] >= '5')
+            round_int(result);
 
     strcpy(dividend->mantissa, result);
     dividend->mantissa[MAX_MANTISSA_SIZE] = '\0';
@@ -254,5 +291,5 @@ void print_long_number(long_number_t *number, bool print_size)
     printf("e%d\n", number->exponent);
 
     if (print_size)
-        print_len_line(1, strlen(number->mantissa));
+        print_len_line(21, strlen(number->mantissa) + 1);
 }

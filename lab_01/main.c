@@ -36,7 +36,7 @@ int main(void)
     rc = divide(&first, &second);
     if (!rc)
     {
-        printf("Division result:\n");
+        printf("Division result:     ");
         print_long_number(&first, true);
     }
     else
