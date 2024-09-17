@@ -32,7 +32,7 @@ int read_long_number(char *ptr, long_number_t *new_number)
 
     // Trim leading zeroes
     size_t diff = 0;
-    while (temp[diff] == '0' && temp[diff + 1] != '\0')
+    while (temp < point_ptr && temp[diff] == '0' && temp[diff + 1] != '\0')
         diff++;
 
     if (diff)
@@ -60,7 +60,7 @@ int read_long_number(char *ptr, long_number_t *new_number)
     if (mantissa_end == 0)
         return EMPTY_NUMBER_ERROR;
 
-    if (mantissa_end >= MAX_MANTISSA_SIZE)
+    if (mantissa_end > MAX_MANTISSA_SIZE)
         return MANTISSA_OVERFLOW;
 
     for (size_t i = 0; i < mantissa_end; ++i)
