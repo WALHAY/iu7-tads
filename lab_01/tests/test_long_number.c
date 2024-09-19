@@ -16,6 +16,9 @@ void test_read_number()
     printf("Simple test!\n");
     assert(read_long_number("123", &number) == SUCCESS);
     assert(equal_long_number(number, "123", 3));
+    printf("Simple test!\n");
+    assert(read_long_number("1e1", &number) == SUCCESS);
+    assert(equal_long_number(number, "1", 2));
     printf("Point test!\n");
     assert(read_long_number("123.123", &number) == SUCCESS);
     assert(equal_long_number(number, "123123", 3));
@@ -65,4 +68,13 @@ void test_read_number()
     assert(read_long_number("-.123000e999999", &number) == EXPONENT_OVERFLOW);
     printf("Exponent negative overflow test!\n");
     assert(read_long_number("-.123000e-100000", &number) == EXPONENT_OVERFLOW);
+    printf("Zero test!\n");
+    assert(read_long_number("0", &number) == SUCCESS);
+    assert(is_zero(number.mantissa));
+    assert(read_long_number("0.0", &number) == SUCCESS);
+    assert(is_zero(number.mantissa));
+    assert(read_long_number("0.e1", &number) == SUCCESS);
+    assert(is_zero(number.mantissa));
+    assert(read_long_number("0.0e1", &number) == SUCCESS);
+    assert(is_zero(number.mantissa));
 }

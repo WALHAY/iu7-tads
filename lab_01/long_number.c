@@ -29,6 +29,7 @@ int read_long_number(char *ptr, long_number_t *new_number)
         char *exp = strpbrk(temp, "eE");
         if (exp && exp < point_ptr)
             return WRONG_SYMBOL_ERROR;
+
         has_pointer = true;
         point_index = point_ptr - temp;
         move_str_left(point_ptr, 1);
@@ -81,7 +82,7 @@ int read_long_number(char *ptr, long_number_t *new_number)
         new_number->mantissa[mantissa_end] = '\0';
     }
     new_number->sign = negative;
-    new_number->point_pos = point_ptr == NULL ? has_exponent ? mantissa_end - 1 : point_index : point_index;
+    new_number->point_pos = point_ptr == NULL ? (has_exponent ? mantissa_end : point_index) : point_index;
 
     // Exponent start
     if (!has_exponent)
