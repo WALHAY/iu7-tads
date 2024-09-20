@@ -9,6 +9,7 @@ int main(void)
     test_read_number();
     return SUCCESS;
 #endif
+    print_rules();
     int rc = SUCCESS;
     long_number_t first;
     long_number_t second;

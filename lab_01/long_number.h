@@ -32,7 +32,7 @@ void create_bigger_mantissa(char *mantissa, char *new_mantissa, size_t size);
 
 bool is_zero(char *number);
 
-void round_int(char *number);
+bool round_int(char *number);
 
 int divide(long_number_t *dividend, long_number_t *divider);
 

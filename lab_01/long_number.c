@@ -218,7 +218,8 @@ bool is_zero(char *number)
     return strpbrk(number, "123456789") == NULL;
 }
 
-void round_int(char *number)
+// returns true if exponent should be increased
+bool round_int(char *number)
 {
     size_t end = strlen(number) - 1;
 
@@ -232,6 +233,16 @@ void round_int(char *number)
             break;
         end--;
     }
+
+    if (!end && add)
+    {
+        char temp[MAX_MANTISSA_SIZE + 1];
+        strcpy(temp, number);
+        strncpy(number + 1, temp, MAX_MANTISSA_SIZE - 1);
+        number[0] = '1';
+        return true;
+    }
+    return false;
 }
 
 int divide(long_number_t *dividend, long_number_t *divider)
@@ -267,7 +278,7 @@ int divide(long_number_t *dividend, long_number_t *divider)
 
     if (strlen(result) == MAX_MANTISSA_SIZE)
         if (result[MAX_MANTISSA_SIZE - 1] >= '5')
-            round_int(result);
+            dividend->exponent += round_int(result);
 
     strcpy(dividend->mantissa, result);
     dividend->mantissa[MAX_MANTISSA_SIZE] = '\0';
@@ -289,6 +300,8 @@ void print_long_number(long_number_t *number, bool print_size)
         printf("%c", number->mantissa[i]);
 
     printf(".");
+    if (is_zero(number->mantissa))
+        printf("0");
 
     for (; number->mantissa[i] != '\0'; ++i)
         printf("%c", number->mantissa[i]);
