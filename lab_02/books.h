@@ -2,6 +2,7 @@
 
 #include "defines.h"
 #include <ctype.h>
+#include <math.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -63,6 +64,10 @@ typedef struct
 } Book;
 
 int validate_input(char *field, char *title, size_t max_size);
+
+int input_enum(size_t *option, size_t max_options, char **options);
+
+int input_year(size_t *year);
 
 int input_book(Book *book);
 

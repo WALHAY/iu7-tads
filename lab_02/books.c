@@ -6,97 +6,95 @@ int validate_input(char *field, char *title, size_t max_size)
 
     char *temp = NULL;
     size_t size = 0;
-    getline(&temp, &size, stdin);
     do
     {
+        printf("Enter %s: ", title);
+        getline(&temp, &size, stdin);
         if (temp == NULL)
             rc = IO_ERR;
 
         if (size > max_size)
             rc = 3;
-
     } while (rc);
 
     strcpy(field, temp);
     return rc;
 }
 
-int input_enum(int *option)
+int input_enum(size_t *option, size_t max_options, char **options)
 {
-    char buf = 0;
-    do
-    {
-        printf("\nEnter book type: ");
-        buf = getchar();
-    } while (!isdigit(buf) || buf > '2');
+    printf("\nPossible variants:\n");
+    for (size_t i = 0; i < max_options; ++i)
+        printf("\t%zu. %s\n", i, options[i]);
 
-    return buf - '0';
+    printf("Option: ");
+    while (!scanf("%zu", option) || *option >= max_options)
+        printf("\nWrong option! Enter option again: ");
+    return SUCCESS;
+}
+
+int input_year(size_t *year)
+{
+    printf("\nEnter publish year: ");
+    while (!scanf("%zu", year) || log10(*year) > 4)
+        printf("\nEnter publish year again: ");
+    return SUCCESS;
 }
 
 int input_book(Book *book)
 {
-    int rc = input_book_common(book);
-    if (!rc)
-        rc = input_book_data(book);
-    return rc;
+    input_book_common(book);
+    input_book_data(book);
+    return SUCCESS;
 }
 
 int input_book_common(Book *book)
 {
-    // input author surname
-    int rc = validate_input(book->authorSurname, "Enter author surname: ", MAX_SURNAME_LEN);
-    // input book title
-    if (!rc)
-        rc = validate_input(book->bookTitle, "Enter book title: ", MAX_TITLE_LEN);
-    // input publisher
-    if (!rc)
-        rc = validate_input(book->publisher, "Enter publisher: ", MAX_PUBLISHER_LEN);
-    return rc;
-}
-
-int input_book_type(Book *book)
-{
-    char buf = 0;
-    do
-    {
-        printf("\nEnter book type: ");
-        buf = getchar();
-    } while (!isdigit(buf) || buf > '2');
-
-    return buf - '0';
+    validate_input(book->authorSurname, "author surname", MAX_SURNAME_LEN);
+    validate_input(book->bookTitle, "book title", MAX_TITLE_LEN);
+    validate_input(book->publisher, "publisher", MAX_PUBLISHER_LEN);
+    return SUCCESS;
 }
 
 int input_book_data(Book *book)
 {
-    EBookType type = 0;
-    int rc = input_book_type(book);
+    char *options[] = {"Technical", "Fiction", "Children"};
+    int rc = input_enum((size_t *)&book->type, 3, options);
     switch (book->type)
     {
     case TECHINCAL:
-        input_technical_book(book);
+        input_technical_book(&book->data.technical);
         break;
     case FICTION:
-        input_fiction_book(book);
+        input_fiction_book(&book->data.fiction);
         break;
     case CHILDREN:
-        input_children_book(book);
+        input_children_book(&book->data.children);
         break;
     }
     return rc;
 }
 
-int input_technical_book(Book *book)
+int input_technical_book(TechnicalBook *book)
 {
+    char *options[] = {"Domestic", "Non domestic"};
+    validate_input(book->industry, "industry", MAX_TITLE_LEN);
+    input_enum((size_t *)&book->domestic, 2, options);
+    input_year(&book->publishYear);
     return SUCCESS;
 }
 
-int input_fiction_book(Book *book)
+int input_fiction_book(FictionBook *book)
 {
+    char *options[] = {"Novel", "Play", "Poetry"};
+    input_enum((size_t *)&book->type, 3, options);
     return SUCCESS;
 }
 
-int input_children_book(Book *book)
+int input_children_book(ChildrenBook *book)
 {
+    char *options[] = {"Fairy Tale", "Children Poetry"};
+    input_enum((size_t *)&book->type, 2, options);
     return SUCCESS;
 }
 
