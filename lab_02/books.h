@@ -1,7 +1,9 @@
 #pragma once
 
-#include <cstdio>
+#include "defines.h"
+#include <ctype.h>
 #include <stdbool.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -52,24 +54,36 @@ typedef union
 
 typedef struct
 {
-    char *authorSurname;
-    char *bookTitle;
-    char *publisher;
+    char authorSurname[MAX_SURNAME_LEN];
+    char bookTitle[MAX_TITLE_LEN];
+    char publisher[MAX_PUBLISHER_LEN];
     size_t pageCount;
     EBookType type;
     UBookData data;
 } Book;
 
-char *validate_input(char *title);
+int validate_input(char *field, char *title, size_t max_size);
 
-int input_book_common();
+int input_book(Book *book);
 
-int input_book_type();
+int input_book_common(Book *book);
 
-int input_book_data();
+int input_book_type(Book *book);
 
-int input_technical_book();
+int input_book_data(Book *book);
 
-int input_fiction_book();
+int input_technical_book(TechnicalBook *book);
 
-int input_children_book();
+int input_fiction_book(FictionBook *book);
+
+int input_children_book(ChildrenBook *book);
+
+void print_book(Book *book);
+
+void print_book_common(Book *book);
+
+void print_technical_book(TechnicalBook *book);
+
+void print_fiction_book(FictionBook *book);
+
+void print_children_book(ChildrenBook *book);
