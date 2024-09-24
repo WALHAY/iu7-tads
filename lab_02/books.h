@@ -30,7 +30,7 @@ typedef enum
 
 typedef struct
 {
-    char *industry;
+    char industry[MAX_INDUSTRY_LEN];
     bool domestic;
     size_t publishYear;
 } TechnicalBook;
@@ -67,7 +67,7 @@ int validate_input(char *field, char *title, size_t max_size);
 
 int input_enum(size_t *option, size_t max_options, char **options);
 
-int input_year(size_t *year);
+int input_value(size_t *value, char *title, bool has_range, size_t max_value);
 
 int input_book(Book *book);
 

@@ -2,23 +2,14 @@
 
 int validate_input(char *field, char *title, size_t max_size)
 {
-    int rc = SUCCESS;
-
-    char *temp = NULL;
-    size_t size = 0;
+    char temp[max_size + 1];
     do
     {
         printf("Enter %s: ", title);
-        getline(&temp, &size, stdin);
-        if (temp == NULL)
-            rc = IO_ERR;
-
-        if (size > max_size)
-            rc = 3;
-    } while (rc);
-
+        fgets(temp, max_size, stdin);
+    } while (strlen(temp) >= max_size);
     strcpy(field, temp);
-    return rc;
+    return SUCCESS;
 }
 
 int input_enum(size_t *option, size_t max_options, char **options)
@@ -33,11 +24,11 @@ int input_enum(size_t *option, size_t max_options, char **options)
     return SUCCESS;
 }
 
-int input_year(size_t *year)
+int input_value(size_t *value, char *title, bool has_range, size_t max_value)
 {
-    printf("\nEnter publish year: ");
-    while (!scanf("%zu", year) || log10(*year) > 4)
-        printf("\nEnter publish year again: ");
+    printf("Enter %s: ", title);
+    while (!scanf("%zu", value) || (has_range && *value > max_value))
+        printf("Enter %s again: ", title);
     return SUCCESS;
 }
 
@@ -53,6 +44,7 @@ int input_book_common(Book *book)
     validate_input(book->authorSurname, "author surname", MAX_SURNAME_LEN);
     validate_input(book->bookTitle, "book title", MAX_TITLE_LEN);
     validate_input(book->publisher, "publisher", MAX_PUBLISHER_LEN);
+    input_value(&book->pageCount, "page count", false, 0);
     return SUCCESS;
 }
 
@@ -77,10 +69,10 @@ int input_book_data(Book *book)
 
 int input_technical_book(TechnicalBook *book)
 {
+    validate_input(book->industry, "industry", MAX_INDUSTRY_LEN);
     char *options[] = {"Domestic", "Non domestic"};
-    validate_input(book->industry, "industry", MAX_TITLE_LEN);
     input_enum((size_t *)&book->domestic, 2, options);
-    input_year(&book->publishYear);
+    input_value(&book->publishYear, "publish year", true, 2024);
     return SUCCESS;
 }
 
@@ -93,6 +85,7 @@ int input_fiction_book(FictionBook *book)
 
 int input_children_book(ChildrenBook *book)
 {
+    input_value((size_t *)&book->minimalAge, "minimal age", true, 100);
     char *options[] = {"Fairy Tale", "Children Poetry"};
     input_enum((size_t *)&book->type, 2, options);
     return SUCCESS;
@@ -117,8 +110,8 @@ void print_book(Book *book)
 
 void print_book_common(Book *book)
 {
-    printf("\nAuthor: %s\nTitle: %s\n%s Pages: %zu\n", book->authorSurname, book->bookTitle, book->publisher,
-           book->pageCount);
+    printf("\nAuthor: %s\nTitle: %s\nPublisher: %s\nPages: %zu\n", book->authorSurname, book->bookTitle,
+           book->publisher, book->pageCount);
 }
 
 void print_technical_book(TechnicalBook *book)
