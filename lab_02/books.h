@@ -13,20 +13,16 @@ typedef enum
     TECHNICAL,
     FICTION,
     CHILDREN
-} EBookType;
-
-typedef enum
-{
-    FAIRY_TALE,
-    CHILD_POETRY
-} EChildrenBookType;
+} EBookGenre;
 
 typedef enum
 {
     NOVEL,
     PLAY,
-    POETRY
-} EFictionBookType;
+    POETRY,
+    FAIRY_TALE,
+    CHILD_POETRY
+} EBookType;
 
 typedef struct
 {
@@ -37,13 +33,13 @@ typedef struct
 
 typedef struct
 {
-    EFictionBookType type;
+    EBookType type;
 } FictionBook;
 
 typedef struct
 {
+    EBookType type;
     size_t minimalAge;
-    EChildrenBookType type;
 } ChildrenBook;
 
 typedef union
@@ -55,11 +51,11 @@ typedef union
 
 typedef struct
 {
-    char authorSurname[MAX_SURNAME_LEN];
-    char bookTitle[MAX_TITLE_LEN];
-    char publisher[MAX_PUBLISHER_LEN];
+    char authorSurname[MAX_SURNAME_LEN + 1];
+    char bookTitle[MAX_TITLE_LEN + 1];
+    char publisher[MAX_PUBLISHER_LEN + 1];
     size_t pageCount;
-    EBookType type;
+    EBookGenre genre;
     UBookData data;
 } Book;
 
@@ -83,8 +79,6 @@ int input_fiction_book(FictionBook *book);
 
 int input_children_book(ChildrenBook *book);
 
-char *get_book_type(Book *book);
+char *get_book_genre(Book *book);
 
 char *get_fiction_book_type(FictionBook *book);
-
-char *get_children_book_type(ChildrenBook *book);

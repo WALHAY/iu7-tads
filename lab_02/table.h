@@ -35,9 +35,9 @@ void generate_key_array(Table *table);
 
 void add_entry(Table *table, Book *entry);
 
-void remove_entry(Table *table, size_t index);
+void remove_entry_by_key(Table *table, char *field);
 
-void print_table_entry(Book *entry);
+void print_by_author(Table *table, char *author);
 
 void print_table_by_keys(Table *table);
 

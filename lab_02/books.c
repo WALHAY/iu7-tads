@@ -9,7 +9,7 @@ int validate_input(char *field, char *title, size_t max_size)
         fgets(temp, max_size, stdin);
     } while (strlen(temp) >= max_size);
     char *newline = strchr(temp, '\n');
-    if(newline)
+    if (newline)
         *newline = '\0';
     strcpy(field, temp);
     return SUCCESS;
@@ -54,8 +54,8 @@ int input_book_common(Book *book)
 int input_book_data(Book *book)
 {
     char *options[] = {"Technical", "Fiction", "Children"};
-    int rc = input_enum((size_t *)&book->type, 3, options);
-    switch (book->type)
+    int rc = input_enum((size_t *)&book->genre, 3, options);
+    switch (book->genre)
     {
     case TECHNICAL:
         input_technical_book(&book->data.technical);
@@ -91,19 +91,20 @@ int input_children_book(ChildrenBook *book)
     input_value((size_t *)&book->minimalAge, "minimal age", true, 100);
     char *options[] = {"Fairy Tale", "Children Poetry"};
     input_enum((size_t *)&book->type, 2, options);
+    book->type += POETRY + 1;
     return SUCCESS;
 }
 
-char *get_book_type(Book *book)
+char *get_book_genre(Book *book)
 {
-    switch (book->type)
+    switch (book->genre)
     {
-        case TECHNICAL:
-            return "Technical";
-        case FICTION:
-            return "Fiction";
-        case CHILDREN:
-            return "Children";
+    case TECHNICAL:
+        return "Technical";
+    case FICTION:
+        return "Fiction";
+    case CHILDREN:
+        return "Children";
     }
 }
 
@@ -117,16 +118,9 @@ char *get_fiction_book_type(FictionBook *book)
         return "Play";
     case POETRY:
         return "Poetry";
-    }
-}
-
-char *get_children_book_type(ChildrenBook *book)
-{
-    switch (book->type)
-    {
     case FAIRY_TALE:
         return "Fairy tale";
     case CHILD_POETRY:
-        return "Children poetry";
+        return "Child poetry";
     }
 }

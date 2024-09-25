@@ -1,9 +1,16 @@
 #pragma once
 
-#define MAX_SURNAME_LEN 25
-#define MAX_TITLE_LEN 40
-#define MAX_PUBLISHER_LEN 40
-#define MAX_INDUSTRY_LEN 40
+#define MAX_SURNAME_LEN 15
+#define MAX_TITLE_LEN 20
+#define MAX_PUBLISHER_LEN 20
+#define MAX_INDUSTRY_LEN 15
+
+#define MAX_TYPE_WIDTH 12
+#define MAX_AGE_WIDTH 7
+#define MAX_GENRE_WIDTH 9
+#define MAX_DOMESTIC_WIDTH 12
+#define MAX_PAGES_WIDTH 5
+#define MAX_YEAR_WIDTH 4
 
 #define SUCCESS 0
 #define IO_ERR 1

@@ -3,8 +3,11 @@
 
 int main(void)
 {
+    Table table;
     Book book;
     input_book(&book);
-    print_table_entry(&book);
+    add_entry(&table, &book);
+    print_table_by_entries(&table);
+
     return SUCCESS;
 }
