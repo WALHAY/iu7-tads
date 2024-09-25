@@ -10,7 +10,7 @@
 
 typedef enum
 {
-    TECHINCAL,
+    TECHNICAL,
     FICTION,
     CHILDREN
 } EBookType;
@@ -83,12 +83,8 @@ int input_fiction_book(FictionBook *book);
 
 int input_children_book(ChildrenBook *book);
 
-void print_book(Book *book);
+char *get_book_type(Book *book);
 
-void print_book_common(Book *book);
+char *get_fiction_book_type(FictionBook *book);
 
-void print_technical_book(TechnicalBook *book);
-
-void print_fiction_book(FictionBook *book);
-
-void print_children_book(ChildrenBook *book);
+char *get_children_book_type(ChildrenBook *book);

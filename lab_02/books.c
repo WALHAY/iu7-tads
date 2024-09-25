@@ -8,6 +8,9 @@ int validate_input(char *field, char *title, size_t max_size)
         printf("Enter %s: ", title);
         fgets(temp, max_size, stdin);
     } while (strlen(temp) >= max_size);
+    char *newline = strchr(temp, '\n');
+    if(newline)
+        *newline = '\0';
     strcpy(field, temp);
     return SUCCESS;
 }
@@ -54,7 +57,7 @@ int input_book_data(Book *book)
     int rc = input_enum((size_t *)&book->type, 3, options);
     switch (book->type)
     {
-    case TECHINCAL:
+    case TECHNICAL:
         input_technical_book(&book->data.technical);
         break;
     case FICTION:
@@ -91,64 +94,39 @@ int input_children_book(ChildrenBook *book)
     return SUCCESS;
 }
 
-void print_book(Book *book)
+char *get_book_type(Book *book)
 {
-    print_book_common(book);
     switch (book->type)
     {
-    case TECHINCAL:
-        print_technical_book(&book->data.technical);
-        break;
-    case FICTION:
-        print_fiction_book(&book->data.fiction);
-        break;
-    case CHILDREN:
-        print_children_book(&book->data.children);
-        break;
+        case TECHNICAL:
+            return "Technical";
+        case FICTION:
+            return "Fiction";
+        case CHILDREN:
+            return "Children";
     }
 }
 
-void print_book_common(Book *book)
+char *get_fiction_book_type(FictionBook *book)
 {
-    printf("\nAuthor: %s\nTitle: %s\nPublisher: %s\nPages: %zu\n", book->authorSurname, book->bookTitle,
-           book->publisher, book->pageCount);
-}
-
-void print_technical_book(TechnicalBook *book)
-{
-    printf("\nIndustry: %s\nDomestic: %s\nPublish year: %zu\n", book->industry, book->domestic ? "Yes" : "No",
-           book->publishYear);
-}
-
-void print_fiction_book(FictionBook *book)
-{
-    char *book_type = NULL;
     switch (book->type)
     {
     case NOVEL:
-        book_type = "Novel";
-        break;
+        return "Novel";
     case PLAY:
-        book_type = "Play";
-        break;
+        return "Play";
     case POETRY:
-        book_type = "Poetry";
-        break;
+        return "Poetry";
     }
-    printf("\nBook type: %s\n", book_type);
 }
 
-void print_children_book(ChildrenBook *book)
+char *get_children_book_type(ChildrenBook *book)
 {
-    char *book_type = NULL;
     switch (book->type)
     {
     case FAIRY_TALE:
-        book_type = "Fairy tale";
-        break;
+        return "Fairy tale";
     case CHILD_POETRY:
-        book_type = "Children poetry";
-        break;
+        return "Children poetry";
     }
-    printf("\nBook type: %s\n", book_type);
 }

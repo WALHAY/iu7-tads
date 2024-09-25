@@ -67,20 +67,16 @@ void remove_entry_by_key(Table *table, char *field)
     }
 }
 
-static void print_column(size_t length, char *format, ...)
+static void print_column(char *text, size_t length)
 {
-    va_list ap;
-    va_start(ap, format);
     size_t diff = length - strlen(text);
 
     printf("|");
-    size_t i = 0;
-    for (; i <= diff / 2; ++i)
+    for (size_t i = 0; i <= diff / 2; ++i)
         printf(" ");
-    printf(format, ap);
-    for (; i <= diff; ++i)
+    printf("%s", text);
+    for (size_t i = 0; i <= diff / 2; ++i)
         printf(" ");
-    va_end(ap);
 }
 
 // author - title - publisher - pages - type -
@@ -89,7 +85,22 @@ void print_table_entry(Book *entry)
     print_column(entry->authorSurname, MAX_SURNAME_LEN + 2);
     print_column(entry->bookTitle, MAX_TITLE_LEN + 2);
     print_column(entry->publisher, MAX_PUBLISHER_LEN + 2);
-    print_column(itoa(entry->pageCount), 10);
+    char pages[25];
+    sprintf(pages, "%zu", entry->pageCount);
+    print_column(pages, 8);
+    // technical literature part
+    bool technical = entry->type == TECHNICAL;
+    print_column(technical ? entry->data.technical.industry : "-", MAX_INDUSTRY_LEN);
+    print_column(technical ? (entry->data.technical.domestic ? "Domestic" : "Non Domestic") : "-", 14);
+    char year[5];
+    sprintf(year, (technical ? "%zu" : "-"), entry->data.technical.publishYear);
+    print_column(year, 7);
+    // fiction literature part
+    print_column(entry->type == FICTION ? get_fiction_book_type(entry) : "-", 10);
+    // children literature part
+    bool children = entry->type == CHILDREN;
+    char minima
+    print_column(children ? entry->data.children.minimalAge)
 }
 
 void print_table_by_keys(Table *table);
