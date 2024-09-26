@@ -18,3 +18,5 @@ void validate_input(char *field, char *title, size_t max_size);
 size_t input_enum(size_t max_options, char **options);
 
 size_t input_value(char *title, bool min_limit, bool max_limit, int min_value, int max_value);
+
+char *get_error_message(int error);

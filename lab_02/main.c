@@ -8,8 +8,12 @@ int main(void)
 
     int rc = SUCCESS;
 
-    while (!rc)
+    while (true)
+    {
         rc = execute_operation(&table);
+        if(rc)
+            printf("%s\n", get_error_message(rc));
+    }
 
     return SUCCESS;
 }

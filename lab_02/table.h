@@ -35,14 +35,14 @@ void generate_key_array(Table *table);
 
 int add_entry(Table *table, Book *entry);
 
-void remove_entry_by_key(Table *table, char *field);
+int remove_entry_by_key(Table *table, char *title);
 
-void print_by_author(Table *table, char *author);
+int print_by_author(Table *table, char *author);
 
-void print_table_by_keys(Table *table);
+int print_table_by_keys(Table *table);
 
-void print_table_by_entries(Table *table);
+int print_table_by_entries(Table *table);
 
-size_t import_table_from_file(Table *table, FILE *file);
+int import_table_from_file(Table *table, FILE *file);
 
-size_t export_table_to_file(Table *table, FILE *file);
+int export_table_to_file(Table *table, FILE *file);

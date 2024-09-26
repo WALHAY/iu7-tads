@@ -16,19 +16,25 @@
 
 #define MAX_FILENAME_LEN 255
 
-#define SUCCESS 0
-#define IO_ERR 1
-#define READ_ERROR 2
-#define WRITE_ERROR 3
-#define WRONG_FILE 4
-#define ADD_OVERFLOW 5
-#define NAN_ERROR 6
+typedef enum
+{
+    SUCCESS = 0,
+    NULLPTR_ERROR,
+    OPEN_FILE_ERROR,
+    WRONG_FILE_FMT_ERROR,
+    READ_ERROR,
+    ADD_OVERFLOW,
+    NAN_ERROR,
+    NOT_FOUND,
+    EMPTY_TABLE
+} ERRORS;
 
 typedef enum
 {
     SORT_ENTRIES,
     SORT_KEYS,
     ADD_ENTRY,
+    REMOVE_ENTRY,
     FIND_BY_KEY,
     PRINT_ENTRIES,
     PRINT_KEYS,

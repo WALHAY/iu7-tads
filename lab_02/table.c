@@ -1,13 +1,15 @@
 #include "table.h"
 
-static size_t get_entries_count_in_file(FILE *file, size_t entry_size, int *rc)
+static int get_entries_count_in_file(FILE *file, size_t entry_size, size_t *count)
 {
     fseek(file, 0L, SEEK_END);
     size_t size = ftell(file);
     rewind(file);
-    if(size % entry_size != 0)
-        *rc = WRONG_FILE;
-    return size / entry_size;
+    if (size % entry_size != 0)
+        return WRONG_FILE_FMT_ERROR;
+
+    *count = size / entry_size;
+    return SUCCESS;
 }
 
 static void print_char_i_times(char c, size_t i)
@@ -152,82 +154,120 @@ void generate_key_array(Table *table)
 
 int add_entry(Table *table, Book *entry)
 {
+    if(!table || !entry)
+        return NULLPTR_ERROR;
+
     if (table->size >= table->max_size)
         return ADD_OVERFLOW;
 
-    printf("%s", entry->authorSurname);
     table->entrySet[table->size] = *entry;
     table->keySet[table->size] = (Key){entry->authorSurname, table->size++};
     return SUCCESS;
 }
 
-void remove_entry_by_key(Table *table, char *field)
+int remove_entry_by_key(Table *table, char *title)
 {
+    if(!table || !title)
+        return NULLPTR_ERROR;
+
+    bool found = false;
+    size_t found_index = 0;
     for (size_t i = 0; i < table->size; ++i)
-        if (!strcmp(field, table->entrySet[i].bookTitle))
-            for (size_t j = i; j + 1 < table->size; ++j)
-                table->entrySet[j] = table->entrySet[j + 1];
+        if (!strcmp(title, table->entrySet[i].bookTitle))
+        {
+            found = true;
+            found_index = i;
+            break;
+        }
+
+    if(!found)
+        return NOT_FOUND;
+
+    table->size--;
+    for(size_t i = found_index; i < table->size; ++i)
+        table->entrySet[i] = table->entrySet[i + 1];
+
+    return SUCCESS;
 }
 
-void print_by_author(Table *table, char *author)
+int print_by_author(Table *table, char *author)
 {
-    if (table->size)
-    {
-        print_table_header();
+    if (!table)
+        return NULLPTR_ERROR;
 
-        for (size_t i = 0; i < table->size; ++i)
-            if (!strcmp(author, table->entrySet[i].authorSurname))
-                print_table_entry(table->entrySet + i);
+    if (!table->size)
+        return EMPTY_TABLE;
 
-        print_splitter();
-    }
-    else
-        printf("Error: Empty table!\n");
+    bool found = false;
+    size_t found_index = 0;
+
+    for (size_t i = 0; i < table->size; ++i)
+        if (!strcmp(author, table->entrySet[i].authorSurname))
+        {
+            found_index = i;
+            found = true;
+            break;
+        }
+
+    if (!found)
+        return NOT_FOUND;
+
+    print_table_header();
+    print_table_entry(table->entrySet + found_index);
+
+    print_splitter();
+    return SUCCESS;
 }
 
-void print_table_by_keys(Table *table)
+int print_table_by_keys(Table *table)
 {
-    if (table->size)
-    {
-        print_table_header();
+    if (!table)
+        return NULLPTR_ERROR;
 
-        for (size_t i = 0; i < table->size; ++i)
-            print_table_entry(table->keySet[i].index + table->entrySet);
-        print_splitter();
-    }
-    else
-        printf("Error: Empty table!");
+    if (!table->size)
+        return EMPTY_TABLE;
+
+    print_table_header();
+
+    for (size_t i = 0; i < table->size; ++i)
+        print_table_entry(table->keySet[i].index + table->entrySet);
+    print_splitter();
+    return SUCCESS;
 }
 
-void print_table_by_entries(Table *table)
+int print_table_by_entries(Table *table)
 {
-    if (table->size)
-    {
-        print_table_header();
+    if (!table)
+        return NULLPTR_ERROR;
 
-        for (size_t i = 0; i < table->size; ++i)
-            print_table_entry(table->entrySet + i);
-        print_splitter();
-    }
-    else
-        printf("Error: Empty table!");
+    if (!table->size)
+        return EMPTY_TABLE;
+
+    print_table_header();
+
+    for (size_t i = 0; i < table->size; ++i)
+        print_table_entry(table->entrySet + i);
+    print_splitter();
+    return SUCCESS;
 }
 
-size_t import_table_from_file(Table *table, FILE *file)
+int import_table_from_file(Table *table, FILE *file)
 {
-    int rc = SUCCESS;
-    size_t entries = get_entries_count_in_file(file, sizeof(Book), &rc);
-    if (!rc && entries != 0)
-    {
-        printf("Rc: %d\n", rc);
-        fread(table->entrySet, sizeof(Book), entries, file);
-        table->size = entries;
-        generate_key_array(table);
-    }
-    return rc;
+    if (!table || !file)
+        return NULLPTR_ERROR;
+
+    size_t count = 0;
+    if(get_entries_count_in_file(file, sizeof(Book), &count))
+        return WRONG_FILE_FMT_ERROR;
+
+    if(fread(table->entrySet, sizeof(Book), count, file) != count)
+        return READ_ERROR;
+    table->size = count;
+    generate_key_array(table);
+    return SUCCESS;
 }
 
-size_t export_table_to_file(Table *table, FILE *file)
+int export_table_to_file(Table *table, FILE *file)
 {
     fwrite(table->entrySet, sizeof(Book), table->size, file);
     return SUCCESS;

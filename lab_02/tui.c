@@ -1,5 +1,17 @@
 #include "tui.h"
 
+static int safe_int_input(int *value)
+{
+    char temp[20];
+    scanf("%19s", temp);
+    char *end = NULL;
+    long val = strtol(temp, &end, 10);
+    if (errno == ERANGE)
+        return NAN_ERROR;
+    *value = val;
+    return SUCCESS;
+}
+
 void print_rules(void)
 {
     printf("Программа для взаимодействия с таблицей книг\n"
@@ -9,9 +21,9 @@ void print_rules(void)
 
 int execute_operation(Table *table)
 {
-    char *options[] = {"Sort using keys", "Sort using entries", "Add book",    "Find by key", "Print keys",
-                       "Print entries",   "Import data",        "Export data", "Quit"};
-    switch (input_enum(9, options))
+    char *options[] = {"Sort using keys", "Sort using entries", "Add book",    "Remove book", "Find by key",
+                       "Print keys",      "Print entries",      "Import data", "Export data", "Quit"};
+    switch (input_enum(10, options))
     {
     case SORT_ENTRIES:
         sort_table_by_entries(table);
@@ -26,54 +38,55 @@ int execute_operation(Table *table)
         Book book;
         input_book(&book);
 
-        add_entry(table, &book);
-        break;
+        return add_entry(table, &book);
     }
+    case REMOVE_ENTRY:
+        break;
     case FIND_BY_KEY:
-        break;
+    {
+        char title[MAX_TITLE_LEN];
+        validate_input(title, "title to find", MAX_TITLE_LEN);
+        return print_by_author(table, title);
+    }
     case PRINT_ENTRIES:
-        print_table_by_entries(table);
-        break;
+        return print_table_by_entries(table);
     case PRINT_KEYS:
-        print_table_by_keys(table);
-        break;
+        return print_table_by_keys(table);
     case IMPORT_TABLE:
     {
         char filename[MAX_FILENAME_LEN + 1];
 
-        int local_rc = SUCCESS;
+        int rc = SUCCESS;
         FILE *file = NULL;
         while (true)
         {
-            validate_input(filename, "filename to import data", MAX_FILENAME_LEN);
-            file = open_file(filename, "rb", &local_rc);
-            if (file != NULL && !local_rc)
+            validate_input(filename, "file to import", MAX_FILENAME_LEN);
+            file = open_file(filename, "rb", &rc);
+            if (file != NULL && !rc)
                 break;
-            printf("Error: Failed to read file\n");
+            printf("%s\n", get_error_message(rc));
         }
-        printf("Start reading %s\n", filename);
-        import_table_from_file(table, file);
+        rc = import_table_from_file(table, file);
         close_file(file);
-        break;
+        return rc;
     }
     case EXPORT_TABLE:
     {
         char filename[MAX_FILENAME_LEN + 1];
 
-        int local_rc = SUCCESS;
+        int rc = SUCCESS;
         FILE *file = NULL;
         while (true)
         {
-            validate_input(filename, "filename to export data", MAX_FILENAME_LEN);
-            file = open_file(filename, "wb", &local_rc);
-            if (file != NULL && !local_rc)
+            validate_input(filename, "file to export", MAX_FILENAME_LEN);
+            file = open_file(filename, "wb", &rc);
+            if (file != NULL && !rc)
                 break;
-            printf("Error: Wrong Filename\n");
+            printf("%s\n", get_error_message(rc));
         }
-        printf("Start writing %s\n", filename);
-        export_table_to_file(table, file);
+        rc = export_table_to_file(table, file);
         close_file(file);
-        break;
+        return rc;
     }
     case QUIT:
         printf("Exiting process...\n");
@@ -108,27 +121,15 @@ void validate_input(char *field, char *title, size_t max_size)
     strcpy(field, temp);
 }
 
-static int safe_int_input(int *value)
-{
-    char temp[20];
-    scanf("%19s", temp);
-    char *end = NULL;
-    long val = strtol(temp, &end, 10);
-    if (errno == ERANGE)
-        return NAN_ERROR;
-    *value = val;
-    return SUCCESS;
-}
-
 size_t input_enum(size_t max_options, char **options)
 {
-    printf("Possible variants:\n");
+    printf("\nPossible variants:\n");
     for (size_t i = 0; i < max_options; ++i)
         printf("\t%zu. %s\n", i, options[i]);
 
     size_t option = 0;
     printf("Option: ");
-    while (safe_int_input((int*)&option) || option >= max_options)
+    while (safe_int_input((int *)&option) || option >= max_options)
         printf("Error: Wrong option!\nEnter option again: ");
     return option;
 }
@@ -140,4 +141,30 @@ size_t input_value(char *title, bool min_limit, bool max_limit, int min_value, i
     while (safe_int_input(&value) || (max_limit && value > max_value) || (min_limit && value < min_value))
         printf("Error: Wrong value!\nEnter %s again: ", title);
     return value;
+}
+
+char *get_error_message(int error)
+{
+    switch (error)
+    {
+    case SUCCESS:
+        return "Warning: Everything is fine! IDK?";
+    case NULLPTR_ERROR:
+        return "Error: Null pointer passed to function!";
+    case OPEN_FILE_ERROR:
+        return "Error: Failed to open file!";
+    case WRONG_FILE_FMT_ERROR:
+        return "Error: Wrong file or corrupted file!";
+    case READ_ERROR:
+        return "Error: Failed to read data from file!";
+    case ADD_OVERFLOW:
+        return "Error: Failed to add entry to table because of max size of table!";
+    case NAN_ERROR:
+        return "Error: Failed to input number!(Possibly wrong symbols were used)";
+    case NOT_FOUND:
+        return "Error: Entry wasn't found";
+    case EMPTY_TABLE:
+        return "Error: Table is empty!";
+    }
+    return "Error: Error message not specified!";
 }
