@@ -1,5 +1,7 @@
 #pragma once
 
+#define MAX_ENTRIES 40
+
 #define MAX_SURNAME_LEN 15
 #define MAX_TITLE_LEN 20
 #define MAX_PUBLISHER_LEN 20
@@ -12,17 +14,25 @@
 #define MAX_PAGES_WIDTH 5
 #define MAX_YEAR_WIDTH 4
 
+#define MAX_FILENAME_LEN 255
+
 #define SUCCESS 0
 #define IO_ERR 1
 #define READ_ERROR 2
-#define WRITE_ERROR 2
+#define WRITE_ERROR 3
+#define WRONG_FILE 4
+#define ADD_OVERFLOW 5
+#define NAN_ERROR 6
 
 typedef enum
 {
     SORT_ENTRIES,
     SORT_KEYS,
+    ADD_ENTRY,
     FIND_BY_KEY,
     PRINT_ENTRIES,
     PRINT_KEYS,
-    IMPORT_TABLE
-} OP_CODES;
+    IMPORT_TABLE,
+    EXPORT_TABLE,
+    QUIT
+} OPCODES;

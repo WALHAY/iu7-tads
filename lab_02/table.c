@@ -1,5 +1,15 @@
 #include "table.h"
 
+static size_t get_entries_count_in_file(FILE *file, size_t entry_size, int *rc)
+{
+    fseek(file, 0L, SEEK_END);
+    size_t size = ftell(file);
+    rewind(file);
+    if(size % entry_size != 0)
+        *rc = WRONG_FILE;
+    return size / entry_size;
+}
+
 static void print_char_i_times(char c, size_t i)
 {
     for (size_t j = 0; j < i; ++j)
@@ -140,34 +150,39 @@ void generate_key_array(Table *table)
         table->keySet[i] = (Key){table->entrySet[i].authorSurname, i};
 }
 
-void add_entry(Table *table, Book *entry)
+int add_entry(Table *table, Book *entry)
 {
     if (table->size >= table->max_size)
-        return;
+        return ADD_OVERFLOW;
 
+    printf("%s", entry->authorSurname);
     table->entrySet[table->size] = *entry;
     table->keySet[table->size] = (Key){entry->authorSurname, table->size++};
+    return SUCCESS;
 }
 
 void remove_entry_by_key(Table *table, char *field)
 {
     for (size_t i = 0; i < table->size; ++i)
-    {
-        if (!strcmp(field, table->keySet[i].authorSurname))
-        {
-        }
-    }
+        if (!strcmp(field, table->entrySet[i].bookTitle))
+            for (size_t j = i; j + 1 < table->size; ++j)
+                table->entrySet[j] = table->entrySet[j + 1];
 }
 
 void print_by_author(Table *table, char *author)
 {
-    for (size_t i = 0; i < table->size; ++i)
+    if (table->size)
     {
-        if (!strcmp(author, table->keySet[i].authorSurname))
-        {
-            print_table_entry(table->entrySet + table->keySet[i].index);
-        }
+        print_table_header();
+
+        for (size_t i = 0; i < table->size; ++i)
+            if (!strcmp(author, table->entrySet[i].authorSurname))
+                print_table_entry(table->entrySet + i);
+
+        print_splitter();
     }
+    else
+        printf("Error: Empty table!\n");
 }
 
 void print_table_by_keys(Table *table)
@@ -198,14 +213,22 @@ void print_table_by_entries(Table *table)
         printf("Error: Empty table!");
 }
 
-size_t import_table_from_file(FILE *file, Table *table)
+size_t import_table_from_file(Table *table, FILE *file)
 {
-    Book book;
-    while (import_entry_from_file(file, ))
-        return SUCCESS;
+    int rc = SUCCESS;
+    size_t entries = get_entries_count_in_file(file, sizeof(Book), &rc);
+    if (!rc && entries != 0)
+    {
+        printf("Rc: %d\n", rc);
+        fread(table->entrySet, sizeof(Book), entries, file);
+        table->size = entries;
+        generate_key_array(table);
+    }
+    return rc;
 }
 
-size_t export_table_to_file(FILE *file, Table *table)
+size_t export_table_to_file(Table *table, FILE *file)
 {
+    fwrite(table->entrySet, sizeof(Book), table->size, file);
     return SUCCESS;
 }

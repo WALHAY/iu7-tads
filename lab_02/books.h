@@ -59,24 +59,20 @@ typedef struct
     UBookData data;
 } Book;
 
-int input_book(Book *book);
+void input_book(Book *book);
 
-int input_book_common(Book *book);
+void input_book_common(Book *book);
 
-int input_book_type(Book *book);
+void input_book_type(Book *book);
 
-int input_book_data(Book *book);
+void input_book_data(Book *book);
 
-int input_technical_book(TechnicalBook *book);
+void input_technical_book(TechnicalBook *book);
 
-int input_fiction_book(FictionBook *book);
+void input_fiction_book(FictionBook *book);
 
-int input_children_book(ChildrenBook *book);
+void input_children_book(ChildrenBook *book);
 
 char *get_book_genre(Book *book);
 
 char *get_fiction_book_type(FictionBook *book);
-
-size_t import_entry_from_file(FILE *file, Book *book);
-
-size_t export_entry_to_file(FILE *file, Book *book);

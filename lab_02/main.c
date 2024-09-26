@@ -3,12 +3,13 @@
 
 int main(void)
 {
-    Table table = {.size = 0, .max_size = 40};
+    print_rules();
+    Table table = {.size = 0, .max_size = MAX_ENTRIES};
 
-    while (true)
-    {
-        execute_operation(&table);
-    }
+    int rc = SUCCESS;
+
+    while (!rc)
+        rc = execute_operation(&table);
 
     return SUCCESS;
 }

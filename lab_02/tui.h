@@ -1,7 +1,9 @@
 #pragma once
 
 #include "defines.h"
+#include "fileio.h"
 #include "table.h"
+#include <errno.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -9,10 +11,10 @@
 
 void print_rules(void);
 
-void execute_operation(Table *table);
+int execute_operation(Table *table);
 
-int validate_input(char *field, char *title, size_t max_size);
+void validate_input(char *field, char *title, size_t max_size);
 
-int input_enum(size_t *option, size_t max_options, char **options);
+size_t input_enum(size_t max_options, char **options);
 
-int input_value(size_t *value, char *title, bool has_range, size_t max_value);
+size_t input_value(char *title, bool min_limit, bool max_limit, int min_value, int max_value);

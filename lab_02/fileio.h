@@ -3,6 +3,6 @@
 #include "defines.h"
 #include <stdio.h>
 
-int open_file(const char *filename, const char *mode, FILE **file);
+FILE *open_file(char *name, char *mode, int *rc);
 
 void close_file(FILE *file);

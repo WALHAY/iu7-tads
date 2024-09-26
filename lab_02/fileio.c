@@ -1,11 +1,11 @@
 #include "fileio.h"
 
-int open_file(const char *filename, const char *mode, FILE **file)
+FILE *open_file(char *name, char *mode, int *rc)
 {
-    *file = fopen(filename, mode);
-    if (!file)
-        return IO_ERR;
-    return SUCCESS;
+    FILE *file = fopen(name, mode);
+    if (file == NULL)
+        *rc = IO_ERR;
+    return file;
 }
 
 void close_file(FILE *file)
