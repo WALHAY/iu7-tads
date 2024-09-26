@@ -9,9 +9,9 @@ void input_book(Book *book)
 
 void input_book_common(Book *book)
 {
-    validate_input(book->authorSurname, "author surname", MAX_SURNAME_LEN);
-    validate_input(book->bookTitle, "book title", MAX_TITLE_LEN);
-    validate_input(book->publisher, "publisher", MAX_PUBLISHER_LEN);
+    input_string(book->authorSurname, "author surname", MAX_SURNAME_LEN);
+    input_string(book->bookTitle, "book title", MAX_TITLE_LEN);
+    input_string(book->publisher, "publisher", MAX_PUBLISHER_LEN);
     book->pageCount = input_value("page count", false, false, 0, 0);
 }
 
@@ -35,7 +35,7 @@ void input_book_data(Book *book)
 
 void input_technical_book(TechnicalBook *book)
 {
-    validate_input(book->industry, "industry", MAX_INDUSTRY_LEN);
+    input_string(book->industry, "industry", MAX_INDUSTRY_LEN);
     char *options[] = {"Domestic", "Non domestic"};
     book->domestic = input_enum(2, options);
     book->publishYear = input_value("publish year", true, true, 0, 2024);

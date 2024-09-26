@@ -13,7 +13,7 @@ void print_rules(void);
 
 int execute_operation(Table *table);
 
-void validate_input(char *field, char *title, size_t max_size);
+void input_string(char *field, char *title, size_t max_size);
 
 size_t input_enum(size_t max_options, char **options);
 

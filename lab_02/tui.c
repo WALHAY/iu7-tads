@@ -43,13 +43,13 @@ int execute_operation(Table *table)
     case REMOVE_ENTRY:
     {
         char title[MAX_TITLE_LEN];
-        validate_input(title, "title to remove", MAX_TITLE_LEN);
+        input_string(title, "title to remove", MAX_TITLE_LEN);
         return remove_entry_by_key(table, title);
     }
     case FIND_BY_KEY:
     {
         char title[MAX_TITLE_LEN];
-        validate_input(title, "author to find", MAX_TITLE_LEN);
+        input_string(title, "author to find", MAX_TITLE_LEN);
         return print_by_author(table, title);
     }
     case PRINT_ENTRIES:
@@ -62,12 +62,11 @@ int execute_operation(Table *table)
 
         int rc = SUCCESS;
         FILE *file = NULL;
-        validate_input(filename, "file to import", MAX_FILENAME_LEN);
+        input_string(filename, "file to import", MAX_FILENAME_LEN);
         file = open_file(filename, "rb", &rc);
         if(file == NULL || rc)
             return rc;
 
-        printf("%s\n", get_error_message(rc));
         rc = import_table_from_file(table, file);
         close_file(file);
         return rc;
@@ -80,7 +79,7 @@ case EXPORT_TABLE:
     FILE *file = NULL;
     while (true)
     {
-        validate_input(filename, "file to export", MAX_FILENAME_LEN);
+        input_string(filename, "file to export", MAX_FILENAME_LEN);
         file = open_file(filename, "wb", &rc);
         if (file != NULL && !rc)
             break;
@@ -98,7 +97,7 @@ case QUIT:
 return SUCCESS;
 }
 
-void validate_input(char *field, char *title, size_t max_size)
+void input_string(char *field, char *title, size_t max_size)
 {
     char temp[max_size + 1];
     while (true)
