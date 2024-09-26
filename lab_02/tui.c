@@ -3,7 +3,7 @@
 static int safe_int_input(int *value)
 {
     char temp[20];
-    scanf("%19s", temp);
+    fgets(temp, 20, stdin);
     char *end = NULL;
     long val = strtol(temp, &end, 10);
     if (errno == ERANGE)
@@ -41,11 +41,15 @@ int execute_operation(Table *table)
         return add_entry(table, &book);
     }
     case REMOVE_ENTRY:
-        break;
+    {
+        char title[MAX_TITLE_LEN];
+        validate_input(title, "title to remove", MAX_TITLE_LEN);
+        return remove_entry_by_key(table, title);
+    }
     case FIND_BY_KEY:
     {
         char title[MAX_TITLE_LEN];
-        validate_input(title, "title to find", MAX_TITLE_LEN);
+        validate_input(title, "author to find", MAX_TITLE_LEN);
         return print_by_author(table, title);
     }
     case PRINT_ENTRIES:
@@ -58,42 +62,40 @@ int execute_operation(Table *table)
 
         int rc = SUCCESS;
         FILE *file = NULL;
-        while (true)
-        {
-            validate_input(filename, "file to import", MAX_FILENAME_LEN);
-            file = open_file(filename, "rb", &rc);
-            if (file != NULL && !rc)
-                break;
-            printf("%s\n", get_error_message(rc));
-        }
+        validate_input(filename, "file to import", MAX_FILENAME_LEN);
+        file = open_file(filename, "rb", &rc);
+        if(file == NULL || rc)
+            return rc;
+
+        printf("%s\n", get_error_message(rc));
         rc = import_table_from_file(table, file);
         close_file(file);
         return rc;
     }
-    case EXPORT_TABLE:
+case EXPORT_TABLE:
+{
+    char filename[MAX_FILENAME_LEN + 1];
+
+    int rc = SUCCESS;
+    FILE *file = NULL;
+    while (true)
     {
-        char filename[MAX_FILENAME_LEN + 1];
-
-        int rc = SUCCESS;
-        FILE *file = NULL;
-        while (true)
-        {
-            validate_input(filename, "file to export", MAX_FILENAME_LEN);
-            file = open_file(filename, "wb", &rc);
-            if (file != NULL && !rc)
-                break;
-            printf("%s\n", get_error_message(rc));
-        }
-        rc = export_table_to_file(table, file);
-        close_file(file);
-        return rc;
+        validate_input(filename, "file to export", MAX_FILENAME_LEN);
+        file = open_file(filename, "wb", &rc);
+        if (file != NULL && !rc)
+            break;
+        printf("%s\n", get_error_message(rc));
     }
-    case QUIT:
-        printf("Exiting process...\n");
-        exit(SUCCESS);
-    }
+    rc = export_table_to_file(table, file);
+    close_file(file);
+    return rc;
+}
+case QUIT:
+    printf("Exiting process...\n");
+    exit(SUCCESS);
+}
 
-    return SUCCESS;
+return SUCCESS;
 }
 
 void validate_input(char *field, char *title, size_t max_size)
