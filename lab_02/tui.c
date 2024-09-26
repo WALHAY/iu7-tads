@@ -46,13 +46,14 @@ int execute_operation(Table *table)
         while (true)
         {
             validate_input(filename, "filename to import data", MAX_FILENAME_LEN);
-            file = open_file(filename, "wb", &local_rc);
+            file = open_file(filename, "rb", &local_rc);
             if (file != NULL && !local_rc)
                 break;
             printf("Error: Failed to read file\n");
         }
         printf("Start reading %s\n", filename);
-        export_table_to_file(table, file);
+        import_table_from_file(table, file);
+        close_file(file);
         break;
     }
     case EXPORT_TABLE:
@@ -71,6 +72,7 @@ int execute_operation(Table *table)
         }
         printf("Start writing %s\n", filename);
         export_table_to_file(table, file);
+        close_file(file);
         break;
     }
     case QUIT:
