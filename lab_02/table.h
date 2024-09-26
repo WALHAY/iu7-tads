@@ -42,3 +42,7 @@ void print_by_author(Table *table, char *author);
 void print_table_by_keys(Table *table);
 
 void print_table_by_entries(Table *table);
+
+size_t import_table_from_file(FILE *file, Table *table);
+
+size_t export_table_to_file(FILE *file, Table *table);

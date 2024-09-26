@@ -59,12 +59,6 @@ typedef struct
     UBookData data;
 } Book;
 
-int validate_input(char *field, char *title, size_t max_size);
-
-int input_enum(size_t *option, size_t max_options, char **options);
-
-int input_value(size_t *value, char *title, bool has_range, size_t max_value);
-
 int input_book(Book *book);
 
 int input_book_common(Book *book);
@@ -82,3 +76,7 @@ int input_children_book(ChildrenBook *book);
 char *get_book_genre(Book *book);
 
 char *get_fiction_book_type(FictionBook *book);
+
+size_t import_entry_from_file(FILE *file, Book *book);
+
+size_t export_entry_to_file(FILE *file, Book *book);

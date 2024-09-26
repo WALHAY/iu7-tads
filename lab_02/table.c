@@ -29,7 +29,7 @@ static void print_splitter(void)
     printf("+");
     // children literature part
     print_char_i_times('-', MAX_AGE_WIDTH + 2);
-    printf("|\n");
+    printf("+\n");
 }
 
 static void print_column(char *text, size_t length)
@@ -170,12 +170,42 @@ void print_by_author(Table *table, char *author)
     }
 }
 
-void print_table_by_keys(Table *table);
+void print_table_by_keys(Table *table)
+{
+    if (table->size)
+    {
+        print_table_header();
+
+        for (size_t i = 0; i < table->size; ++i)
+            print_table_entry(table->keySet[i].index + table->entrySet);
+        print_splitter();
+    }
+    else
+        printf("Error: Empty table!");
+}
 
 void print_table_by_entries(Table *table)
 {
-    print_table_header();
-    // for (size_t i = 0; i < table->size; ++i)
-    print_table_entry(table->entrySet);
-    // print_splitter();
+    if (table->size)
+    {
+        print_table_header();
+
+        for (size_t i = 0; i < table->size; ++i)
+            print_table_entry(table->entrySet + i);
+        print_splitter();
+    }
+    else
+        printf("Error: Empty table!");
+}
+
+size_t import_table_from_file(FILE *file, Table *table)
+{
+    Book book;
+    while (import_entry_from_file(file, ))
+        return SUCCESS;
+}
+
+size_t export_table_to_file(FILE *file, Table *table)
+{
+    return SUCCESS;
 }

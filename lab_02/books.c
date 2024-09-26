@@ -1,39 +1,5 @@
 #include "books.h"
-
-int validate_input(char *field, char *title, size_t max_size)
-{
-    char temp[max_size + 1];
-    do
-    {
-        printf("Enter %s: ", title);
-        fgets(temp, max_size, stdin);
-    } while (strlen(temp) >= max_size);
-    char *newline = strchr(temp, '\n');
-    if (newline)
-        *newline = '\0';
-    strcpy(field, temp);
-    return SUCCESS;
-}
-
-int input_enum(size_t *option, size_t max_options, char **options)
-{
-    printf("\nPossible variants:\n");
-    for (size_t i = 0; i < max_options; ++i)
-        printf("\t%zu. %s\n", i, options[i]);
-
-    printf("Option: ");
-    while (!scanf("%zu", option) || *option >= max_options)
-        printf("\nWrong option! Enter option again: ");
-    return SUCCESS;
-}
-
-int input_value(size_t *value, char *title, bool has_range, size_t max_value)
-{
-    printf("Enter %s: ", title);
-    while (!scanf("%zu", value) || (has_range && *value > max_value))
-        printf("Enter %s again: ", title);
-    return SUCCESS;
-}
+#include "tui.h"
 
 int input_book(Book *book)
 {
@@ -123,4 +89,20 @@ char *get_fiction_book_type(FictionBook *book)
     case CHILD_POETRY:
         return "Child poetry";
     }
+}
+
+size_t import_entry_from_file(FILE *file, Book *book)
+{
+    if (fread(book, sizeof(Book), 1, file))
+        return READ_ERROR;
+
+    return SUCCESS;
+}
+
+size_t export_entry_to_file(FILE *file, Book *book)
+{
+    if (fwrite(book, sizeof(Book), 1, file))
+        return WRITE_ERROR;
+
+    return SUCCESS;
 }

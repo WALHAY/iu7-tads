@@ -4,3 +4,5 @@
 #include <stdio.h>
 
 int open_file(const char *filename, const char *mode, FILE **file);
+
+void close_file(FILE *file);

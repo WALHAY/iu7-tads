@@ -1,13 +1,14 @@
-#include "books.h"
 #include "table.h"
+#include "tui.h"
 
 int main(void)
 {
-    Table table;
-    Book book;
-    input_book(&book);
-    add_entry(&table, &book);
-    print_table_by_entries(&table);
+    Table table = {.size = 0, .max_size = 40};
+
+    while (true)
+    {
+        execute_operation(&table);
+    }
 
     return SUCCESS;
 }

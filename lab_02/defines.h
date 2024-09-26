@@ -14,3 +14,15 @@
 
 #define SUCCESS 0
 #define IO_ERR 1
+#define READ_ERROR 2
+#define WRITE_ERROR 2
+
+typedef enum
+{
+    SORT_ENTRIES,
+    SORT_KEYS,
+    FIND_BY_KEY,
+    PRINT_ENTRIES,
+    PRINT_KEYS,
+    IMPORT_TABLE
+} OP_CODES;
