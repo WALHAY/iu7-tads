@@ -31,8 +31,10 @@ typedef enum
 
 typedef enum
 {
-    SORT_ENTRIES,
-    SORT_KEYS,
+    BSORT_ENTRIES,
+    BSORT_KEYS,
+    QSORT_ENTRIES,
+    QSORT_KEYS,
     ADD_ENTRY,
     REMOVE_ENTRY,
     FIND_BY_KEY,

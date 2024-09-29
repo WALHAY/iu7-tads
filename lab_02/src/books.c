@@ -1,5 +1,5 @@
-#include "books.h"
-#include "tui.h"
+#include "../inc/books.h"
+#include "../inc/tui.h"
 
 void input_book(Book *book)
 {

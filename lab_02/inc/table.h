@@ -27,9 +27,13 @@ void swap_keys(Key *first, Key *second);
 
 void swap_entries(Book *first, Book *second);
 
-void sort_table_by_keys(Table *table);
+void bsort_table_by_keys(Table *table);
 
-void sort_table_by_entries(Table *table);
+void bsort_table_by_entries(Table *table);
+
+void qsort_table_by_keys(Table *table);
+
+void qsort_table_by_entries(Table *table);
 
 void generate_key_array(Table *table);
 

@@ -1,4 +1,4 @@
-#include "table.h"
+#include "../inc/table.h"
 
 static int get_entries_count_in_file(FILE *file, size_t entry_size, size_t *count)
 {
@@ -128,22 +128,40 @@ void swap_entries(Book *first, Book *second)
     *second = temp;
 }
 
-void sort_table_by_keys(Table *table)
+void bsort_table_by_keys(Table *table)
 {
-    for (size_t i = 0; i < table->size; ++i)
-        for (size_t j = i; j < table->size; ++j)
-            if (compare_keys(table->keySet + i, table->keySet + j))
-                swap_keys(table->keySet + i, table->keySet + j);
+    for (size_t i = 0; i < table->size - 1; ++i)
+        for (size_t j = 0; j < table->size - i - 1; ++j)
+            if (compare_keys(table->keySet + j, table->keySet + j + 1))
+                swap_keys(table->keySet + j, table->keySet + j + 1);
 }
 
-void sort_table_by_entries(Table *table)
+void bsort_table_by_entries(Table *table)
 {
-    for (size_t i = 0; i < table->size; ++i)
-        for (size_t j = i; j < table->size; ++j)
-            if (compare_entries(table->entrySet + i, table->entrySet + i))
-                swap_entries(table->entrySet + i, table->entrySet + j);
+    for (size_t i = 0; i < table->size - 1; ++i)
+        for (size_t j = 0; j < table->size - i - 1; ++j)
+            if (compare_entries(table->entrySet + j, table->entrySet + j + 1))
+                swap_entries(table->entrySet + j, table->entrySet + j + 1);
+}
 
-    generate_key_array(table);
+static int qcompare_keys(const void *first, const void *second)
+{
+    return compare_keys((Key *)first, (Key *)second);
+}
+
+static int qcompare_entries(const void *first, const void *second)
+{
+    return compare_entries((Book *)first, (Book *)second);
+}
+
+void qsort_table_by_keys(Table *table)
+{
+    qsort(table->keySet, table->size, sizeof(Key), qcompare_keys);
+}
+
+void qsort_table_by_entries(Table *table)
+{
+    qsort(table->entrySet, table->size, sizeof(Book), qcompare_entries);
 }
 
 void generate_key_array(Table *table)
@@ -154,7 +172,7 @@ void generate_key_array(Table *table)
 
 int add_entry(Table *table, Book *entry)
 {
-    if(!table || !entry)
+    if (!table || !entry)
         return NULLPTR_ERROR;
 
     if (table->size >= table->max_size)
@@ -167,7 +185,7 @@ int add_entry(Table *table, Book *entry)
 
 int remove_entry_by_key(Table *table, char *title)
 {
-    if(!table || !title)
+    if (!table || !title)
         return NULLPTR_ERROR;
 
     bool found = false;
@@ -180,11 +198,11 @@ int remove_entry_by_key(Table *table, char *title)
             break;
         }
 
-    if(!found)
+    if (!found)
         return NOT_FOUND;
 
     table->size--;
-    for(size_t i = found_index; i < table->size; ++i)
+    for (size_t i = found_index; i < table->size; ++i)
         table->entrySet[i] = table->entrySet[i + 1];
 
     return SUCCESS;
@@ -257,10 +275,10 @@ int import_table_from_file(Table *table, FILE *file)
         return NULLPTR_ERROR;
 
     size_t count = 0;
-    if(get_entries_count_in_file(file, sizeof(Book), &count))
+    if (get_entries_count_in_file(file, sizeof(Book), &count))
         return WRONG_FILE_FMT_ERROR;
 
-    if(fread(table->entrySet, sizeof(Book), count, file) != count)
+    if (fread(table->entrySet, sizeof(Book), count, file) != count)
         return READ_ERROR;
     table->size = count;
     generate_key_array(table);

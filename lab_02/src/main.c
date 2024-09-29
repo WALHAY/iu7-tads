@@ -1,5 +1,5 @@
-#include "table.h"
-#include "tui.h"
+#include "../inc/table.h"
+#include "../inc/tui.h"
 
 int main(void)
 {
@@ -11,7 +11,7 @@ int main(void)
     while (true)
     {
         rc = execute_operation(&table);
-        if(rc)
+        if (rc)
             printf("%s\n", get_error_message(rc));
     }
 

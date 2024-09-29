@@ -1,4 +1,4 @@
-#include "fileio.h"
+#include "../inc/fileio.h"
 
 FILE *open_file(char *name, char *mode, int *rc)
 {

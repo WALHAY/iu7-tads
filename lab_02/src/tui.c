@@ -1,4 +1,4 @@
-#include "tui.h"
+#include "../inc/tui.h"
 
 static int safe_int_input(int *value)
 {
@@ -21,17 +21,26 @@ void print_rules(void)
 
 int execute_operation(Table *table)
 {
-    char *options[] = {"Sort using keys", "Sort using entries", "Add book",    "Remove book", "Find by key",
-                       "Print keys",      "Print entries",      "Import data", "Export data", "Quit"};
-    switch (input_enum(10, options))
+    char *options[] = {
+        "Entries Bubble Sort", "Keys Bubble Sort", "Entries QSort", "Keys QSort",  "Add book",    "Remove book",
+        "Find by key",         "Print keys",       "Print entries", "Import data", "Export data", "Quit"};
+    switch (input_enum(12, options))
     {
-    case SORT_ENTRIES:
-        sort_table_by_entries(table);
-        printf("Table sorted using entries!\n");
+    case BSORT_ENTRIES:
+        bsort_table_by_entries(table);
+        printf("Entries sorted using bubble sort!\n");
         break;
-    case SORT_KEYS:
-        sort_table_by_keys(table);
-        printf("Table sorted using keys!\n");
+    case BSORT_KEYS:
+        bsort_table_by_keys(table);
+        printf("Keys sorted using bubble sort!\n");
+        break;
+    case QSORT_ENTRIES:
+        qsort_table_by_entries(table);
+        printf("Entries sorted using qsort!\n");
+        break;
+    case QSORT_KEYS:
+        qsort_table_by_keys(table);
+        printf("Keys sorted using qsort!\n");
         break;
     case ADD_ENTRY:
     {
@@ -64,37 +73,37 @@ int execute_operation(Table *table)
         FILE *file = NULL;
         input_string(filename, "file to import", MAX_FILENAME_LEN);
         file = open_file(filename, "rb", &rc);
-        if(file == NULL || rc)
+        if (file == NULL || rc)
             return rc;
 
         rc = import_table_from_file(table, file);
         close_file(file);
         return rc;
     }
-case EXPORT_TABLE:
-{
-    char filename[MAX_FILENAME_LEN + 1];
-
-    int rc = SUCCESS;
-    FILE *file = NULL;
-    while (true)
+    case EXPORT_TABLE:
     {
-        input_string(filename, "file to export", MAX_FILENAME_LEN);
-        file = open_file(filename, "wb", &rc);
-        if (file != NULL && !rc)
-            break;
-        printf("%s\n", get_error_message(rc));
-    }
-    rc = export_table_to_file(table, file);
-    close_file(file);
-    return rc;
-}
-case QUIT:
-    printf("Exiting process...\n");
-    exit(SUCCESS);
-}
+        char filename[MAX_FILENAME_LEN + 1];
 
-return SUCCESS;
+        int rc = SUCCESS;
+        FILE *file = NULL;
+        while (true)
+        {
+            input_string(filename, "file to export", MAX_FILENAME_LEN);
+            file = open_file(filename, "wb", &rc);
+            if (file != NULL && !rc)
+                break;
+            printf("%s\n", get_error_message(rc));
+        }
+        rc = export_table_to_file(table, file);
+        close_file(file);
+        return rc;
+    }
+    case QUIT:
+        printf("Exiting process...\n");
+        exit(SUCCESS);
+    }
+
+    return SUCCESS;
 }
 
 void input_string(char *field, char *title, size_t max_size)
