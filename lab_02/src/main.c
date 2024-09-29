@@ -9,11 +9,8 @@ int main(void)
     int rc = SUCCESS;
 
     while (true)
-    {
-        rc = execute_operation(&table);
-        if (rc)
+        if ((rc = execute_operation(&table)))
             printf("%s\n", get_error_message(rc));
-    }
 
     return SUCCESS;
 }

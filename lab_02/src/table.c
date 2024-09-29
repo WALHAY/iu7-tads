@@ -237,6 +237,21 @@ int print_by_author(Table *table, char *author)
     return SUCCESS;
 }
 
+int print_key_array(Table *table)
+{
+    if (!table)
+        return NULLPTR_ERROR;
+
+    if (!table->size)
+        return EMPTY_TABLE;
+
+    printf("Key\tIndex\n");
+
+    for (size_t i = 0; i < table->size; ++i)
+        printf("%s\t%zu\n", table->keySet[i].authorSurname, table->keySet[i].index);
+    return SUCCESS;
+}
+
 int print_table_by_keys(Table *table)
 {
     if (!table)

@@ -43,6 +43,8 @@ int remove_entry_by_key(Table *table, char *title);
 
 int print_by_author(Table *table, char *author);
 
+int print_key_array(Table *table);
+
 int print_table_by_keys(Table *table);
 
 int print_table_by_entries(Table *table);

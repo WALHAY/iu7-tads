@@ -21,10 +21,20 @@ void print_rules(void)
 
 int execute_operation(Table *table)
 {
-    char *options[] = {
-        "Entries Bubble Sort", "Keys Bubble Sort", "Entries QSort", "Keys QSort",  "Add book",    "Remove book",
-        "Find by key",         "Print keys",       "Print entries", "Import data", "Export data", "Quit"};
-    switch (input_enum(12, options))
+    char *options[] = {"Entries Bubble Sort",
+                       "Keys Bubble Sort",
+                       "Entries QSort",
+                       "Keys QSort",
+                       "Add book",
+                       "Remove book",
+                       "Find by key",
+                       "Print keys array",
+                       "Print keys",
+                       "Print entries",
+                       "Import data",
+                       "Export data",
+                       "Quit"};
+    switch (input_enum(13, options))
     {
     case BSORT_ENTRIES:
         bsort_table_by_entries(table);
@@ -61,6 +71,8 @@ int execute_operation(Table *table)
         input_string(title, "author to find", MAX_TITLE_LEN);
         return print_by_author(table, title);
     }
+    case PRINT_KEY_ARRAY:
+        return print_key_array(table);
     case PRINT_ENTRIES:
         return print_table_by_entries(table);
     case PRINT_KEYS:

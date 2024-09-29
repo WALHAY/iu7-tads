@@ -38,6 +38,7 @@ typedef enum
     ADD_ENTRY,
     REMOVE_ENTRY,
     FIND_BY_KEY,
+    PRINT_KEY_ARRAY,
     PRINT_ENTRIES,
     PRINT_KEYS,
     IMPORT_TABLE,
