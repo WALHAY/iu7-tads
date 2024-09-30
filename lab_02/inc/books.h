@@ -76,3 +76,5 @@ void input_children_book(ChildrenBook *book);
 char *get_book_genre(Book *book);
 
 char *get_fiction_book_type(FictionBook *book);
+
+void print_book(Book *book);

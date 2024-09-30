@@ -4,7 +4,7 @@
 int main(void)
 {
     print_rules();
-    Table table = {.size = 0, .max_size = MAX_ENTRIES};
+    Table table = {.size = 0};
 
     int rc = SUCCESS;
 

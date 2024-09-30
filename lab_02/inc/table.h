@@ -14,7 +14,6 @@ typedef struct
 typedef struct
 {
     size_t size;
-    size_t max_size;
     Key keySet[MAX_ENTRIES];
     Book entrySet[MAX_ENTRIES];
 } Table;
