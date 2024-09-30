@@ -21,37 +21,23 @@ void print_rules(void)
 
 int execute_operation(Table *table)
 {
-    char *options[] = {"Entries Bubble Sort",
-                       "Keys Bubble Sort",
-                       "Entries QSort",
-                       "Keys QSort",
-                       "Add book",
+    char *options[] = {"Add book",
                        "Remove book",
                        "Find by key",
                        "Print keys array",
-                       "Print keys",
-                       "Print entries",
+                       "Print table using keys",
+                       "Print table using entries",
+                       "Entries Bubble Sort",
+                       "Keys Bubble Sort",
+                       "Entries QSort",
+                       "Keys QSort",
                        "Import data",
                        "Export data",
                        "Quit"};
-    switch (input_enum(13, options))
+    size_t opt = input_enum(13, options);
+    printf("Processing: %s\n", *(options + opt));
+    switch (opt)
     {
-    case BSORT_ENTRIES:
-        bsort_table_by_entries(table);
-        printf("Entries sorted using bubble sort!\n");
-        break;
-    case BSORT_KEYS:
-        bsort_table_by_keys(table);
-        printf("Keys sorted using bubble sort!\n");
-        break;
-    case QSORT_ENTRIES:
-        qsort_table_by_entries(table);
-        printf("Entries sorted using qsort!\n");
-        break;
-    case QSORT_KEYS:
-        qsort_table_by_keys(table);
-        printf("Keys sorted using qsort!\n");
-        break;
     case ADD_ENTRY:
     {
         Book book;
@@ -73,10 +59,24 @@ int execute_operation(Table *table)
     }
     case PRINT_KEY_ARRAY:
         return print_key_array(table);
-    case PRINT_ENTRIES:
-        return print_table_by_entries(table);
     case PRINT_KEYS:
         return print_table_by_keys(table);
+    case PRINT_ENTRIES:
+        return print_table_by_entries(table);
+    case BSORT_ENTRIES:
+        bsort_table_by_entries(table);
+        generate_key_array(table);
+        break;
+    case BSORT_KEYS:
+        bsort_table_by_keys(table);
+        break;
+    case QSORT_ENTRIES:
+        qsort_table_by_entries(table);
+        generate_key_array(table);
+        break;
+    case QSORT_KEYS:
+        qsort_table_by_keys(table);
+        break;
     case IMPORT_TABLE:
     {
         char filename[MAX_FILENAME_LEN + 1];

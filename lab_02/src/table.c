@@ -56,6 +56,9 @@ void bsort_table_by_keys(Table *table)
     if (!table)
         return;
 
+    if (table->size <= 1)
+        return;
+
     for (size_t i = 0; i < table->size - 1; ++i)
         for (size_t j = 0; j < table->size - i - 1; ++j)
             if (compare_keys(table->keySet + j, table->keySet + j + 1))
@@ -65,6 +68,9 @@ void bsort_table_by_keys(Table *table)
 void bsort_table_by_entries(Table *table)
 {
     if (!table)
+        return;
+
+    if (table->size <= 1)
         return;
 
     for (size_t i = 0; i < table->size - 1; ++i)
@@ -198,8 +204,8 @@ int print_table_by_keys(Table *table)
 
     for (size_t i = 0; i < table->size; ++i)
     {
-        printf("\nEntry: #%zu\n", i + 1);
-        print_book(table->keySet[i].index + table->entrySet);
+        printf("\nEntry #%zu\n", i + 1);
+        print_book(table->entrySet + table->keySet[i].index);
     }
     return SUCCESS;
 }
@@ -214,7 +220,7 @@ int print_table_by_entries(Table *table)
 
     for (size_t i = 0; i < table->size; ++i)
     {
-        printf("\nEntry: #%zu\n", i + 1);
+        printf("\nEntry #%zu\n", i + 1);
         print_book(table->entrySet + i);
     }
     return SUCCESS;
