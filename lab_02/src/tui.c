@@ -5,8 +5,9 @@ static int safe_int_input(int *value)
     char temp[20];
     fgets(temp, 20, stdin);
     char *end = NULL;
+    errno = 0;
     long val = strtol(temp, &end, 10);
-    if (errno == ERANGE)
+    if (errno == ERANGE || errno == EINVAL)
         return NAN_ERROR;
     *value = val;
     return SUCCESS;

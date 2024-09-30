@@ -12,7 +12,7 @@ void input_book_common(Book *book)
     input_string(book->authorSurname, "author surname", MAX_SURNAME_LEN);
     input_string(book->bookTitle, "book title", MAX_TITLE_LEN);
     input_string(book->publisher, "publisher", MAX_PUBLISHER_LEN);
-    book->pageCount = input_value("page count", false, false, 0, 0);
+    book->pageCount = input_value("page count", true, false, 0, 0);
 }
 
 void input_book_data(Book *book)
