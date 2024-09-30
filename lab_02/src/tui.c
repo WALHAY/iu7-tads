@@ -63,13 +63,13 @@ int execute_operation(Table *table)
     {
         char title[MAX_TITLE_LEN];
         input_string(title, "title to remove", MAX_TITLE_LEN);
-        return remove_entry_by_key(table, title);
+        return remove_first_by_title(table, title);
     }
     case FIND_BY_KEY:
     {
         char title[MAX_TITLE_LEN];
         input_string(title, "author to find", MAX_TITLE_LEN);
-        return print_by_author(table, title);
+        return find_all_by_author(table, title);
     }
     case PRINT_KEY_ARRAY:
         return print_key_array(table);

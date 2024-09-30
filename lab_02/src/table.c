@@ -1,7 +1,10 @@
 #include "../inc/table.h"
 
-static int get_entries_count_in_file(FILE *file, size_t entry_size, size_t *count)
+int get_entries_count_in_file(FILE *file, size_t entry_size, size_t *count)
 {
+    if (!file || !count)
+        return NULLPTR_ERROR;
+
     fseek(file, 0L, SEEK_END);
     size_t size = ftell(file);
     rewind(file);
@@ -10,12 +13,6 @@ static int get_entries_count_in_file(FILE *file, size_t entry_size, size_t *coun
 
     *count = size / entry_size;
     return SUCCESS;
-}
-
-static void print_char_i_times(char c, size_t i)
-{
-    for (size_t j = 0; j < i; ++j)
-        printf("%c", c);
 }
 
 bool compare_keys(Key *first, Key *second)
@@ -102,13 +99,17 @@ void qsort_table_by_entries(Table *table)
     qsort(table->entrySet, table->size, sizeof(Book), qcompare_entries);
 }
 
-void generate_key_array(Table *table)
+int generate_key_array(Table *table)
 {
     if (!table)
-        return;
+        return NULLPTR_ERROR;
+
+    if (!table->size)
+        return EMPTY_TABLE;
 
     for (size_t i = 0; i < table->size; ++i)
         table->keySet[i] = (Key){table->entrySet[i].authorSurname, i};
+    return SUCCESS;
 }
 
 int add_entry(Table *table, Book *entry)
@@ -124,7 +125,7 @@ int add_entry(Table *table, Book *entry)
     return SUCCESS;
 }
 
-int remove_entry_by_key(Table *table, char *title)
+int remove_first_by_title(Table *table, char *title)
 {
     if (!table || !title)
         return NULLPTR_ERROR;
@@ -132,12 +133,14 @@ int remove_entry_by_key(Table *table, char *title)
     bool found = false;
     size_t found_index = 0;
     for (size_t i = 0; i < table->size; ++i)
+    {
         if (!strcmp(title, table->entrySet[i].bookTitle))
         {
             found = true;
             found_index = i;
             break;
         }
+    }
 
     if (!found)
         return NOT_FOUND;
@@ -149,7 +152,7 @@ int remove_entry_by_key(Table *table, char *title)
     return SUCCESS;
 }
 
-int print_by_author(Table *table, char *author)
+int find_all_by_author(Table *table, char *author)
 {
     if (!table)
         return NULLPTR_ERROR;
@@ -158,21 +161,16 @@ int print_by_author(Table *table, char *author)
         return EMPTY_TABLE;
 
     bool found = false;
-    size_t found_index = 0;
-
     for (size_t i = 0; i < table->size; ++i)
+    {
         if (!strcmp(author, table->entrySet[i].authorSurname))
         {
-            found_index = i;
+            print_book(table->entrySet + i);
             found = true;
-            break;
         }
+    }
 
-    if (!found)
-        return NOT_FOUND;
-
-    print_book(table->entrySet + found_index);
-    return SUCCESS;
+    return found ? SUCCESS : NOT_FOUND;
 }
 
 int print_key_array(Table *table)
@@ -183,7 +181,7 @@ int print_key_array(Table *table)
     if (!table->size)
         return EMPTY_TABLE;
 
-    printf("Key\tIndex\n");
+    printf("\nKey\tIndex\n");
 
     for (size_t i = 0; i < table->size; ++i)
         printf("%s\t%zu\n", table->keySet[i].authorSurname, table->keySet[i].index);
@@ -199,7 +197,10 @@ int print_table_by_keys(Table *table)
         return EMPTY_TABLE;
 
     for (size_t i = 0; i < table->size; ++i)
+    {
+        printf("\nEntry: #%zu\n", i + 1);
         print_book(table->keySet[i].index + table->entrySet);
+    }
     return SUCCESS;
 }
 
@@ -212,7 +213,10 @@ int print_table_by_entries(Table *table)
         return EMPTY_TABLE;
 
     for (size_t i = 0; i < table->size; ++i)
+    {
+        printf("\nEntry: #%zu\n", i + 1);
         print_book(table->entrySet + i);
+    }
     return SUCCESS;
 }
 
@@ -228,8 +232,7 @@ int import_table_from_file(Table *table, FILE *file)
     if (fread(table->entrySet, sizeof(Book), count, file) != count)
         return READ_ERROR;
     table->size = count;
-    generate_key_array(table);
-    return SUCCESS;
+    return generate_key_array(table);
 }
 
 int export_table_to_file(Table *table, FILE *file)
