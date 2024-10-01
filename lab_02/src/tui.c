@@ -16,18 +16,18 @@ static int safe_int_input(int *value)
 void print_rules(void)
 {
     printf("Program to interact with tables of book structures\n"
-           "Program abilities: add/remove book, sort in different algorithms\n"
+           "Abilities: add/remove book, sort in different algorithms\n"
            "Find by author, Time and memory comparison\n\n");
 }
 
 void print_limitations(void)
 {
-    printf("Limits\n\n"
-           "Max surname is 40 symbols!\n"
-           "Max book title is 100 symbols!\n"
-           "Max publisher name is 80 sybols!\n"
-           "Max industry name is 30 symbols!\n"
-           "Max filename is 255 symbols!\n\n");
+    printf("Limitations:\n\n"
+           "- Max surname is 40 symbols!\n"
+           "- Max book title is 100 symbols!\n"
+           "- Max publisher name is 80 sybols!\n"
+           "- Max industry name is 30 symbols!\n"
+           "- Max filename is 255 symbols!\n\n");
 }
 
 int execute_operation(Table *table)
@@ -44,7 +44,7 @@ int execute_operation(Table *table)
                        "Keys QSort",
                        "Import data",
                        "Export data",
-                       "Efficiency",
+                       "Collect efficiency",
                        "Quit"};
     size_t opt = input_enum(14, options);
     printf("Processing: %s\n", *(options + opt));

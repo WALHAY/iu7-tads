@@ -171,6 +171,7 @@ int find_all_by_author(Table *table, char *author)
     {
         if (!strcmp(author, table->entrySet[i].authorSurname))
         {
+            printf("\nEntry #%zu\n", i + 1);
             print_book(table->entrySet + i);
             found = true;
         }
