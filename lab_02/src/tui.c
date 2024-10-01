@@ -34,8 +34,9 @@ int execute_operation(Table *table)
                        "Keys QSort",
                        "Import data",
                        "Export data",
+                       "Efficiency",
                        "Quit"};
-    size_t opt = input_enum(13, options);
+    size_t opt = input_enum(14, options);
     printf("Processing: %s\n", *(options + opt));
     switch (opt)
     {
@@ -111,6 +112,9 @@ int execute_operation(Table *table)
         close_file(file);
         return rc;
     }
+    case EFFICIENCY:
+        get_program_efficiency();
+        break;
     case QUIT:
         printf("Exiting process...\n");
         exit(SUCCESS);

@@ -1,6 +1,6 @@
 #pragma once
 
-#define MAX_ENTRIES 100
+#define MAX_ENTRIES 500
 
 #define MAX_SURNAME_LEN 40
 #define MAX_TITLE_LEN 100
@@ -36,5 +36,6 @@ typedef enum
     QSORT_KEYS,
     IMPORT_TABLE,
     EXPORT_TABLE,
+    EFFICIENCY,
     QUIT
 } OPCODES;

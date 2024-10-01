@@ -12,7 +12,7 @@ void get_time_efficiency_bsort(Table *table)
     struct timespec t1, t2;
     size_t entries_sum = 0;
     size_t keys_sum = 0;
-    printf("Bubble Sort Comparison\n");
+    printf("Bubble Sort Comparison(average of %d tries)\n", TRIES);
     for (size_t i = 0; i < TRIES; ++i)
     {
         shuffle_table(table);
@@ -29,7 +29,7 @@ void get_time_efficiency_bsort(Table *table)
     }
     size_t avg_entries = entries_sum / TRIES;
     size_t avg_keys = keys_sum / TRIES;
-    printf("Bubble Sort entries: %zu ns\nBubble Sort keys: %zu ns\n", avg_entries, avg_keys);
+    printf("Bubble Sort entries:\t%zu ns\nBubble Sort keys:\t%zu ns\n", avg_entries, avg_keys);
 }
 
 void get_time_efficiency_qsort(Table *table)
@@ -37,7 +37,7 @@ void get_time_efficiency_qsort(Table *table)
     struct timespec t1, t2;
     size_t entries_sum = 0;
     size_t keys_sum = 0;
-    printf("QSort Comparison\n");
+    printf("QSort Time Comparison(average of %d tries)\n", TRIES);
     for (size_t i = 0; i < TRIES; ++i)
     {
         shuffle_table(table);
@@ -54,7 +54,7 @@ void get_time_efficiency_qsort(Table *table)
     }
     size_t avg_entries = entries_sum / TRIES;
     size_t avg_keys = keys_sum / TRIES;
-    printf("QSort entries: %zu ns\nQSort keys: %zu ns\n", avg_entries, avg_keys);
+    printf("QSort entries:\t%zu ns\nQSort keys:\t%zu ns\n", avg_entries, avg_keys);
 }
 
 void get_memory_efficiency(Table *table)
@@ -62,9 +62,20 @@ void get_memory_efficiency(Table *table)
     size_t entries_size = sizeof(Book) * table->size;
     size_t keys_size = sizeof(Key) * table->size;
     long double sum = entries_size + keys_size;
-    printf("Table with keys is bigger on %.2Lf%% = %zu bytes", sum / entries_size * 100.0f, keys_size);
+    printf("Key array size in table of %zu size is %.2Lf%% of all table = %zu bytes\n", table->size,
+           keys_size / sum * 100.0f, keys_size);
 }
 
 void get_program_efficiency(void)
 {
+    for (size_t i = 50; i <= 500; i += 50)
+    {
+        Table table = {.size = 0};
+        printf("\nElement count: %zu\n", i);
+        generate_entries(&table, i);
+        get_time_efficiency_bsort(&table);
+        printf("\n");
+        get_time_efficiency_qsort(&table);
+        get_memory_efficiency(&table);
+    }
 }

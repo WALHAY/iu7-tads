@@ -1,5 +1,6 @@
 #pragma once
 
+#include "comparison.h"
 #include "defines.h"
 #include "fileio.h"
 #include "table.h"

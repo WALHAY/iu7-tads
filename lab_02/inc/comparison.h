@@ -1,5 +1,6 @@
 #pragma once
 
+#include "entry_generator.h"
 #include "table.h"
 #include <time.h>
 
