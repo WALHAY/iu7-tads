@@ -1,10 +1,16 @@
+#include "../inc/entry_generator.h"
 #include "../inc/table.h"
 #include "../inc/tui.h"
 
-int main(void)
+int main(int argc, char **argv)
 {
     print_rules();
     Table table = {.size = 0};
+    if (argc == 3)
+    {
+        generate_entries(&table, atoi(argv[2]));
+        printf("Entries generated!\n");
+    }
 
     int rc = SUCCESS;
 
