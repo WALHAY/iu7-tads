@@ -4,6 +4,7 @@
 
 int main(int argc, char **argv)
 {
+    printf("%zu - %zu", sizeof(Key), sizeof(Book));
     print_rules();
     print_limitations();
     Table table = {.size = 0};

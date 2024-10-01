@@ -96,8 +96,12 @@ int execute_operation(Table *table)
         int rc = SUCCESS;
         FILE *file = NULL;
         input_string(filename, "file to import", MAX_FILENAME_LEN);
-        file = open_file(filename, "rb", &rc);
-        if (file == NULL || rc)
+        rc = validate_filename(filename);
+
+        if (!rc)
+            file = open_file(filename, "rb", &rc);
+
+        if (rc)
             return rc;
 
         rc = import_table_from_file(table, file);
@@ -113,9 +117,13 @@ int execute_operation(Table *table)
         while (true)
         {
             input_string(filename, "file to export", MAX_FILENAME_LEN);
-            file = open_file(filename, "wb", &rc);
+            rc = validate_filename(filename);
+            if (!rc)
+                file = open_file(filename, "wb", &rc);
+
             if (file != NULL && !rc)
                 break;
+
             printf("%s\n", get_error_message(rc));
         }
         rc = export_table_to_file(table, file);
@@ -202,6 +210,23 @@ char *get_error_message(int error)
         return "Error: Entry wasn't found";
     case EMPTY_TABLE:
         return "Error: Table is empty!";
+    case WRONG_FILENAME_ERROR:
+        return "Error: Wrong filename format!";
     }
     return "Error: Error message not specified!";
+}
+
+int validate_filename(char *filename)
+{
+    if (!filename)
+        return NULLPTR_ERROR;
+
+    char *dot = strchr(filename, '.');
+    if (!dot || dot - filename <= 0)
+        return WRONG_FILENAME_ERROR;
+
+    if (strcmp(dot + 1, "tbl"))
+        return WRONG_FILENAME_ERROR;
+
+    return SUCCESS;
 }

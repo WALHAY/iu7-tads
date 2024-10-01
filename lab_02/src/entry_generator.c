@@ -38,10 +38,10 @@ void generate_entries(Table *table, size_t size)
             book.data.technical.publishYear = generate_in_range(1950, 2017);
             break;
         case FICTION:
-            book.data.fiction.type = generate_in_range(0, 3);
+            book.data.fiction.type = generate_in_range(0, 2);
             break;
         case CHILDREN:
-            book.data.children.minimalAge = generate_in_range(3, 16);
+            book.data.children.minimalAge = generate_in_range(3, 17);
             book.data.children.type = generate_in_range(3, 4);
             break;
         }
