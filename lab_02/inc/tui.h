@@ -12,6 +12,8 @@
 
 void print_rules(void);
 
+void print_limitations(void);
+
 int execute_operation(Table *table);
 
 void input_string(char *field, char *title, size_t max_size);

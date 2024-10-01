@@ -15,9 +15,19 @@ static int safe_int_input(int *value)
 
 void print_rules(void)
 {
-    printf("Программа для взаимодействия с таблицей книг\n"
-           "Возможности программы: удаление/добавление записей в таблицу\n"
-           "Сортировка по ключам/записям, поиск книг по автору\n\n");
+    printf("Program to interact with tables of book structures\n"
+           "Program abilities: add/remove book, sort in different algorithms\n"
+           "Find by author, Time and memory comparison\n\n");
+}
+
+void print_limitations(void)
+{
+    printf("Limits\n\n"
+           "Max surname is 40 symbols!\n"
+           "Max book title is 100 symbols!\n"
+           "Max publisher name is 80 sybols!\n"
+           "Max industry name is 30 symbols!\n"
+           "Max filename is 255 symbols!\n\n");
 }
 
 int execute_operation(Table *table)

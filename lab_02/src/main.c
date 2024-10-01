@@ -5,6 +5,7 @@
 int main(int argc, char **argv)
 {
     print_rules();
+    print_limitations();
     Table table = {.size = 0};
     if (argc == 3)
     {
