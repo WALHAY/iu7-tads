@@ -153,7 +153,7 @@ int remove_first_by_title(Table *table, char *title)
         return NOT_FOUND;
 
     table->size--;
-    for (size_t i = found_index; i < table->size; ++i)
+    for (size_t i = found_index; i + 1 < table->size; ++i)
         table->entrySet[i] = table->entrySet[i + 1];
 
     return SUCCESS;
