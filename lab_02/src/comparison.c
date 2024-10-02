@@ -1,5 +1,40 @@
 #include "../inc/comparison.h"
 
+static void print_table_splitter(void)
+{
+    printf("+");
+    print_char_i_times('-', MAX_OUT_ELEMENT_WIDTH + 2);
+    printf("+");
+    print_char_i_times('-', MAX_OUT_TIME_WIDTH + 2);
+    printf("+");
+    print_char_i_times('-', MAX_OUT_TIME_WIDTH + 2);
+    printf("+\n");
+}
+
+static void print_table_header(void)
+{
+    print_table_splitter();
+    print_column("Elements", MAX_OUT_ELEMENT_WIDTH);
+    print_column("Keys", MAX_OUT_TIME_WIDTH);
+    print_column("Entries", MAX_OUT_TIME_WIDTH);
+    printf("|\n");
+    print_table_splitter();
+}
+
+static void print_table_entry(size_t elements, size_t keys, size_t entries)
+{
+    char elements_str[MAX_OUT_ELEMENT_WIDTH];
+    sprintf(elements_str, "%zu", elements);
+    print_column(elements_str, MAX_OUT_ELEMENT_WIDTH);
+    char keys_time[MAX_OUT_TIME_WIDTH];
+    sprintf(keys_time, "%zu", keys);
+    print_column(keys_time, MAX_OUT_TIME_WIDTH);
+    char entries_time[MAX_OUT_TIME_WIDTH];
+    sprintf(entries_time, "%zu", entries);
+    print_column(entries_time, MAX_OUT_TIME_WIDTH);
+    printf("|\n");
+}
+
 static void shuffle_table(Table *table)
 {
     for (size_t i = 0; i < table->size; ++i)
@@ -7,12 +42,11 @@ static void shuffle_table(Table *table)
     generate_key_array(table);
 }
 
-void get_time_efficiency_bsort(Table *table)
+void get_time_efficiency_bsort(Table *table, size_t size)
 {
     struct timespec t1, t2;
     size_t entries_sum = 0;
     size_t keys_sum = 0;
-    printf("Bubble Sort Comparison(average of %d tries)\n", TRIES);
     for (size_t i = 0; i < TRIES; ++i)
     {
         shuffle_table(table);
@@ -29,15 +63,14 @@ void get_time_efficiency_bsort(Table *table)
     }
     size_t avg_entries = entries_sum / TRIES;
     size_t avg_keys = keys_sum / TRIES;
-    printf("Bubble Sort entries:\t%zu ns\nBubble Sort keys:\t%zu ns\n", avg_entries, avg_keys);
+    print_table_entry(size, avg_keys, avg_entries);
 }
 
-void get_time_efficiency_qsort(Table *table)
+void get_time_efficiency_qsort(Table *table, size_t size)
 {
     struct timespec t1, t2;
     size_t entries_sum = 0;
     size_t keys_sum = 0;
-    printf("QSort Time Comparison(average of %d tries)\n", TRIES);
     for (size_t i = 0; i < TRIES; ++i)
     {
         shuffle_table(table);
@@ -54,7 +87,7 @@ void get_time_efficiency_qsort(Table *table)
     }
     size_t avg_entries = entries_sum / TRIES;
     size_t avg_keys = keys_sum / TRIES;
-    printf("QSort entries:\t%zu ns\nQSort keys:\t%zu ns\n", avg_entries, avg_keys);
+    print_table_entry(size, avg_keys, avg_entries);
 }
 
 void get_memory_efficiency(void)
@@ -67,14 +100,24 @@ void get_memory_efficiency(void)
 
 void get_program_efficiency(void)
 {
+    printf("\n\nBubble Sort time efficiency\n");
+    print_table_header();
     for (size_t i = 50; i <= 500; i += 50)
     {
         Table table = {.size = 0};
-        printf("\nElement count: %zu\n", i);
         generate_entries(&table, i);
-        get_time_efficiency_bsort(&table);
-        printf("\n");
-        get_time_efficiency_qsort(&table);
+        get_time_efficiency_bsort(&table, i);
     }
+    print_table_splitter();
+
+    printf("\n\nQSort time efficiency\n");
+    print_table_header();
+    for (size_t i = 50; i <= 500; i += 50)
+    {
+        Table table = {.size = 0};
+        generate_entries(&table, i);
+        get_time_efficiency_qsort(&table, i);
+    }
+    print_table_splitter();
     get_memory_efficiency();
 }

@@ -63,7 +63,7 @@ char *get_book_genre(Book *book)
     case FICTION:
         return "Fiction";
     case CHILDREN:
-        return "Children literature";
+        return "Children";
     }
     return "Unknown";
 }

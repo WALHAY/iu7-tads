@@ -12,6 +12,8 @@ static void print_table_splitter(void)
     printf("+");
     print_char_i_times('-', MAX_OUT_PAGES_WIDTH + 2);
     printf("+");
+    print_char_i_times('-', MAX_OUT_GENRE_LEN + 2);
+    printf("+");
     // technical literature part
     print_char_i_times('-', MAX_OUT_INDUSTRY_LEN + 2);
     printf("+");
@@ -43,12 +45,13 @@ static void print_table_header(void)
     print_column("Title", MAX_OUT_TITLE_LEN);
     print_column("Publisher", MAX_OUT_PUBLISHER_LEN);
     print_column("Pages", MAX_OUT_PAGES_WIDTH);
+    print_column("Type", MAX_OUT_GENRE_LEN);
     // technical literature part
     print_column("Industry", MAX_OUT_INDUSTRY_LEN);
     print_column("Country", MAX_OUT_DOMESTIC_WIDTH);
     print_column("Year", MAX_OUT_YEAR_WIDTH);
     // fiction literature part
-    print_column("Type", MAX_OUT_TYPE_WIDTH);
+    print_column("Genre", MAX_OUT_TYPE_WIDTH);
     // children literature part
     print_column("Min age", MAX_OUT_AGE_WIDTH);
     printf("|\n");
@@ -73,6 +76,7 @@ static void print_table_entry(Book *entry)
     char pages[MAX_OUT_PAGES_WIDTH + 1];
     sprintf(pages, "%zu", entry->pageCount);
     print_column(pages, MAX_OUT_PAGES_WIDTH);
+    print_column(get_book_genre(entry), MAX_OUT_GENRE_LEN);
     // technical literature part
     bool technical = entry->genre == TECHNICAL;
     print_column(technical ? entry->data.technical.industry : "-", MAX_OUT_INDUSTRY_LEN);
