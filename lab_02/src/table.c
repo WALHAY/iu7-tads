@@ -1,5 +1,10 @@
 #include "../inc/table.h"
 
+static void print_header(void)
+{
+    printf("Surname - Title - Pages - Publisher - Type - Industry - Is Domestic - Year - Genre - Minimal Age");
+}
+
 int get_entries_count_in_file(FILE *file, size_t entry_size, size_t *count)
 {
     if (!file || !count)
@@ -53,10 +58,7 @@ void swap_entries(Book *first, Book *second)
 
 void bsort_table_by_keys(Table *table)
 {
-    if (!table)
-        return;
-
-    if (table->size <= 1)
+    if (!table || table->size <= 1)
         return;
 
     for (size_t i = 0; i < table->size - 1; ++i)
@@ -67,10 +69,7 @@ void bsort_table_by_keys(Table *table)
 
 void bsort_table_by_entries(Table *table)
 {
-    if (!table)
-        return;
-
-    if (table->size <= 1)
+    if (!table || table->size <= 1)
         return;
 
     for (size_t i = 0; i < table->size - 1; ++i)
@@ -91,7 +90,7 @@ static int qcompare_entries(const void *first, const void *second)
 
 void qsort_table_by_keys(Table *table)
 {
-    if (!table)
+    if (!table || table->size <= 1)
         return;
 
     qsort(table->keySet, table->size, sizeof(Key), qcompare_keys);
@@ -99,7 +98,7 @@ void qsort_table_by_keys(Table *table)
 
 void qsort_table_by_entries(Table *table)
 {
-    if (!table)
+    if (!table || table->size <= 1)
         return;
 
     qsort(table->entrySet, table->size, sizeof(Book), qcompare_entries);
@@ -180,7 +179,6 @@ int find_all_novels_by_author(Table *table, char *author)
         {
             if (book->genre == FICTION && book->data.fiction.type == NOVEL)
             {
-                printf("\nEntry #%zu\n", i + 1);
                 print_book(table->entrySet + i);
                 found = true;
             }
@@ -213,11 +211,10 @@ int print_table_by_keys(Table *table)
     if (!table->size)
         return EMPTY_TABLE;
 
+    print_header();
     for (size_t i = 0; i < table->size; ++i)
-    {
-        printf("\nEntry #%zu\n", i + 1);
         print_book(table->entrySet + table->keySet[i].index);
-    }
+    printf("\n");
     return SUCCESS;
 }
 
@@ -229,11 +226,10 @@ int print_table_by_entries(Table *table)
     if (!table->size)
         return EMPTY_TABLE;
 
+    print_header();
     for (size_t i = 0; i < table->size; ++i)
-    {
-        printf("\nEntry #%zu\n", i + 1);
         print_book(table->entrySet + i);
-    }
+    printf("\n");
     return SUCCESS;
 }
 

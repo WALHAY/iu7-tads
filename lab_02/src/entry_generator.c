@@ -4,9 +4,9 @@
 
 static char *authors[] = {"Glukhovskiy", "Asimov",   "King",    "Dostoevskiy", "Pushkin",
                           "Savelyev",    "Perelman", "Arbuzov", "Hamilton"};
-static char *titles1[] = {"Cool", "Awesome", "Bad", "Dummy", "Moderate"};
-static char *titles2[] = {"Animals", " Nature",  " Friends", " Vibes", " Cars", " Automoblies",
-                          " People", " Student", " Apples",  " Cats",  " Dogs"};
+static char *titles1[] = {"Cool", "Awesome", "Bad", "Wonderful", "Moderate"};
+static char *titles2[] = {" Animals", " Nature",  " Friends", " Vibes", " Cars", " Automoblies",
+                          " People",  " Student", " Apples",  " Cats",  " Dogs"};
 static char *titles3[] = {" of Kamchatka", " in Nigeria", " in Africa",    " of USA",
                           " in USA",       " of China",   " in University"};
 static char *industry[] = {"Physics", "Math", "Programming", "Law", "Chemical"};

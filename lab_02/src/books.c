@@ -88,27 +88,22 @@ char *get_fiction_book_type(FictionBook *book)
 
 void print_book(Book *book)
 {
-    printf("\nTitle:     %s\n", book->bookTitle);
-    printf("Author:    %s\n", book->authorSurname);
-    printf("Pages:     %zu\n", book->pageCount);
-    printf("Publisher: %s\n", book->publisher);
-    printf("Genre:     %s\n", get_book_genre(book));
+    printf("\n%s, %s, %zu, %s, %s, ", book->bookTitle, book->authorSurname, book->pageCount, book->publisher,
+           get_book_genre(book));
     switch (book->genre)
     {
     case TECHNICAL:
     {
-        printf("Industry:     %s\n", book->data.technical.industry);
-        printf("Domestic:     %s\n", book->data.technical.domestic ? "Yes" : "No");
-        printf("Publish year: %zu\n", book->data.technical.publishYear);
+        printf("%s, %s, %zu, -, -", book->data.technical.industry, book->data.technical.domestic ? "Yes" : "No",
+               book->data.technical.publishYear);
         break;
     }
     case FICTION:
-        printf("Subgenre:  %s\n", get_fiction_book_type(&book->data.fiction));
+        printf("-, -, -, %s, -", get_fiction_book_type(&book->data.fiction));
         break;
     case CHILDREN:
     {
-        printf("Subgenre:  %s\n", get_fiction_book_type(&book->data.fiction));
-        printf("Minimal age: %zu\n", book->data.children.minimalAge);
+        printf("-, -, -, %s - %zu", get_fiction_book_type(&book->data.fiction), book->data.children.minimalAge);
         break;
     }
     }

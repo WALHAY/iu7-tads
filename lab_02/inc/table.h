@@ -1,13 +1,12 @@
 #pragma once
 
 #include "books.h"
-#include <stdarg.h>
 #include <stdlib.h>
 #include <string.h>
 
 typedef struct
 {
-    char authorSurname[MAX_SURNAME_LEN];
+    char authorSurname[MAX_SURNAME_LEN + 1];
     size_t index;
 } Key;
 
