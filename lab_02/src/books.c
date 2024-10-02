@@ -85,26 +85,3 @@ char *get_fiction_book_type(FictionBook *book)
     }
     return "Unknown";
 }
-
-void print_book(Book *book)
-{
-    printf("\n%s, %s, %zu, %s, %s, ", book->bookTitle, book->authorSurname, book->pageCount, book->publisher,
-           get_book_genre(book));
-    switch (book->genre)
-    {
-    case TECHNICAL:
-    {
-        printf("%s, %s, %zu, -, -", book->data.technical.industry, book->data.technical.domestic ? "Yes" : "No",
-               book->data.technical.publishYear);
-        break;
-    }
-    case FICTION:
-        printf("-, -, -, %s, -", get_fiction_book_type(&book->data.fiction));
-        break;
-    case CHILDREN:
-    {
-        printf("-, -, -, %s - %zu", get_fiction_book_type(&book->data.fiction), book->data.children.minimalAge);
-        break;
-    }
-    }
-}

@@ -14,6 +14,12 @@ void print_rules(void);
 
 void print_limitations(void);
 
+void print_splitter(void);
+
+void print_table_header(void);
+
+void print_table_entry(Book *entry);
+
 int execute_operation(Table *table);
 
 void input_string(char *field, char *title, size_t max_size);

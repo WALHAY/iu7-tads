@@ -1,9 +1,5 @@
 #include "../inc/table.h"
-
-static void print_header(void)
-{
-    printf("Surname - Title - Pages - Publisher - Type - Industry - Is Domestic - Year - Genre - Minimal Age");
-}
+#include "../inc/tui.h"
 
 int get_entries_count_in_file(FILE *file, size_t entry_size, size_t *count)
 {
@@ -179,11 +175,18 @@ int find_all_novels_by_author(Table *table, char *author)
         {
             if (book->genre == FICTION && book->data.fiction.type == NOVEL)
             {
-                print_book(table->entrySet + i);
+                if (!found)
+                {
+                    print_table_header();
+                }
+                print_table_entry(table->entrySet + i);
                 found = true;
             }
         }
     }
+
+    if (found)
+        print_splitter();
 
     return found ? SUCCESS : NOT_FOUND;
 }
@@ -211,10 +214,10 @@ int print_table_by_keys(Table *table)
     if (!table->size)
         return EMPTY_TABLE;
 
-    print_header();
+    print_table_header();
     for (size_t i = 0; i < table->size; ++i)
-        print_book(table->entrySet + table->keySet[i].index);
-    printf("\n");
+        print_table_entry(table->entrySet + table->keySet[i].index);
+    print_splitter();
     return SUCCESS;
 }
 
@@ -226,10 +229,10 @@ int print_table_by_entries(Table *table)
     if (!table->size)
         return EMPTY_TABLE;
 
-    print_header();
+    print_table_header();
     for (size_t i = 0; i < table->size; ++i)
-        print_book(table->entrySet + i);
-    printf("\n");
+        print_table_entry(table->entrySet + i);
+    print_splitter();
     return SUCCESS;
 }
 
