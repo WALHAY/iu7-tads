@@ -4,14 +4,15 @@
 
 int main(int argc, char **argv)
 {
-    print_rules();
-    print_limitations();
     Table table = {.size = 0};
     if (argc == 3)
     {
         generate_entries(&table, atoi(argv[2]));
         printf("Entries generated!\n");
     }
+
+    print_rules();
+    print_limitations();
 
     int rc = SUCCESS;
 

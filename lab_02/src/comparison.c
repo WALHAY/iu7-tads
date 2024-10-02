@@ -95,7 +95,7 @@ void get_memory_efficiency(void)
     size_t entry_size = sizeof(Book);
     size_t key_size = sizeof(Key);
     long double sum = entry_size + key_size;
-    printf("\nKey array size of all size is %.2Lf%%\n", key_size / sum * 100.0f);
+    printf("\nKey array size to all size is %.2Lf%%\n", key_size / sum * 100.0f);
 }
 
 void get_program_efficiency(void)

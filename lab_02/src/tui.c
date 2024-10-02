@@ -43,12 +43,15 @@ void print_rules(void)
 void print_limitations(void)
 {
     printf("Limitations:\n\n"
+           " - Empty string input is prohibited!\n"
            " - Max surname is %d symbols!\n"
            " - Max book title is %d symbols!\n"
            " - Max publisher name is %d sybols!\n"
            " - Max industry name is %d symbols!\n"
-           " - Max filename is %d symbols!\n\n",
-           MAX_SURNAME_LEN, MAX_TITLE_LEN, MAX_PUBLISHER_LEN, MAX_INDUSTRY_LEN, MAX_FILENAME_LEN);
+           " - Max filename is %d symbols!\n"
+           " - Max entries is %d!\n"
+           " - File should be with *.tbl extension!\n\n",
+           MAX_SURNAME_LEN, MAX_TITLE_LEN, MAX_PUBLISHER_LEN, MAX_INDUSTRY_LEN, MAX_FILENAME_LEN, MAX_ENTRIES);
 }
 
 int execute_operation(Table *table)
