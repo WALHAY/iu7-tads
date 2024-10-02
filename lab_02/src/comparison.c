@@ -42,7 +42,7 @@ static void shuffle_table(Table *table)
     generate_key_array(table);
 }
 
-void get_time_efficiency_bsort(Table *table, size_t size)
+void get_time_efficiency_bsort(Table *table, FILE *file, size_t size)
 {
     struct timespec t1, t2;
     size_t entries_sum = 0;
@@ -64,9 +64,10 @@ void get_time_efficiency_bsort(Table *table, size_t size)
     size_t avg_entries = entries_sum / TRIES;
     size_t avg_keys = keys_sum / TRIES;
     print_table_entry(size, avg_keys, avg_entries);
+    fprintf(file, "%zu %zu\n", avg_keys, avg_entries);
 }
 
-void get_time_efficiency_qsort(Table *table, size_t size)
+void get_time_efficiency_qsort(Table *table, FILE *file, size_t size)
 {
     struct timespec t1, t2;
     size_t entries_sum = 0;
@@ -88,6 +89,7 @@ void get_time_efficiency_qsort(Table *table, size_t size)
     size_t avg_entries = entries_sum / TRIES;
     size_t avg_keys = keys_sum / TRIES;
     print_table_entry(size, avg_keys, avg_entries);
+    fprintf(file, "%zu %zu\n", avg_keys, avg_entries);
 }
 
 void get_memory_efficiency(void)
@@ -100,23 +102,27 @@ void get_memory_efficiency(void)
 
 void get_program_efficiency(void)
 {
+    int rc = SUCCESS;
+    FILE *file = open_file("comparison.txt", "w", &rc);
     printf("\n\nBubble Sort time efficiency\n");
+    fprintf(file, "Bubble Sort time efficiency\n");
     print_table_header();
     for (size_t i = 50; i <= 500; i += 50)
     {
         Table table = {.size = 0};
         generate_entries(&table, i);
-        get_time_efficiency_bsort(&table, i);
+        get_time_efficiency_bsort(&table, file, i);
     }
     print_table_splitter();
 
     printf("\n\nQSort time efficiency\n");
+    fprintf(file, "QSort time efficiency\n");
     print_table_header();
     for (size_t i = 50; i <= 500; i += 50)
     {
         Table table = {.size = 0};
         generate_entries(&table, i);
-        get_time_efficiency_qsort(&table, i);
+        get_time_efficiency_qsort(&table, file, i);
     }
     print_table_splitter();
     get_memory_efficiency();
