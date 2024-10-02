@@ -19,9 +19,9 @@ typedef struct
 
 int get_entries_count_in_file(FILE *file, size_t entry_size, size_t *count);
 
-bool compare_keys(Key *first, Key *second);
+int compare_keys(Key *first, Key *second);
 
-bool compare_entries(Book *first, Book *second);
+int compare_entries(Book *first, Book *second);
 
 void swap_keys(Key *first, Key *second);
 

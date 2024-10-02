@@ -120,20 +120,20 @@ int get_entries_count_in_file(FILE *file, size_t entry_size, size_t *count)
     return SUCCESS;
 }
 
-bool compare_keys(Key *first, Key *second)
+int compare_keys(Key *first, Key *second)
 {
     if (!first || !second)
         return 0;
 
-    return strcmp(first->authorSurname, second->authorSurname) > 0;
+    return strcmp(first->authorSurname, second->authorSurname);
 }
 
-bool compare_entries(Book *first, Book *second)
+int compare_entries(Book *first, Book *second)
 {
     if (!first || !second)
         return 0;
 
-    return strcmp(first->authorSurname, second->authorSurname) > 0;
+    return strcmp(first->authorSurname, second->authorSurname);
 }
 
 void swap_keys(Key *first, Key *second)
@@ -163,8 +163,12 @@ void bsort_table_by_keys(Table *table)
 
     for (size_t i = 0; i < table->size - 1; ++i)
         for (size_t j = 0; j < table->size - i - 1; ++j)
-            if (compare_keys(table->keySet + j, table->keySet + j + 1))
-                swap_keys(table->keySet + j, table->keySet + j + 1);
+            if (strcmp(table->keySet[j].authorSurname, table->keySet[j + 1].authorSurname))
+            {
+                Key temp = table->keySet[j];
+                table->keySet[j] = table->keySet[j + 1];
+                table->keySet[j + 1] = temp;
+            }
 }
 
 void bsort_table_by_entries(Table *table)
@@ -174,8 +178,12 @@ void bsort_table_by_entries(Table *table)
 
     for (size_t i = 0; i < table->size - 1; ++i)
         for (size_t j = 0; j < table->size - i - 1; ++j)
-            if (compare_entries(table->entrySet + j, table->entrySet + j + 1))
-                swap_entries(table->entrySet + j, table->entrySet + j + 1);
+            if (strcmp(table->entrySet[j].authorSurname, table->entrySet[j + 1].authorSurname))
+            {
+                Book temp = table->entrySet[j];
+                table->entrySet[j] = table->entrySet[j + 1];
+                table->entrySet[j + 1] = temp;
+            }
 }
 
 static int qcompare_keys(const void *first, const void *second)
