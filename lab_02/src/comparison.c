@@ -57,13 +57,12 @@ void get_time_efficiency_qsort(Table *table)
     printf("QSort entries:\t%zu ns\nQSort keys:\t%zu ns\n", avg_entries, avg_keys);
 }
 
-void get_memory_efficiency(Table *table)
+void get_memory_efficiency(void)
 {
-    size_t entries_size = sizeof(Book) * table->size;
-    size_t keys_size = sizeof(Key) * table->size;
-    long double sum = entries_size + keys_size;
-    printf("Key array size in table of %zu size is %.2Lf%% of all table = %zu bytes\n", table->size,
-           keys_size / sum * 100.0f, keys_size);
+    size_t entry_size = sizeof(Book);
+    size_t key_size = sizeof(Key);
+    long double sum = entry_size + key_size;
+    printf("\nKey array size of all size is %.2Lf%%\n", key_size / sum * 100.0f);
 }
 
 void get_program_efficiency(void)
@@ -76,6 +75,6 @@ void get_program_efficiency(void)
         get_time_efficiency_bsort(&table);
         printf("\n");
         get_time_efficiency_qsort(&table);
-        get_memory_efficiency(&table);
     }
+    get_memory_efficiency();
 }

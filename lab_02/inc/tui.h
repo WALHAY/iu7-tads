@@ -10,15 +10,13 @@
 #include <stdlib.h>
 #include <string.h>
 
+void print_char_i_times(char c, size_t i);
+
+void print_column(char *text, size_t length);
+
 void print_rules(void);
 
 void print_limitations(void);
-
-void print_splitter(void);
-
-void print_table_header(void);
-
-void print_table_entry(Book *entry);
 
 int execute_operation(Table *table);
 

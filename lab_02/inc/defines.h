@@ -18,6 +18,7 @@
 #define MAX_OUT_YEAR_WIDTH 4
 #define MAX_OUT_TYPE_WIDTH 15
 #define MAX_OUT_AGE_WIDTH 7
+#define MAX_OUT_INDEX_LEN 5
 
 typedef enum
 {
