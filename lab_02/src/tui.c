@@ -17,25 +17,27 @@ void print_rules(void)
 {
     printf("Program to interact with tables of book structures\n"
            "Abilities: add/remove book, sort in different algorithms\n"
-           "Find by author, Time and memory comparison\n\n");
+           "Find by author, Time and memory comparison\n"
+           "Import/export data tables to files\n\n");
 }
 
 void print_limitations(void)
 {
     printf("Limitations:\n\n"
-           "- Max surname is 40 symbols!\n"
-           "- Max book title is 100 symbols!\n"
-           "- Max publisher name is 80 sybols!\n"
-           "- Max industry name is 30 symbols!\n"
-           "- Max filename is 255 symbols!\n\n");
+           " - Max surname is %d symbols!\n"
+           " - Max book title is %d symbols!\n"
+           " - Max publisher name is %d sybols!\n"
+           " - Max industry name is %d symbols!\n"
+           " - Max filename is %d symbols!\n\n",
+           MAX_SURNAME_LEN, MAX_TITLE_LEN, MAX_PUBLISHER_LEN, MAX_INDUSTRY_LEN, MAX_FILENAME_LEN);
 }
 
 int execute_operation(Table *table)
 {
     char *options[] = {"Add book",
-                       "Remove book",
-                       "Find by key",
-                       "Print keys array",
+                       "Remove book by title",
+                       "Find novels by author",
+                       "Print key array",
                        "Print table using keys",
                        "Print table using entries",
                        "Entries Bubble Sort",
@@ -66,8 +68,8 @@ int execute_operation(Table *table)
     case FIND_BY_KEY:
     {
         char title[MAX_TITLE_LEN];
-        input_string(title, "author to find", MAX_TITLE_LEN);
-        return find_all_by_author(table, title);
+        input_string(title, "author to find novels", MAX_TITLE_LEN);
+        return find_all_novels_by_author(table, title);
     }
     case PRINT_KEY_ARRAY:
         return print_key_array(table);

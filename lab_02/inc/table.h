@@ -7,7 +7,7 @@
 
 typedef struct
 {
-    char *authorSurname;
+    char authorSurname[MAX_SURNAME_LEN];
     size_t index;
 } Key;
 
@@ -42,7 +42,7 @@ int add_entry(Table *table, Book *entry);
 
 int remove_first_by_title(Table *table, char *title);
 
-int find_all_by_author(Table *table, char *author);
+int find_all_novels_by_author(Table *table, char *author);
 
 int print_key_array(Table *table);
 

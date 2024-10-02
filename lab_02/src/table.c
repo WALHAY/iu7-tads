@@ -114,7 +114,10 @@ int generate_key_array(Table *table)
         return EMPTY_TABLE;
 
     for (size_t i = 0; i < table->size; ++i)
-        table->keySet[i] = (Key){table->entrySet[i].authorSurname, i};
+    {
+        strcpy(table->keySet[i].authorSurname, table->entrySet[i].authorSurname);
+        table->keySet[i].index = i;
+    }
     return SUCCESS;
 }
 
@@ -126,8 +129,11 @@ int add_entry(Table *table, Book *entry)
     if (table->size >= MAX_ENTRIES)
         return ADD_OVERFLOW;
 
-    table->entrySet[table->size] = *entry;
-    table->keySet[table->size] = (Key){entry->authorSurname, table->size++};
+    size_t index = table->size;
+    table->entrySet[index] = *entry;
+    strcpy(table->keySet[index].authorSurname, entry->authorSurname);
+    table->keySet[index].index = index;
+    table->size++;
     return SUCCESS;
 }
 
@@ -158,7 +164,7 @@ int remove_first_by_title(Table *table, char *title)
     return SUCCESS;
 }
 
-int find_all_by_author(Table *table, char *author)
+int find_all_novels_by_author(Table *table, char *author)
 {
     if (!table)
         return NULLPTR_ERROR;
@@ -169,11 +175,15 @@ int find_all_by_author(Table *table, char *author)
     bool found = false;
     for (size_t i = 0; i < table->size; ++i)
     {
-        if (!strcmp(author, table->entrySet[i].authorSurname))
+        Book *book = table->entrySet + i;
+        if (!strcmp(author, book->authorSurname))
         {
-            printf("\nEntry #%zu\n", i + 1);
-            print_book(table->entrySet + i);
-            found = true;
+            if (book->genre == FICTION && book->data.fiction.type == NOVEL)
+            {
+                printf("\nEntry #%zu\n", i + 1);
+                print_book(table->entrySet + i);
+                found = true;
+            }
         }
     }
 
