@@ -30,6 +30,11 @@ int add_matrix_element(SparseMatrix *matrix, int element, size_t row, size_t col
         return WRONG_POS_ERROR;
 
     size_t rowStart = matrix->rowStartIndex[row];
+    size_t rowEnd = matrix->rowStartIndex[row + 1];
+    // keep it ordered
+    while (rowStart < rowEnd && matrix->columnIndex[rowStart] < column)
+        rowStart++;
+
     for (size_t i = matrix->size; i >= rowStart && i >= 1; --i)
     {
         matrix->elements[i] = matrix->elements[i - 1];

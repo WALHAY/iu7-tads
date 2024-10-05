@@ -6,7 +6,12 @@
 typedef struct
 {
     size_t size;
-    int *nonZero;
-    size_t *columnIndex;
-    size_t *rowIndex;
+    int *elements;
+    size_t *index;
 } SparseVector;
+
+SparseVector *create_vector(size_t size);
+
+void generate_random_vector(SparseVector *vector, size_t elements);
+
+void print_sparse_vector(SparseVector *vector);
