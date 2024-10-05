@@ -8,6 +8,8 @@ static void print_table_splitter(void)
     print_char_i_times('-', MAX_OUT_TIME_WIDTH + 2);
     printf("+");
     print_char_i_times('-', MAX_OUT_TIME_WIDTH + 2);
+    printf("+");
+    print_char_i_times('-', MAX_OUT_TIME_WIDTH + 2);
     printf("+\n");
 }
 
@@ -17,11 +19,12 @@ static void print_table_header(void)
     print_column("Elements", MAX_OUT_ELEMENT_WIDTH);
     print_column("Keys", MAX_OUT_TIME_WIDTH);
     print_column("Entries", MAX_OUT_TIME_WIDTH);
+    print_column("Boost", MAX_OUT_TIME_WIDTH);
     printf("|\n");
     print_table_splitter();
 }
 
-static void print_table_entry(size_t elements, size_t keys, size_t entries)
+static void print_table_entry(size_t elements, size_t keys, size_t entries, double boost)
 {
     char elements_str[MAX_OUT_ELEMENT_WIDTH];
     sprintf(elements_str, "%zu", elements);
@@ -32,6 +35,9 @@ static void print_table_entry(size_t elements, size_t keys, size_t entries)
     char entries_time[MAX_OUT_TIME_WIDTH];
     sprintf(entries_time, "%zu", entries);
     print_column(entries_time, MAX_OUT_TIME_WIDTH);
+    char boost_time[MAX_OUT_TIME_WIDTH];
+    sprintf(boost_time, "%.2lf", boost);
+    print_column(boost_time, MAX_OUT_TIME_WIDTH);
     printf("|\n");
 }
 
@@ -63,7 +69,8 @@ void get_time_efficiency_bsort(Table *table, FILE *file, size_t size)
     }
     size_t avg_entries = entries_sum / TRIES;
     size_t avg_keys = keys_sum / TRIES;
-    print_table_entry(size, avg_keys, avg_entries);
+    double percent = (avg_entries - avg_keys) * 100.0 / avg_entries;
+    print_table_entry(size, avg_keys, avg_entries, percent);
     fprintf(file, "%zu %zu\n", avg_keys, avg_entries);
 }
 
@@ -88,7 +95,8 @@ void get_time_efficiency_qsort(Table *table, FILE *file, size_t size)
     }
     size_t avg_entries = entries_sum / TRIES;
     size_t avg_keys = keys_sum / TRIES;
-    print_table_entry(size, avg_keys, avg_entries);
+    double percent = (avg_entries - avg_keys) * 100.0 / avg_entries;
+    print_table_entry(size, avg_keys, avg_entries, percent);
     fprintf(file, "%zu %zu\n", avg_keys, avg_entries);
 }
 
