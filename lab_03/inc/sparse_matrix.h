@@ -16,8 +16,6 @@ typedef struct
 
 SparseMatrix *create_matrix(size_t rows, size_t columns, size_t elements);
 
-int input_matrix(SparseMatrix *matrix);
-
 int add_matrix_element(SparseMatrix *matrix, int element, size_t row, size_t column);
 
 int generate_random_matrix(SparseMatrix *matrix, size_t elements);

@@ -16,11 +16,6 @@ SparseMatrix *create_matrix(size_t rows, size_t columns, size_t elements)
     return matrix;
 }
 
-int input_matrix(SparseMatrix *matrix)
-{
-    return !matrix ? NULLPTR_ERROR : SUCCESS;
-}
-
 int add_matrix_element(SparseMatrix *matrix, int element, size_t row, size_t column)
 {
     if (!matrix)
@@ -32,8 +27,11 @@ int add_matrix_element(SparseMatrix *matrix, int element, size_t row, size_t col
     size_t rowStart = matrix->rowStartIndex[row];
     size_t rowEnd = matrix->rowStartIndex[row + 1];
     // keep it ordered
-    while (rowStart < rowEnd && matrix->columnIndex[rowStart] < column)
-        rowStart++;
+    for (; rowStart < rowEnd; ++rowStart)
+        if (matrix->columnIndex[rowStart] > column)
+            break;
+        else
+            return ELEMENT_EXIST_ERROR;
 
     for (size_t i = matrix->size; i >= rowStart && i >= 1; --i)
     {
@@ -77,7 +75,7 @@ static void print_full_matrix(SparseMatrix *matrix)
             printf("%d\t", matrix->elements[j]);
         }
 
-        for (; current_index < matrix->columns; ++current_index)
+        while (current_index++ < matrix->columns)
             printf("0\t");
         printf("\n");
     }
