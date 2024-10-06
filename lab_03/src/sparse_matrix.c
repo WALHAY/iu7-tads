@@ -8,8 +8,8 @@ SparseMatrix *create_matrix(size_t rows, size_t columns, size_t elements)
 
     matrix->size = 0;
     matrix->elements = malloc(sizeof(int) * elements);
-    matrix->columnIndex = calloc(sizeof(int), elements);
-    matrix->rowStartIndex = calloc(sizeof(int *), rows + 1);
+    matrix->columnIndex = calloc(elements, sizeof(int));
+    matrix->rowStartIndex = calloc(rows + 1, sizeof(size_t));
     matrix->rows = rows;
     matrix->columns = columns;
 
