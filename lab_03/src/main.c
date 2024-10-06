@@ -1,3 +1,4 @@
+#include "../inc/functions.h"
 #include "../inc/sparse_matrix.h"
 #include "../inc/sparse_vector.h"
 
@@ -15,5 +16,9 @@ int main(void)
     add_vector_element(v, 2, 2);
     add_vector_element(v, 1, 3);
     print_sparse_vector(v);
+
+    SparseMatrix *result = multiply_matrix_on_vector(mx, v);
+    printf("Result:\n");
+    print_sparse_matrix(result);
     return 0;
 }

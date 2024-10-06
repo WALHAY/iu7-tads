@@ -60,8 +60,9 @@ static void print_full_vector(SparseVector *vector)
     size_t current_index = 0;
     for (size_t i = 0; i < vector->size; ++i)
     {
-        while (current_index < vector->index[i])
+        while (current_index++ < vector->index[i])
             printf("0\t");
+        printf("%d\t", vector->elements[i]);
         current_index++;
     }
     printf("\n");
@@ -84,7 +85,7 @@ void print_sparse_vector(SparseVector *vector)
     if (!vector)
         return;
 
-    if (vector->size > 30)
+    if (vector->size <= 30)
         print_full_vector(vector);
     else
         print_short_vector(vector);

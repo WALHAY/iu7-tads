@@ -5,7 +5,7 @@ SparseMatrix *multiply_matrix_on_vector(SparseMatrix *matrix, SparseVector *vect
     if (!matrix || !vector)
         return NULL;
 
-    SparseMatrix *result = create_matrix(matrix->rows, matrix->columns, matrix->size);
+    SparseMatrix *result = create_matrix(matrix->rows, 1, matrix->size);
 
     if (!result)
         return NULL;
@@ -27,6 +27,8 @@ SparseMatrix *multiply_matrix_on_vector(SparseMatrix *matrix, SparseVector *vect
                     sum += vector->elements[vectorRow] * matrix->elements[start];
             }
         }
+        if (sum != 0)
+            add_matrix_element(result, sum, row, 0);
     }
 
     return result;
