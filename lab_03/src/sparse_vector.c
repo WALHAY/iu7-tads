@@ -1,6 +1,6 @@
 #include "../inc/sparse_vector.h"
 
-SparseVector *create_vector(size_t length)
+SparseVector *create_vector(size_t length, size_t initial_size)
 {
     SparseVector *vector = malloc(sizeof(SparseVector));
     if (!vector)
@@ -8,8 +8,8 @@ SparseVector *create_vector(size_t length)
 
     vector->length = length;
     vector->size = 0;
-    vector->elements = malloc(sizeof(int) * length);
-    vector->index = calloc(length, sizeof(size_t));
+    vector->elements = malloc(sizeof(int) * initial_size);
+    vector->index = calloc(initial_size, sizeof(size_t));
 
     return vector;
 }
@@ -41,18 +41,30 @@ int add_vector_element(SparseVector *vector, int element, size_t index)
     return SUCCESS;
 }
 
-void generate_random_vector(SparseVector *vector, size_t elements);
-
-int get_or_zero(SparseVector *vector, size_t index)
+int replace_vector_element(SparseVector *vector, int element, size_t index)
 {
-    if (index >= vector->size)
-        return 0;
+    if (!vector)
+        return NULLPTR_ERROR;
 
-    for (size_t i = 0; i < vector->size; ++i)
+    if (index > vector->length)
+        return WRONG_POS_ERROR;
+
+    for (size_t i = 0; i < vector->size && vector->index[i] > index; ++i)
+    {
         if (vector->index[i] == index)
-            return vector->elements[i];
+        {
+            vector->elements[i] = element;
+            return SUCCESS;
+        }
+    }
 
-    return 0;
+    return REPLACE_ERROR;
+}
+
+void generate_random_vector(SparseVector *vector, size_t elements)
+{
+    for (size_t i = 0; i < elements; ++i)
+        add_vector_element(vector, rand() % 100 * (rand() % 2 ? -1 : 1), rand() % vector->length);
 }
 
 static void print_full_vector(SparseVector *vector)
@@ -63,8 +75,9 @@ static void print_full_vector(SparseVector *vector)
         while (current_index++ < vector->index[i])
             printf("0\t");
         printf("%d\t", vector->elements[i]);
-        current_index++;
     }
+    while (current_index++ < vector->length)
+        printf("0\t");
     printf("\n");
 }
 
@@ -85,7 +98,7 @@ void print_sparse_vector(SparseVector *vector)
     if (!vector)
         return;
 
-    if (vector->size <= 30)
+    if (vector->length <= 30)
         print_full_vector(vector);
     else
         print_short_vector(vector);

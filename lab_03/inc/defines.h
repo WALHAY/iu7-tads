@@ -7,5 +7,6 @@ typedef enum
     NULLPTR_ERROR,
     ALLOC_ERROR,
     ELEMENT_EXIST_ERROR,
-    NAN_ERROR
+    NAN_ERROR,
+    REPLACE_ERROR
 } ERRORS;

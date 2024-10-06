@@ -48,6 +48,29 @@ int add_matrix_element(SparseMatrix *matrix, int element, size_t row, size_t col
     return SUCCESS;
 }
 
+int replace_matrix_element(SparseMatrix *matrix, int element, size_t row, size_t column)
+{
+    if (!matrix)
+        return NULLPTR_ERROR;
+
+    if (row >= matrix->rows || column >= matrix->columns)
+        return WRONG_POS_ERROR;
+
+    size_t rowStart = matrix->rowStartIndex[row];
+    size_t rowEnd = matrix->rowStartIndex[row + 1];
+
+    for (size_t i = rowStart; i < rowEnd && matrix->columnIndex[i] > column; ++i)
+    {
+        if (matrix->columnIndex[i] == column)
+        {
+            matrix->elements[i] = element;
+            return SUCCESS;
+        }
+    }
+
+    return REPLACE_ERROR;
+}
+
 int generate_random_matrix(SparseMatrix *matrix, size_t elements)
 {
     srand(time(NULL));
@@ -95,7 +118,7 @@ static void print_short_matrix(SparseMatrix *matrix)
     printf("\n");
 
     printf("IA: ");
-    for (size_t i = 0; i < matrix->columns; ++i)
+    for (size_t i = 0; i <= matrix->rows; ++i)
         printf("%zu\t", matrix->rowStartIndex[i]);
     printf("\n");
 }
