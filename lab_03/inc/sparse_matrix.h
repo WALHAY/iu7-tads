@@ -14,7 +14,7 @@ typedef struct
     int *elements;
 } SparseMatrix;
 
-SparseMatrix *create_matrix(size_t rows, size_t columns, size_t elements);
+SparseMatrix *create_matrix(size_t rows, size_t columns, size_t initial_size);
 
 int add_matrix_element(SparseMatrix *matrix, int element, size_t row, size_t column);
 

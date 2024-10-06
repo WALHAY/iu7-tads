@@ -22,6 +22,9 @@ int add_vector_element(SparseVector *vector, int element, size_t index)
     if (index >= vector->length)
         return WRONG_POS_ERROR;
 
+    vector->elements = realloc(vector->elements, sizeof(int) * (vector->size + 1));
+    vector->index = realloc(vector->index, sizeof(size_t) * (vector->size + 1));
+
     size_t insert_at = 0;
     for (; insert_at < vector->size; ++insert_at)
         if (vector->index[insert_at] > index)

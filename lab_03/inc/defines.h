@@ -10,3 +10,16 @@ typedef enum
     NAN_ERROR,
     REPLACE_ERROR
 } ERRORS;
+
+typedef enum
+{
+    CREATE_MATRIX,
+    CREATE_VECTOR,
+    INPUT_MATRIX,
+    INPUT_VECTOR,
+    MULTIPLICATION,
+    PRINT_MATRIX,
+    PRINT_VECTOR,
+    COMPARISON,
+    EXIT
+} OPCODES;
