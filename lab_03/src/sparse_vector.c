@@ -66,9 +66,23 @@ int replace_vector_element(SparseVector *vector, int element, size_t index)
 
 void generate_random_vector(SparseVector *vector, float fill)
 {
-    size_t elements = vector->length * fill;
+    size_t elements = vector->length;
+    size_t fill_elements = elements * fill;
+    int indices[elements];
+
     for (size_t i = 0; i < elements; ++i)
-        add_vector_element(vector, rand() % 100 * (rand() % 2 ? -1 : 1), rand() % vector->length);
+        indices[i] = i;
+
+    for (size_t i = 0; i < fill_elements; ++i)
+    {
+        size_t arr_index = rand() % elements--;
+        size_t index = indices[arr_index];
+        int value = (rand() % 100) * (rand() % 2 ? -1 : 1);
+        add_vector_element(vector, value, index);
+
+        for (size_t j = arr_index; j < elements; ++j)
+            indices[j] = indices[j + 1];
+    }
 }
 
 static void print_full_vector(SparseVector *vector)

@@ -63,7 +63,6 @@ int execute_operation(SparseMatrix **mptr, SparseVector **vptr)
         generate_random_matrix(matrix, fill_percent / 100.0f);
         break;
     }
-    break;
     case RANDOMIZE_VECTOR:
     {
         int fill_percent = input_value("vector fill percent", true, true, 1, 100);

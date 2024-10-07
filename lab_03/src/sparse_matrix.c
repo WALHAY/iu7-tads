@@ -33,7 +33,7 @@ int add_matrix_element(SparseMatrix *matrix, int element, size_t row, size_t col
     for (; rowStart < rowEnd; ++rowStart)
         if (matrix->columnIndex[rowStart] > column)
             break;
-        else
+        else if (matrix->columnIndex[rowStart] == column)
             return ELEMENT_EXIST_ERROR;
 
     for (size_t i = matrix->size; i >= rowStart && i >= 1; --i)
@@ -77,12 +77,25 @@ int replace_matrix_element(SparseMatrix *matrix, int element, size_t row, size_t
 int generate_random_matrix(SparseMatrix *matrix, float fill)
 {
     srand(time(NULL));
-    size_t elements = matrix->rows * matrix->columns * fill;
+    size_t elements = matrix->rows * matrix->columns;
+    size_t fill_elements = elements * fill;
+    size_t indices[elements];
     for (size_t i = 0; i < elements; ++i)
+        indices[i] = i;
+
+    for (size_t i = 0; i < fill_elements; ++i)
     {
-        size_t row = rand() % matrix->rows;
-        size_t column = rand() % matrix->columns;
-        add_matrix_element(matrix, rand() % 100 * (rand() % 2 ? -1 : 1), row, column);
+        size_t arr_index = rand() % elements--;
+        size_t index = indices[arr_index];
+
+        size_t row = index / matrix->columns;
+        size_t column = index % matrix->columns;
+        int value = (rand() % 100) * (rand() % 2 ? -1 : 1);
+        if (add_matrix_element(matrix, value, row, column) == ELEMENT_EXIST_ERROR)
+            replace_matrix_element(matrix, value, row, column);
+
+        for (size_t j = arr_index; j < elements; ++j)
+            indices[j] = indices[j + 1];
     }
     return SUCCESS;
 }
