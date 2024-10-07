@@ -17,10 +17,18 @@ int execute_operation(SparseMatrix **mptr, SparseVector **vptr)
 {
     SparseMatrix *matrix = *mptr;
     SparseVector *vector = *vptr;
-    char *options[] = {
-        "Create new Matrix", "Create new Vector", "Input matrix", "Input vector", "Multiply matrix on vector",
-        "Print matrix",      "Print vector",      "Compare",      "Exit"};
-    size_t opt = input_enum(9, options);
+    char *options[] = {"Create new Matrix",
+                       "Create new Vector",
+                       "Input matrix",
+                       "Input vector",
+                       "Randomize matrix",
+                       "Randomize vector",
+                       "Multiply matrix on vector",
+                       "Print matrix",
+                       "Print vector",
+                       "Compare",
+                       "Exit"};
+    size_t opt = input_enum(11, options);
     printf("Processing: %s\n", *(options + opt));
     switch (opt)
     {
@@ -36,6 +44,9 @@ int execute_operation(SparseMatrix **mptr, SparseVector **vptr)
     }
     case CREATE_VECTOR:
     {
+        if (!vector)
+            free(vector);
+
         size_t length = input_value("vector length", true, false, 1, 0);
         *vptr = create_vector(length, 0);
         break;
@@ -46,10 +57,25 @@ int execute_operation(SparseMatrix **mptr, SparseVector **vptr)
     case INPUT_VECTOR:
         input_vector(vector);
         break;
+    case RANDOMIZE_MATRIX:
+    {
+        int fill_percent = input_value("matrix fill percent", true, true, 1, 100);
+        generate_random_matrix(matrix, fill_percent / 100.0f);
+        break;
+    }
+    break;
+    case RANDOMIZE_VECTOR:
+    {
+        int fill_percent = input_value("vector fill percent", true, true, 1, 100);
+        generate_random_vector(vector, fill_percent / 100.0f);
+        break;
+    }
     case MULTIPLICATION:
     {
         SparseMatrix *result = multiply_matrix_on_vector(matrix, vector);
         print_sparse_matrix(result);
+        if (!result)
+            free(result);
         break;
     }
     case PRINT_MATRIX:
@@ -81,23 +107,39 @@ size_t input_enum(size_t max_options, char **options)
     return option;
 }
 
-size_t input_value(char *title, bool min_limit, bool max_limit, int min_value, int max_value)
+int input_value(char *title, bool min_limit, bool max_limit, int min_value, int max_value)
 {
     int value = 0;
     printf("Enter %s: ", title);
     while (safe_int_input(&value) || (max_limit && value > max_value) || (min_limit && value < min_value))
-        printf("Error: Wrong value!\nEnter %s again: ", title);
+        printf("Error: Wrong value!\n"
+               "Enter %s again: ",
+               title);
     return value;
 }
 
 void input_matrix(SparseMatrix *matrix)
 {
-    add_matrix_element(matrix, 1, 0, 0);
+    int element = 0;
+    size_t row = 0;
+    size_t column = 0;
+    do
+    {
+        element = input_value("element value", false, false, 0, 0);
+        row = input_value("element row", true, true, 0, matrix->rows);
+        column = input_value("element column", true, true, 0, matrix->columns);
+    } while (!add_matrix_element(matrix, element, row, column));
 }
 
 void input_vector(SparseVector *vector)
 {
-    add_vector_element(vector, 1, 0);
+    int element = 0;
+    size_t index = 0;
+    do
+    {
+        element = input_value("element value", false, false, 0, 0);
+        index = input_value("element index", true, true, 0, vector->length);
+    } while (!add_vector_element(vector, element, index));
 }
 
 char *get_error_message(int error)

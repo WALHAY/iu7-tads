@@ -74,9 +74,10 @@ int replace_matrix_element(SparseMatrix *matrix, int element, size_t row, size_t
     return REPLACE_ERROR;
 }
 
-int generate_random_matrix(SparseMatrix *matrix, size_t elements)
+int generate_random_matrix(SparseMatrix *matrix, float fill)
 {
     srand(time(NULL));
+    size_t elements = matrix->rows * matrix->columns * fill;
     for (size_t i = 0; i < elements; ++i)
     {
         size_t row = rand() % matrix->rows;

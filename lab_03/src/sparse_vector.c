@@ -64,8 +64,9 @@ int replace_vector_element(SparseVector *vector, int element, size_t index)
     return REPLACE_ERROR;
 }
 
-void generate_random_vector(SparseVector *vector, size_t elements)
+void generate_random_vector(SparseVector *vector, float fill)
 {
+    size_t elements = vector->length * fill;
     for (size_t i = 0; i < elements; ++i)
         add_vector_element(vector, rand() % 100 * (rand() % 2 ? -1 : 1), rand() % vector->length);
 }
