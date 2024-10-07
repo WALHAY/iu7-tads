@@ -120,26 +120,25 @@ int input_value(char *title, bool min_limit, bool max_limit, int min_value, int 
 
 void input_matrix(SparseMatrix *matrix)
 {
-    int element = 0;
-    size_t row = 0;
-    size_t column = 0;
-    do
+    int size = input_value("count of elements you want to input", true, true, 1, matrix->rows * matrix->columns);
+    while (size--)
     {
-        element = input_value("element value", false, false, 0, 0);
-        row = input_value("element row", true, true, 0, matrix->rows);
-        column = input_value("element column", true, true, 0, matrix->columns);
-    } while (!add_matrix_element(matrix, element, row, column));
+        int element = input_value("element value", false, false, 0, 0);
+        size_t row = input_value("element row", true, true, 0, matrix->rows);
+        size_t column = input_value("element column", true, true, 0, matrix->columns);
+        add_matrix_element(matrix, element, row, column);
+    }
 }
 
 void input_vector(SparseVector *vector)
 {
-    int element = 0;
-    size_t index = 0;
-    do
+    int size = input_value("count of elements you want to input", true, true, 1, vector->length);
+    while (size--)
     {
-        element = input_value("element value", false, false, 0, 0);
-        index = input_value("element index", true, true, 0, vector->length);
-    } while (!add_vector_element(vector, element, index));
+        int element = input_value("element value", false, false, 0, 0);
+        size_t index = input_value("element index", true, true, 0, vector->length);
+        add_vector_element(vector, element, index);
+    }
 }
 
 char *get_error_message(int error)
