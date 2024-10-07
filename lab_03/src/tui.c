@@ -72,8 +72,8 @@ int execute_operation(SparseMatrix **mptr, SparseVector **vptr)
     }
     case MULTIPLICATION:
     {
-        SparseMatrix *result = multiply_matrix_on_vector(matrix, vector);
-        print_sparse_matrix(result);
+        SparseVector *result = multiply_matrix_by_vector(vector, matrix);
+        print_sparse_vector(result);
         if (!result)
             free(result);
         break;
@@ -126,7 +126,14 @@ void input_matrix(SparseMatrix *matrix)
         int element = input_value("element value", false, false, 0, 0);
         size_t row = input_value("element row", true, true, 0, matrix->rows);
         size_t column = input_value("element column", true, true, 0, matrix->columns);
-        add_matrix_element(matrix, element, row, column);
+        if (add_matrix_element(matrix, element, row, column) == ELEMENT_EXIST_ERROR)
+        {
+            printf("Element is already existing!\n"
+                   "Replace element? ");
+            size_t option = input_value("(Yes - 1, No - 0)", true, true, 0, 1);
+            if (option == 1)
+                replace_matrix_element(matrix, element, row, column);
+        }
     }
 }
 
@@ -137,7 +144,14 @@ void input_vector(SparseVector *vector)
     {
         int element = input_value("element value", false, false, 0, 0);
         size_t index = input_value("element index", true, true, 0, vector->length);
-        add_vector_element(vector, element, index);
+        if (add_vector_element(vector, element, index) == ELEMENT_EXIST_ERROR)
+        {
+            printf("Element is already existing!\n"
+                   "Replace element? ");
+            size_t option = input_value("(Yes - 1, No - 0)", true, true, 0, 1);
+            if (option == 1)
+                replace_vector_element(vector, element, index);
+        }
     }
 }
 

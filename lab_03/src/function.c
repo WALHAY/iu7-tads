@@ -1,35 +1,31 @@
 #include "../inc/functions.h"
 
-SparseMatrix *multiply_matrix_on_vector(SparseMatrix *matrix, SparseVector *vector)
+SparseVector *multiply_matrix_by_vector(SparseVector *vector, SparseMatrix *matrix)
 {
     if (!matrix || !vector)
         return NULL;
 
-    SparseMatrix *result = create_matrix(matrix->rows, 1, matrix->size);
+    if (matrix->columns != vector->length)
+        return NULL;
+
+    SparseVector *result = create_vector(vector->length, 0);
+
+    for (size_t i = 0; i < vector->size; ++i)
+    {
+        int sum = 0;
+        size_t column = vector->index[i];
+        size_t rowStart = matrix->rowStartIndex[column];
+        size_t rowEnd = matrix->rowStartIndex[column + 1];
+        for (size_t j = rowStart; j < rowEnd && matrix->columnIndex[j] <= column; ++j)
+        {
+            if (matrix->columnIndex[j] == column)
+                sum += matrix->elements[j] * vector->elements[column];
+        }
+        add_vector_element(result, sum, column);
+    }
 
     if (!result)
         return NULL;
-
-    for (size_t row = 0; row < matrix->rows; ++row)
-    {
-        int sum = 0;
-        for (size_t start = matrix->rowStartIndex[row]; start < matrix->rowStartIndex[row + 1]; ++start)
-        {
-            size_t column = matrix->columnIndex[start];
-
-            for (size_t vectorRow = 0; vectorRow < vector->size; ++vectorRow)
-            {
-                if (vector->index[vectorRow] > column)
-                    break;
-                else if (vector->index[vectorRow] < column)
-                    continue;
-                else
-                    sum += vector->elements[vectorRow] * matrix->elements[start];
-            }
-        }
-        if (sum != 0)
-            add_matrix_element(result, sum, row, 0);
-    }
 
     return result;
 }

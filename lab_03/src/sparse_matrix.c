@@ -62,7 +62,7 @@ int replace_matrix_element(SparseMatrix *matrix, int element, size_t row, size_t
     size_t rowStart = matrix->rowStartIndex[row];
     size_t rowEnd = matrix->rowStartIndex[row + 1];
 
-    for (size_t i = rowStart; i < rowEnd && matrix->columnIndex[i] > column; ++i)
+    for (size_t i = rowStart; i < rowEnd && matrix->columnIndex[i] <= column; ++i)
     {
         if (matrix->columnIndex[i] == column)
         {
