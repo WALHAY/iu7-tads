@@ -13,6 +13,30 @@ static int safe_int_input(int *value)
     return SUCCESS;
 }
 
+static void overwrite_matrix_add(SparseMatrix *matrix, int value, size_t row, size_t column)
+{
+    static char *opts[] = {"No", "Yes"};
+    if (add_matrix_element(matrix, value, row, column) == ELEMENT_EXIST_ERROR)
+    {
+        printf("Element exist in matrix, do you want to overwrite it?");
+        size_t opt = input_enum(2, opts);
+        if (opt)
+            replace_matrix_element(matrix, value, row, column);
+    }
+}
+
+static void overwrite_vector_add(SparseVector *matrix, int value, size_t index)
+{
+    static char *opts[] = {"No", "Yes"};
+    if (add_vector_element(matrix, value, index) == ELEMENT_EXIST_ERROR)
+    {
+        printf("Element exist in vector, do you want to overwrite it?");
+        size_t opt = input_enum(2, opts);
+        if (opt)
+            replace_vector_element(matrix, value, index);
+    }
+}
+
 static void input_matrix_full(SparseMatrix *matrix)
 {
     for (size_t row = 0; row < matrix->rows; ++row)
@@ -22,7 +46,7 @@ static void input_matrix_full(SparseMatrix *matrix)
             char title[120];
             sprintf(title, "value of element in %zu row %zu column", row, column);
             int value = input_value(title, false, false, 0, 0);
-            add_matrix_element(matrix, value, row, column);
+            overwrite_matrix_add(matrix, value, row, column);
         }
     }
 }
@@ -32,10 +56,10 @@ static void input_matrix_positional(SparseMatrix *matrix)
     int size = input_value("count of elements you want to input", true, true, 1, matrix->rows * matrix->columns);
     while (size--)
     {
-        int element = input_value("element value", false, false, 0, 0);
+        int value = input_value("element value", false, false, 0, 0);
         size_t row = input_value("element row", true, true, 0, matrix->rows - 1);
         size_t column = input_value("element column", true, true, 0, matrix->columns - 1);
-        add_matrix_element(matrix, element, row, column);
+        overwrite_matrix_add(matrix, value, row, column);
         printf("\n");
     }
 }
@@ -47,7 +71,7 @@ static void input_vector_full(SparseVector *vector)
         char title[120];
         sprintf(title, "%zu element value", i);
         int value = input_value(title, false, false, 0, 0);
-        add_vector_element(vector, value, i);
+        overwrite_vector_add(vector, value, i);
     }
 }
 
@@ -56,9 +80,10 @@ static void input_vector_positional(SparseVector *vector)
     int size = input_value("count of elements you want to input", true, true, 1, vector->length);
     while (size--)
     {
-        int element = input_value("element value", false, false, 0, 0);
+        int value = input_value("element value", false, false, 0, 0);
         size_t index = input_value("element index", true, true, 0, vector->length - 1);
-        add_vector_element(vector, element, index);
+        overwrite_vector_add(vector, value, index);
+        printf("\n");
     }
 }
 
@@ -66,18 +91,18 @@ int execute_operation(SparseMatrix **mptr, SparseVector **vptr)
 {
     SparseMatrix *matrix = *mptr;
     SparseVector *vector = *vptr;
-    char *options[] = {"Create new Matrix",
-                       "Recreate Vector",
-                       "Input matrix",
-                       "Input vector",
-                       "Randomize matrix",
-                       "Randomize vector",
-                       "Multiply vector by matrix (sparse)",
-                       "Multiply vector by matrix (basic)",
-                       "Print matrix",
-                       "Print vector",
-                       "Compare TaDS",
-                       "Exit"};
+    static char *options[] = {"Create new Matrix",
+                              "Recreate Vector",
+                              "Input matrix",
+                              "Input vector",
+                              "Randomize matrix",
+                              "Randomize vector",
+                              "Multiply vector by matrix (sparse)",
+                              "Multiply vector by matrix (basic)",
+                              "Print matrix",
+                              "Print vector",
+                              "Compare TaDS",
+                              "Exit"};
     size_t opt = input_enum(12, options);
     printf("Processing: %s\n", *(options + opt));
     switch (opt)
@@ -132,6 +157,7 @@ int execute_operation(SparseMatrix **mptr, SparseVector **vptr)
     {
         SparseVector *result = create_vector(vector->length, 0);
         multiply_vector_by_matrix(vector, matrix, result);
+        printf("\nMultiplication result:\n");
         print_sparse_vector(result);
         free_vector(result);
         break;
@@ -142,6 +168,7 @@ int execute_operation(SparseMatrix **mptr, SparseVector **vptr)
         RegularMatrix *rmatrix = from_sparse_to_regular_matrix(matrix);
         RegularVector *rresult = create_regular_vector(rvector->length);
         multiply_vector_by_matrix_basic(rvector, rmatrix, rresult);
+        printf("\nMultiplication result:\n");
         SparseVector *sresult = from_regular_to_sparse_vector(rresult);
         print_sparse_vector(sresult);
         free_regular_vector(rvector);
@@ -151,8 +178,10 @@ int execute_operation(SparseMatrix **mptr, SparseVector **vptr)
         break;
     }
     case PRINT_MATRIX:
+        printf("\nMatrix:\n");
         return print_sparse_matrix(matrix);
     case PRINT_VECTOR:
+        printf("\nVector:\n");
         return print_sparse_vector(vector);
     case COMPARISON:
     {
@@ -198,7 +227,7 @@ int input_matrix(SparseMatrix *matrix)
 
     if (matrix->rows < MAX_FULL_MATRIX_INPUT_LEN && matrix->columns < MAX_FULL_MATRIX_INPUT_LEN)
     {
-        char *opts[] = {"Input full matrix", "Input elements by position"};
+        static char *opts[] = {"Input full matrix", "Input elements by position"};
         size_t option = input_enum(2, opts);
         if (option)
             input_matrix_positional(matrix);
@@ -217,7 +246,7 @@ int input_vector(SparseVector *vector)
 
     if (vector->length < MAX_FULL_VECTOR_INPUT_LEN)
     {
-        char *opts[] = {"Input full vector", "Input elements by position"};
+        static char *opts[] = {"Input full vector", "Input elements by position"};
         size_t option = input_enum(2, opts);
         if (option)
             input_vector_positional(vector);
