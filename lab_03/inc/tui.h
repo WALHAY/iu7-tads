@@ -16,8 +16,8 @@ size_t input_enum(size_t max_options, char **options);
 
 int input_value(char *title, bool min_limit, bool max_limit, int min_value, int max_value);
 
-void input_matrix(SparseMatrix *matrix);
+int input_matrix(SparseMatrix *matrix);
 
-void input_vector(SparseVector *vector);
+int input_vector(SparseVector *vector);
 
 char *get_error_message(int error);

@@ -5,8 +5,8 @@
 
 int main(void)
 {
-    SparseMatrix *matrix = create_matrix(3, 3, 0);
-    SparseVector *vector = create_vector(3, 0);
+    SparseMatrix *matrix = NULL;
+    SparseVector *vector = NULL;
 
     while (true)
         execute_operation(&matrix, &vector);

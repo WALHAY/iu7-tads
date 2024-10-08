@@ -16,6 +16,23 @@ SparseMatrix *create_matrix(size_t rows, size_t columns, size_t initial_size)
     return matrix;
 }
 
+SparseMatrix *free_matrix(SparseMatrix *matrix)
+{
+    if (!matrix)
+        return NULL;
+
+    if (!matrix->elements)
+        free(matrix->elements);
+
+    if (!matrix->columnIndex)
+        free(matrix->columnIndex);
+
+    if (!matrix->rowStartIndex)
+        free(matrix->rowStartIndex);
+    free(matrix);
+    return NULL;
+}
+
 int add_matrix_element(SparseMatrix *matrix, int element, size_t row, size_t column)
 {
     if (!matrix)

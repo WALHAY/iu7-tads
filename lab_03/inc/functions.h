@@ -3,4 +3,4 @@
 #include "sparse_matrix.h"
 #include "sparse_vector.h"
 
-SparseVector *multiply_matrix_by_vector(SparseVector *vector, SparseMatrix *matrix);
+SparseVector *multiply_vector_by_matrix(SparseVector *vector, SparseMatrix *matrix);

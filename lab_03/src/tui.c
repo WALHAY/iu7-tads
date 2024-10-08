@@ -67,7 +67,7 @@ int execute_operation(SparseMatrix **mptr, SparseVector **vptr)
     SparseMatrix *matrix = *mptr;
     SparseVector *vector = *vptr;
     char *options[] = {"Create new Matrix",
-                       "Create new Vector",
+                       "Recreate Vector",
                        "Input matrix",
                        "Input vector",
                        "Randomize matrix",
@@ -83,29 +83,31 @@ int execute_operation(SparseMatrix **mptr, SparseVector **vptr)
     {
     case CREATE_MATRIX:
     {
-        if (!matrix)
-            free(matrix);
+        free_matrix(matrix);
 
         size_t rows = input_value("matrix rows count", true, false, 1, 0);
         size_t columns = input_value("matrix columns count", true, false, 1, 0);
         *mptr = create_matrix(rows, columns, 0);
+        printf("Created matrix of size rows: %zu - columns: %zu\n", rows, columns);
         break;
     }
     case CREATE_VECTOR:
     {
-        if (!vector)
-            free(vector);
+        free_vector(vector);
 
-        size_t length = input_value("vector length", true, false, 1, 0);
+        size_t length = 0;
+        if (matrix)
+            length = matrix->rows;
+        else
+            length = input_value("vector length", true, false, 1, 0);
         *vptr = create_vector(length, 0);
+        printf("Created vector of length %zu\n", length);
         break;
     }
     case INPUT_MATRIX:
-        input_matrix(matrix);
-        break;
+        return input_matrix(matrix);
     case INPUT_VECTOR:
-        input_vector(vector);
-        break;
+        return input_vector(vector);
     case RANDOMIZE_MATRIX:
     {
         int fill_percent = input_value("matrix fill percent", true, true, 1, 100);
@@ -120,7 +122,7 @@ int execute_operation(SparseMatrix **mptr, SparseVector **vptr)
     }
     case MULTIPLICATION:
     {
-        SparseVector *result = multiply_matrix_by_vector(vector, matrix);
+        SparseVector *result = multiply_vector_by_matrix(vector, matrix);
         print_sparse_vector(result);
         if (!result)
             free(result);
@@ -166,9 +168,12 @@ int input_value(char *title, bool min_limit, bool max_limit, int min_value, int 
     return value;
 }
 
-void input_matrix(SparseMatrix *matrix)
+int input_matrix(SparseMatrix *matrix)
 {
-    if (matrix->rows < 10 && matrix->columns < 10)
+    if (!matrix)
+        return NULLPTR_ERROR;
+
+    if (matrix->rows < MAX_FULL_MATRIX_INPUT_LEN && matrix->columns < MAX_FULL_MATRIX_INPUT_LEN)
     {
         char *opts[] = {"Input full matrix", "Input elements by position"};
         size_t option = input_enum(2, opts);
@@ -179,11 +184,15 @@ void input_matrix(SparseMatrix *matrix)
     }
     else
         input_matrix_positional(matrix);
+    return SUCCESS;
 }
 
-void input_vector(SparseVector *vector)
+int input_vector(SparseVector *vector)
 {
-    if (vector->length < 30)
+    if (!vector)
+        return NULLPTR_ERROR;
+
+    if (vector->length < MAX_FULL_VECTOR_INPUT_LEN)
     {
         char *opts[] = {"Input full vector", "Input elements by position"};
         size_t option = input_enum(2, opts);
@@ -194,6 +203,7 @@ void input_vector(SparseVector *vector)
     }
     else
         input_vector_positional(vector);
+    return SUCCESS;
 }
 
 char *get_error_message(int error)

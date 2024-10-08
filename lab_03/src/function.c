@@ -1,6 +1,6 @@
 #include "../inc/functions.h"
 
-SparseVector *multiply_matrix_by_vector(SparseVector *vector, SparseMatrix *matrix)
+SparseVector *multiply_vector_by_matrix(SparseVector *vector, SparseMatrix *matrix)
 {
     if (!matrix || !vector)
         return NULL;
