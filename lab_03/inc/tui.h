@@ -2,6 +2,8 @@
 
 #include "defines.h"
 #include "functions.h"
+#include "regular_matrix.h"
+#include "regular_vector.h"
 #include "sparse_matrix.h"
 #include "sparse_vector.h"
 #include <errno.h>

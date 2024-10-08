@@ -72,12 +72,13 @@ int execute_operation(SparseMatrix **mptr, SparseVector **vptr)
                        "Input vector",
                        "Randomize matrix",
                        "Randomize vector",
-                       "Multiply matrix on vector",
+                       "Multiply vector by matrix sparse",
+                       "Multiplication vector by matrix regular",
                        "Print matrix",
                        "Print vector",
                        "Compare",
                        "Exit"};
-    size_t opt = input_enum(11, options);
+    size_t opt = input_enum(12, options);
     printf("Processing: %s\n", *(options + opt));
     switch (opt)
     {
@@ -120,12 +121,21 @@ int execute_operation(SparseMatrix **mptr, SparseVector **vptr)
         generate_random_vector(vector, fill_percent / 100.0f);
         break;
     }
-    case MULTIPLICATION:
+    case MULTIPLICATION_SPARSE:
     {
         SparseVector *result = multiply_vector_by_matrix(vector, matrix);
         print_sparse_vector(result);
         if (!result)
             free(result);
+        break;
+    }
+    case MULTIPLICATION_REGULAR:
+    {
+        RegularVector *rvector = from_sparse_to_regular_vector(vector);
+        RegularMatrix *rmatrix = from_sparse_to_regular_matrix(matrix);
+        RegularVector *result = multiply_vector_by_matrix_basic(rvector, rmatrix);
+        for (size_t i = 0; i < result->length; ++i)
+            printf("Shit %d\n", result->data[i]);
         break;
     }
     case PRINT_MATRIX:
