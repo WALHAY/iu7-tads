@@ -13,6 +13,55 @@ static int safe_int_input(int *value)
     return SUCCESS;
 }
 
+static void input_matrix_full(SparseMatrix *matrix)
+{
+    for (size_t row = 0; row < matrix->rows; ++row)
+    {
+        for (size_t column = 0; column < matrix->columns; ++column)
+        {
+            char title[120];
+            sprintf(title, "value of element in %zu row %zu column", row, column);
+            int value = input_value(title, false, false, 0, 0);
+            add_matrix_element(matrix, value, row, column);
+        }
+    }
+}
+
+static void input_matrix_positional(SparseMatrix *matrix)
+{
+    int size = input_value("count of elements you want to input", true, true, 1, matrix->rows * matrix->columns);
+    while (size--)
+    {
+        int element = input_value("element value", false, false, 0, 0);
+        size_t row = input_value("element row", true, true, 0, matrix->rows - 1);
+        size_t column = input_value("element column", true, true, 0, matrix->columns - 1);
+        add_matrix_element(matrix, element, row, column);
+        printf("\n");
+    }
+}
+
+static void input_vector_full(SparseVector *vector)
+{
+    for (size_t i = 0; i < vector->length; ++i)
+    {
+        char title[120];
+        sprintf(title, "%zu element value", i);
+        int value = input_value(title, false, false, 0, 0);
+        add_vector_element(vector, value, i);
+    }
+}
+
+static void input_vector_positional(SparseVector *vector)
+{
+    int size = input_value("count of elements you want to input", true, true, 1, vector->length);
+    while (size--)
+    {
+        int element = input_value("element value", false, false, 0, 0);
+        size_t index = input_value("element index", true, true, 0, vector->length - 1);
+        add_vector_element(vector, element, index);
+    }
+}
+
 int execute_operation(SparseMatrix **mptr, SparseVector **vptr)
 {
     SparseMatrix *matrix = *mptr;
@@ -119,39 +168,32 @@ int input_value(char *title, bool min_limit, bool max_limit, int min_value, int 
 
 void input_matrix(SparseMatrix *matrix)
 {
-    int size = input_value("count of elements you want to input", true, true, 1, matrix->rows * matrix->columns);
-    while (size--)
+    if (matrix->rows < 10 && matrix->columns < 10)
     {
-        int element = input_value("element value", false, false, 0, 0);
-        size_t row = input_value("element row", true, true, 0, matrix->rows);
-        size_t column = input_value("element column", true, true, 0, matrix->columns);
-        if (add_matrix_element(matrix, element, row, column) == ELEMENT_EXIST_ERROR)
-        {
-            printf("Element is already existing!\n"
-                   "Replace element? ");
-            size_t option = input_value("(Yes - 1, No - 0)", true, true, 0, 1);
-            if (option == 1)
-                replace_matrix_element(matrix, element, row, column);
-        }
+        char *opts[] = {"Input full matrix", "Input elements by position"};
+        size_t option = input_enum(2, opts);
+        if (option)
+            input_matrix_positional(matrix);
+        else
+            input_matrix_full(matrix);
     }
+    else
+        input_matrix_positional(matrix);
 }
 
 void input_vector(SparseVector *vector)
 {
-    int size = input_value("count of elements you want to input", true, true, 1, vector->length);
-    while (size--)
+    if (vector->length < 30)
     {
-        int element = input_value("element value", false, false, 0, 0);
-        size_t index = input_value("element index", true, true, 0, vector->length);
-        if (add_vector_element(vector, element, index) == ELEMENT_EXIST_ERROR)
-        {
-            printf("Element is already existing!\n"
-                   "Replace element? ");
-            size_t option = input_value("(Yes - 1, No - 0)", true, true, 0, 1);
-            if (option == 1)
-                replace_vector_element(vector, element, index);
-        }
+        char *opts[] = {"Input full vector", "Input elements by position"};
+        size_t option = input_enum(2, opts);
+        if (option)
+            input_vector_positional(vector);
+        else
+            input_vector_full(vector);
     }
+    else
+        input_vector_positional(vector);
 }
 
 char *get_error_message(int error)
