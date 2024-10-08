@@ -134,8 +134,6 @@ int execute_operation(SparseMatrix **mptr, SparseVector **vptr)
         RegularVector *rvector = from_sparse_to_regular_vector(vector);
         RegularMatrix *rmatrix = from_sparse_to_regular_matrix(matrix);
         RegularVector *result = multiply_vector_by_matrix_basic(rvector, rmatrix);
-        for (size_t i = 0; i < result->length; ++i)
-            printf("Shit %d\n", result->data[i]);
         break;
     }
     case PRINT_MATRIX:

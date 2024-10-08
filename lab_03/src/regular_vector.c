@@ -2,7 +2,6 @@
 
 RegularVector *create_regular_vector(size_t length)
 {
-    printf("Create %zu len vector\n", length);
     RegularVector *result = malloc(sizeof(RegularVector));
     result->length = length;
     result->data = calloc(length, sizeof(int));
