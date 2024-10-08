@@ -64,10 +64,10 @@ int add_matrix_element(SparseMatrix *matrix, int element, size_t row, size_t col
         matrix->rowIndex[i] = matrix->rowIndex[i - 1];
     }
     matrix->elements[columnStart] = element;
-    matrix->rowIndex[columnStart] = column;
+    matrix->rowIndex[columnStart] = row;
     matrix->size++;
 
-    for (size_t i = row + 1; i <= matrix->rows; ++i)
+    for (size_t i = column + 1; i <= matrix->columns; ++i)
         matrix->columnStartIndex[i]++;
 
     return SUCCESS;

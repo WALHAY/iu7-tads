@@ -7,6 +7,27 @@ void multiply_vector_by_matrix(SparseVector *vector, SparseMatrix *matrix, Spars
 
     if (matrix->rows != vector->length)
         return;
+
+    for (size_t column = 0; column < matrix->columns; ++column)
+    {
+        size_t columnStart = matrix->columnStartIndex[column];
+        size_t columnEnd = matrix->columnStartIndex[column + 1];
+        size_t index = 0;
+        int sum = 0;
+        for (size_t pos = columnStart; pos < columnEnd; ++pos)
+        {
+            int value = matrix->elements[pos];
+            size_t row = matrix->rowIndex[pos];
+            while (index < vector->size && vector->index[index] < row)
+                index++;
+
+            if (vector->index[index] == row)
+                sum += vector->elements[index] * value;
+        }
+
+        if (sum)
+            add_vector_element(result, sum, column);
+    }
 }
 
 void multiply_vector_by_matrix_basic(RegularVector *vector, RegularMatrix *matrix, RegularVector *result)
