@@ -2,6 +2,7 @@
 
 #include "defines.h"
 #include <limits.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -11,7 +12,7 @@ typedef struct
     size_t allocated;
     size_t size;
     size_t rows, columns;
-    size_t *columnIndex, *rowStartIndex;
+    size_t *rowIndex, *columnStartIndex;
     int *elements;
 } SparseMatrix;
 

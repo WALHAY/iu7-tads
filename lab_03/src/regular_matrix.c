@@ -26,17 +26,37 @@ RegularMatrix *free_regular_matrix(RegularMatrix *matrix)
     return NULL;
 }
 
+int generate_random_regular_matrix(RegularMatrix *matrix, float fill)
+{
+    if (!matrix)
+        return NULLPTR_ERROR;
+
+    size_t elements = matrix->rows * matrix->columns;
+    size_t fill_elements = elements * fill;
+
+    for (size_t i = 0; i < fill_elements; ++i)
+    {
+        size_t index = rand() % elements;
+
+        size_t row = index / matrix->columns;
+        size_t column = index % matrix->columns;
+        int value = (rand() % 100) * (rand() % 2 ? -1 : 1);
+        matrix->matrix[row][column] = value;
+    }
+    return SUCCESS;
+}
+
 RegularMatrix *from_sparse_to_regular_matrix(SparseMatrix *matrix)
 {
     RegularMatrix *result = create_regular_matrix(matrix->rows, matrix->columns);
-    for (size_t row = 0; row < matrix->rows; ++row)
+    for (size_t column = 0; column < matrix->columns; ++column)
     {
-        size_t rowStart = matrix->rowStartIndex[row];
-        size_t rowEnd = matrix->rowStartIndex[row + 1];
-        for (size_t index = rowStart; index < rowEnd; ++index)
+        size_t columnStart = matrix->columnStartIndex[column];
+        size_t columnEnd = matrix->columnStartIndex[column + 1];
+        for (size_t j = columnStart; j < columnEnd; ++j)
         {
-            size_t column = matrix->columnIndex[index];
-            int value = matrix->elements[index];
+            int value = matrix->elements[j];
+            size_t row = matrix->rowIndex[j];
             result->matrix[row][column] = value;
         }
     }

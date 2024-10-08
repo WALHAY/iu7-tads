@@ -41,6 +41,7 @@ int add_vector_element(SparseVector *vector, int element, size_t index)
     {
         vector->elements = realloc(vector->elements, sizeof(int) * (vector->size + 1));
         vector->index = realloc(vector->index, sizeof(size_t) * (vector->size + 1));
+        vector->allocated++;
     }
 
     size_t insert_at = 0;
@@ -89,20 +90,12 @@ int generate_random_vector(SparseVector *vector, float fill)
 
     size_t elements = vector->length;
     size_t fill_elements = elements * fill;
-    int indices[elements];
-
-    for (size_t i = 0; i < elements; ++i)
-        indices[i] = i;
 
     for (size_t i = 0; i < fill_elements; ++i)
     {
-        size_t arr_index = rand() % elements--;
-        size_t index = indices[arr_index];
+        size_t index = rand() % elements;
         int value = (rand() % 100) * (rand() % 2 ? -1 : 1);
         add_vector_element(vector, value, index);
-
-        for (size_t j = arr_index; j < elements; ++j)
-            indices[j] = indices[j + 1];
     }
     return SUCCESS;
 }

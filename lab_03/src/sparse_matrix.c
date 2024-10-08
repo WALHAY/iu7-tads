@@ -9,8 +9,8 @@ SparseMatrix *create_matrix(size_t rows, size_t columns, size_t initial_size)
     matrix->allocated = initial_size;
     matrix->size = 0;
     matrix->elements = calloc(initial_size, sizeof(int));
-    matrix->columnIndex = calloc(initial_size, sizeof(size_t));
-    matrix->rowStartIndex = calloc(rows + 1, sizeof(size_t));
+    matrix->rowIndex = calloc(initial_size, sizeof(size_t));
+    matrix->columnStartIndex = calloc(rows + 1, sizeof(size_t));
     matrix->rows = rows;
     matrix->columns = columns;
 
@@ -25,11 +25,11 @@ SparseMatrix *free_matrix(SparseMatrix *matrix)
     if (!matrix->elements)
         free(matrix->elements);
 
-    if (!matrix->columnIndex)
-        free(matrix->columnIndex);
+    if (!matrix->rowIndex)
+        free(matrix->rowIndex);
 
-    if (!matrix->rowStartIndex)
-        free(matrix->rowStartIndex);
+    if (!matrix->columnStartIndex)
+        free(matrix->columnStartIndex);
     free(matrix);
     return NULL;
 }
@@ -45,29 +45,30 @@ int add_matrix_element(SparseMatrix *matrix, int element, size_t row, size_t col
     if (matrix->size + 1 > matrix->allocated)
     {
         matrix->elements = realloc(matrix->elements, sizeof(int) * (matrix->size + 1));
-        matrix->columnIndex = realloc(matrix->columnIndex, sizeof(size_t) * (matrix->size + 1));
+        matrix->rowIndex = realloc(matrix->rowIndex, sizeof(size_t) * (matrix->size + 1));
+        matrix->allocated++;
     }
 
-    size_t rowStart = matrix->rowStartIndex[row];
-    size_t rowEnd = matrix->rowStartIndex[row + 1];
+    size_t columnStart = matrix->columnStartIndex[column];
+    size_t columnEnd = matrix->columnStartIndex[column + 1];
     // keep it ordered
-    for (; rowStart < rowEnd; ++rowStart)
-        if (matrix->columnIndex[rowStart] > column)
+    for (; columnStart < columnEnd; ++columnStart)
+        if (matrix->rowIndex[columnStart] > row)
             break;
-        else if (matrix->columnIndex[rowStart] == column)
+        else if (matrix->rowIndex[columnStart] == row)
             return ELEMENT_EXIST_ERROR;
 
-    for (size_t i = matrix->size; i >= rowStart && i >= 1; --i)
+    for (size_t i = matrix->size; i >= columnStart && i >= 1; --i)
     {
         matrix->elements[i] = matrix->elements[i - 1];
-        matrix->columnIndex[i] = matrix->columnIndex[i - 1];
+        matrix->rowIndex[i] = matrix->rowIndex[i - 1];
     }
-    matrix->elements[rowStart] = element;
-    matrix->columnIndex[rowStart] = column;
+    matrix->elements[columnStart] = element;
+    matrix->rowIndex[columnStart] = column;
     matrix->size++;
 
     for (size_t i = row + 1; i <= matrix->rows; ++i)
-        matrix->rowStartIndex[i]++;
+        matrix->columnStartIndex[i]++;
 
     return SUCCESS;
 }
@@ -80,12 +81,12 @@ int replace_matrix_element(SparseMatrix *matrix, int element, size_t row, size_t
     if (row >= matrix->rows || column >= matrix->columns)
         return WRONG_POS_ERROR;
 
-    size_t rowStart = matrix->rowStartIndex[row];
-    size_t rowEnd = matrix->rowStartIndex[row + 1];
+    size_t columnStart = matrix->columnStartIndex[column];
+    size_t columnEnd = matrix->columnStartIndex[column + 1];
 
-    for (size_t i = rowStart; i < rowEnd && matrix->columnIndex[i] <= column; ++i)
+    for (size_t i = columnStart; i < columnEnd && matrix->rowIndex[i] <= row; ++i)
     {
-        if (matrix->columnIndex[i] == column)
+        if (matrix->rowIndex[i] == row)
         {
             matrix->elements[i] = element;
             return SUCCESS;
@@ -102,44 +103,43 @@ int generate_random_matrix(SparseMatrix *matrix, float fill)
 
     size_t elements = matrix->rows * matrix->columns;
     size_t fill_elements = elements * fill;
-    size_t indices[elements];
-    for (size_t i = 0; i < elements; ++i)
-        indices[i] = i;
 
     for (size_t i = 0; i < fill_elements; ++i)
     {
-        size_t arr_index = rand() % elements--;
-        size_t index = indices[arr_index];
+        size_t index = rand() % elements;
 
         size_t row = index / matrix->columns;
         size_t column = index % matrix->columns;
         int value = (rand() % 100) * (rand() % 2 ? -1 : 1);
         if (add_matrix_element(matrix, value, row, column) == ELEMENT_EXIST_ERROR)
             replace_matrix_element(matrix, value, row, column);
-
-        for (size_t j = arr_index; j < elements; ++j)
-            indices[j] = indices[j + 1];
     }
     return SUCCESS;
 }
 
 static void print_full_matrix(SparseMatrix *matrix)
 {
-    for (size_t i = 0; i < matrix->rows; ++i)
+    for (size_t row = 0; row < matrix->rows; ++row)
     {
-        size_t current_index = 0;
-        size_t start = matrix->rowStartIndex[i];
-        size_t end = matrix->rowStartIndex[i + 1];
-
-        for (size_t j = start; j < end; ++j)
+        for (size_t column = 0; column < matrix->columns; ++column)
         {
-            while (current_index++ < matrix->columnIndex[j])
-                printf("0\t");
-            printf("%d\t", matrix->elements[j]);
-        }
+            size_t columnStart = matrix->columnStartIndex[column];
+            size_t columnEnd = matrix->columnStartIndex[column + 1];
 
-        while (current_index++ < matrix->columns)
-            printf("0\t");
+            int value = 0;
+            bool found = false;
+            for (size_t pos = columnStart; pos < columnEnd; ++pos)
+            {
+                if (matrix->rowIndex[pos] == row)
+                {
+                    found = true;
+                    value = matrix->elements[pos];
+                    break;
+                }
+            }
+
+            printf("%d\t", found ? value : 0);
+        }
         printf("\n");
     }
 }
@@ -151,15 +151,15 @@ static void print_short_matrix(SparseMatrix *matrix)
         printf("%d\t", matrix->elements[i]);
     printf("\n");
 
-    printf("JA: ");
-    for (size_t i = 0; i < matrix->rows; ++i)
-        for (size_t j = matrix->rowStartIndex[i]; j < matrix->rowStartIndex[i + 1]; ++j)
-            printf("%zu\t", matrix->columnIndex[j]);
+    printf("IA: ");
+    for (size_t column = 0; column < matrix->rows; ++column)
+        for (size_t pos = matrix->columnStartIndex[column]; pos < matrix->columnStartIndex[column + 1]; ++pos)
+            printf("%zu\t", matrix->rowIndex[pos]);
     printf("\n");
 
-    printf("IA: ");
+    printf("JA: ");
     for (size_t i = 0; i <= matrix->rows; ++i)
-        printf("%zu\t", matrix->rowStartIndex[i]);
+        printf("%zu\t", matrix->columnStartIndex[i]);
     printf("\n");
 }
 

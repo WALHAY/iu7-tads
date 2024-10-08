@@ -53,8 +53,8 @@ static void input_matrix_full(SparseMatrix *matrix)
 
 static void input_matrix_positional(SparseMatrix *matrix)
 {
-    int size = input_value("count of elements you want to input", true, true, 1, matrix->rows * matrix->columns);
-    while (size--)
+    size_t size = input_value("count of elements you want to input", true, true, 0, matrix->rows * matrix->columns);
+    for (size_t i = 0; i < size; ++i)
     {
         int value = input_value("element value", false, false, 0, 0);
         size_t row = input_value("element row", true, true, 0, matrix->rows - 1);
@@ -77,8 +77,8 @@ static void input_vector_full(SparseVector *vector)
 
 static void input_vector_positional(SparseVector *vector)
 {
-    int size = input_value("count of elements you want to input", true, true, 1, vector->length);
-    while (size--)
+    size_t size = input_value("count of elements you want to input", true, true, 0, vector->length);
+    for (size_t i = 0; i < size; ++i)
     {
         int value = input_value("element value", false, false, 0, 0);
         size_t index = input_value("element index", true, true, 0, vector->length - 1);
@@ -184,10 +184,8 @@ int execute_operation(SparseMatrix **mptr, SparseVector **vptr)
         printf("\nVector:\n");
         return print_sparse_vector(vector);
     case COMPARISON:
-    {
         compare_tads();
         break;
-    }
     case EXIT:
         exit(SUCCESS);
     }

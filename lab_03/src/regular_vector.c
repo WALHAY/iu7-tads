@@ -19,6 +19,22 @@ RegularVector *free_regular_vector(RegularVector *vector)
     return NULL;
 }
 
+int generate_random_regular_vector(RegularVector *vector, float fill)
+{
+    if (!vector)
+        return NULLPTR_ERROR;
+
+    size_t fill_elements = vector->length * fill;
+
+    for (size_t i = 0; i < fill_elements; ++i)
+    {
+        size_t index = rand() % vector->length;
+        int value = (rand() % 100) * (rand() % 2 ? -1 : 1);
+        vector->data[index] = value;
+    }
+    return SUCCESS;
+}
+
 RegularVector *from_sparse_to_regular_vector(SparseVector *vector)
 {
     RegularVector *result = create_regular_vector(vector->length);
