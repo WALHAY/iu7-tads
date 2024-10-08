@@ -99,13 +99,17 @@ int execute_operation(SparseMatrix **mptr, SparseVector **vptr)
     }
     case CREATE_VECTOR:
     {
+        if (!matrix)
+        {
+            printf("Specify matrix first\n");
+            break;
+        }
+
         free_vector(vector);
 
         size_t length = 0;
         if (matrix)
             length = matrix->rows;
-        else
-            length = input_value("vector length", true, false, 1, 0);
         *vptr = create_vector(length, 0);
         printf("Created vector of length %zu\n", length);
         break;
@@ -129,8 +133,7 @@ int execute_operation(SparseMatrix **mptr, SparseVector **vptr)
         SparseVector *result = create_vector(vector->length, 0);
         multiply_vector_by_matrix(vector, matrix, result);
         print_sparse_vector(result);
-        if (!result)
-            free(result);
+        free_vector(result);
         break;
     }
     case MULTIPLICATION_REGULAR:
@@ -141,6 +144,10 @@ int execute_operation(SparseMatrix **mptr, SparseVector **vptr)
         multiply_vector_by_matrix_basic(rvector, rmatrix, rresult);
         SparseVector *sresult = from_regular_to_sparse_vector(rresult);
         print_sparse_vector(sresult);
+        free_regular_vector(rvector);
+        free_regular_matrix(rmatrix);
+        free_regular_vector(rresult);
+        free_vector(sresult);
         break;
     }
     case PRINT_MATRIX:

@@ -8,6 +8,7 @@
 
 typedef struct
 {
+    size_t allocated;
     size_t size;
     size_t rows, columns;
     size_t *columnIndex, *rowStartIndex;

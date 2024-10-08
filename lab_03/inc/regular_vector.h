@@ -11,6 +11,8 @@ typedef struct
 
 RegularVector *create_regular_vector(size_t length);
 
+RegularVector *free_regular_vector(RegularVector *vector);
+
 RegularVector *from_sparse_to_regular_vector(SparseVector *vector);
 
 SparseVector *from_regular_to_sparse_vector(RegularVector *vector);

@@ -6,6 +6,7 @@ SparseMatrix *create_matrix(size_t rows, size_t columns, size_t initial_size)
     if (!matrix)
         return NULL;
 
+    matrix->allocated = initial_size;
     matrix->size = 0;
     matrix->elements = calloc(initial_size, sizeof(int));
     matrix->columnIndex = calloc(initial_size, sizeof(size_t));
@@ -41,8 +42,11 @@ int add_matrix_element(SparseMatrix *matrix, int element, size_t row, size_t col
     if (row >= matrix->rows || column >= matrix->columns)
         return WRONG_POS_ERROR;
 
-    matrix->elements = realloc(matrix->elements, sizeof(int) * (matrix->size + 1));
-    matrix->columnIndex = realloc(matrix->columnIndex, sizeof(size_t) * (matrix->size + 1));
+    if (matrix->size + 1 > matrix->allocated)
+    {
+        matrix->elements = realloc(matrix->elements, sizeof(int) * (matrix->size + 1));
+        matrix->columnIndex = realloc(matrix->columnIndex, sizeof(size_t) * (matrix->size + 1));
+    }
 
     size_t rowStart = matrix->rowStartIndex[row];
     size_t rowEnd = matrix->rowStartIndex[row + 1];

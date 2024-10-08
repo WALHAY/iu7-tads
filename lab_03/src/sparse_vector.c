@@ -7,8 +7,9 @@ SparseVector *create_vector(size_t length, size_t initial_size)
         return NULL;
 
     vector->length = length;
+    vector->allocated = initial_size;
     vector->size = 0;
-    vector->elements = malloc(sizeof(int) * initial_size);
+    vector->elements = calloc(initial_size, sizeof(int));
     vector->index = calloc(initial_size, sizeof(size_t));
 
     return vector;
@@ -36,8 +37,11 @@ int add_vector_element(SparseVector *vector, int element, size_t index)
     if (index >= vector->length)
         return WRONG_POS_ERROR;
 
-    vector->elements = realloc(vector->elements, sizeof(int) * (vector->size + 1));
-    vector->index = realloc(vector->index, sizeof(size_t) * (vector->size + 1));
+    if (vector->size + 1 > vector->allocated)
+    {
+        vector->elements = realloc(vector->elements, sizeof(int) * (vector->size + 1));
+        vector->index = realloc(vector->index, sizeof(size_t) * (vector->size + 1));
+    }
 
     size_t insert_at = 0;
     for (; insert_at < vector->size; ++insert_at)

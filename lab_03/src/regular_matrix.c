@@ -12,6 +12,20 @@ RegularMatrix *create_regular_matrix(size_t rows, size_t columns)
     return result;
 }
 
+RegularMatrix *free_regular_matrix(RegularMatrix *matrix)
+{
+    if (!matrix)
+        return NULL;
+
+    if (matrix->buffer)
+        free(matrix->buffer);
+
+    if (matrix->matrix)
+        free(matrix->matrix);
+
+    return NULL;
+}
+
 RegularMatrix *from_sparse_to_regular_matrix(SparseMatrix *matrix)
 {
     RegularMatrix *result = create_regular_matrix(matrix->rows, matrix->columns);

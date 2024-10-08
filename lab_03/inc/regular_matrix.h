@@ -13,6 +13,8 @@ typedef struct
 
 RegularMatrix *create_regular_matrix(size_t rows, size_t columns);
 
+RegularMatrix *free_regular_matrix(RegularMatrix *matrix);
+
 RegularMatrix *from_sparse_to_regular_matrix(SparseMatrix *matrix);
 
 SparseMatrix *from_regular_to_sparse_matrix(RegularMatrix *matrix);

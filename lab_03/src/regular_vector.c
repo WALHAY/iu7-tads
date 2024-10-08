@@ -8,6 +8,17 @@ RegularVector *create_regular_vector(size_t length)
     return result;
 }
 
+RegularVector *free_regular_vector(RegularVector *vector)
+{
+    if (!vector)
+        return NULL;
+
+    if (vector->data)
+        free(vector);
+
+    return NULL;
+}
+
 RegularVector *from_sparse_to_regular_vector(SparseVector *vector)
 {
     RegularVector *result = create_regular_vector(vector->length);
