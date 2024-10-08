@@ -76,7 +76,7 @@ int execute_operation(SparseMatrix **mptr, SparseVector **vptr)
                        "Multiply vector by matrix (basic)",
                        "Print matrix",
                        "Print vector",
-                       "Compare",
+                       "Compare TaDS",
                        "Exit"};
     size_t opt = input_enum(12, options);
     printf("Processing: %s\n", *(options + opt));
@@ -126,7 +126,8 @@ int execute_operation(SparseMatrix **mptr, SparseVector **vptr)
     }
     case MULTIPLICATION_SPARSE:
     {
-        SparseVector *result = multiply_vector_by_matrix(vector, matrix);
+        SparseVector *result = create_vector(vector->length, 0);
+        multiply_vector_by_matrix(vector, matrix, result);
         print_sparse_vector(result);
         if (!result)
             free(result);
@@ -136,8 +137,9 @@ int execute_operation(SparseMatrix **mptr, SparseVector **vptr)
     {
         RegularVector *rvector = from_sparse_to_regular_vector(vector);
         RegularMatrix *rmatrix = from_sparse_to_regular_matrix(matrix);
-        RegularVector *result = multiply_vector_by_matrix_basic(rvector, rmatrix);
-        SparseVector *sresult = from_regular_to_sparse_vector(result);
+        RegularVector *rresult = create_regular_vector(rvector->length);
+        multiply_vector_by_matrix_basic(rvector, rmatrix, rresult);
+        SparseVector *sresult = from_regular_to_sparse_vector(rresult);
         print_sparse_vector(sresult);
         break;
     }
@@ -146,7 +148,10 @@ int execute_operation(SparseMatrix **mptr, SparseVector **vptr)
     case PRINT_VECTOR:
         return print_sparse_vector(vector);
     case COMPARISON:
+    {
+        compare_tads();
         break;
+    }
     case EXIT:
         exit(SUCCESS);
     }

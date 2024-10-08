@@ -1,17 +1,12 @@
 #include "../inc/functions.h"
 
-SparseVector *multiply_vector_by_matrix(SparseVector *vector, SparseMatrix *matrix)
+void multiply_vector_by_matrix(SparseVector *vector, SparseMatrix *matrix, SparseVector *result)
 {
-    if (!matrix || !vector)
-        return NULL;
+    if (!matrix || !vector || !result)
+        return;
 
     if (matrix->rows != vector->length)
-        return NULL;
-
-    SparseVector *result = create_vector(vector->length, 0);
-
-    if (!result)
-        return NULL;
+        return;
 
     for (size_t i = 0; i < matrix->columns; ++i)
     {
@@ -27,22 +22,15 @@ SparseVector *multiply_vector_by_matrix(SparseVector *vector, SparseMatrix *matr
         }
         add_vector_element(result, sum, i);
     }
-
-    return result;
 }
 
-RegularVector *multiply_vector_by_matrix_basic(RegularVector *vector, RegularMatrix *matrix)
+void multiply_vector_by_matrix_basic(RegularVector *vector, RegularMatrix *matrix, RegularVector *result)
 {
-    if (!vector || !matrix)
-        return NULL;
+    if (!vector || !matrix || !result)
+        return;
 
     if (vector->length != matrix->rows)
-        return NULL;
-
-    RegularVector *result = create_regular_vector(vector->length);
-
-    if (!result)
-        return NULL;
+        return;
 
     for (size_t column = 0; column < vector->length; ++column)
     {
@@ -51,5 +39,4 @@ RegularVector *multiply_vector_by_matrix_basic(RegularVector *vector, RegularMat
             sum += vector->data[i] * matrix->matrix[i][column];
         result->data[column] = sum;
     }
-    return result;
 }

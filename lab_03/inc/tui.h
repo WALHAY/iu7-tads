@@ -1,5 +1,6 @@
 #pragma once
 
+#include "comparison.h"
 #include "defines.h"
 #include "functions.h"
 #include "regular_matrix.h"
