@@ -5,10 +5,13 @@ SparseVector *multiply_vector_by_matrix(SparseVector *vector, SparseMatrix *matr
     if (!matrix || !vector)
         return NULL;
 
-    if (matrix->columns != vector->length)
+    if (matrix->rows != vector->length)
         return NULL;
 
     SparseVector *result = create_vector(vector->length, 0);
+
+    if (!result)
+        return NULL;
 
     for (size_t i = 0; i < matrix->columns; ++i)
     {
@@ -25,15 +28,22 @@ SparseVector *multiply_vector_by_matrix(SparseVector *vector, SparseMatrix *matr
         add_vector_element(result, sum, i);
     }
 
-    if (!result)
-        return NULL;
-
     return result;
 }
 
 RegularVector *multiply_vector_by_matrix_basic(RegularVector *vector, RegularMatrix *matrix)
 {
+    if (!vector || !matrix)
+        return NULL;
+
+    if (vector->length != matrix->rows)
+        return NULL;
+
     RegularVector *result = create_regular_vector(vector->length);
+
+    if (!result)
+        return NULL;
+
     for (size_t column = 0; column < vector->length; ++column)
     {
         int sum = 0;

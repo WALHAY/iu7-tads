@@ -72,8 +72,8 @@ int execute_operation(SparseMatrix **mptr, SparseVector **vptr)
                        "Input vector",
                        "Randomize matrix",
                        "Randomize vector",
-                       "Multiply vector by matrix sparse",
-                       "Multiplication vector by matrix regular",
+                       "Multiply vector by matrix (sparse)",
+                       "Multiply vector by matrix (basic)",
                        "Print matrix",
                        "Print vector",
                        "Compare",
@@ -90,6 +90,11 @@ int execute_operation(SparseMatrix **mptr, SparseVector **vptr)
         size_t columns = input_value("matrix columns count", true, false, 1, 0);
         *mptr = create_matrix(rows, columns, 0);
         printf("Created matrix of size rows: %zu - columns: %zu\n", rows, columns);
+
+        free_vector(vector);
+
+        *vptr = create_vector(rows, 0);
+        printf("Created vector of length %zu\n", rows);
         break;
     }
     case CREATE_VECTOR:
@@ -112,14 +117,12 @@ int execute_operation(SparseMatrix **mptr, SparseVector **vptr)
     case RANDOMIZE_MATRIX:
     {
         int fill_percent = input_value("matrix fill percent", true, true, 1, 100);
-        generate_random_matrix(matrix, fill_percent / 100.0f);
-        break;
+        return generate_random_matrix(matrix, fill_percent / 100.0f);
     }
     case RANDOMIZE_VECTOR:
     {
         int fill_percent = input_value("vector fill percent", true, true, 1, 100);
-        generate_random_vector(vector, fill_percent / 100.0f);
-        break;
+        return generate_random_vector(vector, fill_percent / 100.0f);
     }
     case MULTIPLICATION_SPARSE:
     {
@@ -134,14 +137,14 @@ int execute_operation(SparseMatrix **mptr, SparseVector **vptr)
         RegularVector *rvector = from_sparse_to_regular_vector(vector);
         RegularMatrix *rmatrix = from_sparse_to_regular_matrix(matrix);
         RegularVector *result = multiply_vector_by_matrix_basic(rvector, rmatrix);
+        SparseVector *sresult = from_regular_to_sparse_vector(result);
+        print_sparse_vector(sresult);
         break;
     }
     case PRINT_MATRIX:
-        print_sparse_matrix(matrix);
-        break;
+        return print_sparse_matrix(matrix);
     case PRINT_VECTOR:
-        print_sparse_vector(vector);
-        break;
+        return print_sparse_vector(vector);
     case COMPARISON:
         break;
     case EXIT:

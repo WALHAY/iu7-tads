@@ -19,6 +19,6 @@ int add_vector_element(SparseVector *vector, int element, size_t index);
 
 int replace_vector_element(SparseVector *vector, int element, size_t index);
 
-void generate_random_vector(SparseVector *vector, float fill);
+int generate_random_vector(SparseVector *vector, float fill);
 
-void print_sparse_vector(SparseVector *vector);
+int print_sparse_vector(SparseVector *vector);

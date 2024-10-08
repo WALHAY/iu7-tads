@@ -93,7 +93,9 @@ int replace_matrix_element(SparseMatrix *matrix, int element, size_t row, size_t
 
 int generate_random_matrix(SparseMatrix *matrix, float fill)
 {
-    srand(time(NULL));
+    if (!matrix)
+        return NULLPTR_ERROR;
+
     size_t elements = matrix->rows * matrix->columns;
     size_t fill_elements = elements * fill;
     size_t indices[elements];
@@ -159,6 +161,9 @@ static void print_short_matrix(SparseMatrix *matrix)
 
 int print_sparse_matrix(SparseMatrix *matrix)
 {
+    if (!matrix)
+        return NULLPTR_ERROR;
+
     if (matrix->columns > 30 || matrix->rows > 30)
         print_short_matrix(matrix);
     else

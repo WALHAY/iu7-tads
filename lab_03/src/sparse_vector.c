@@ -78,8 +78,11 @@ int replace_vector_element(SparseVector *vector, int element, size_t index)
     return REPLACE_ERROR;
 }
 
-void generate_random_vector(SparseVector *vector, float fill)
+int generate_random_vector(SparseVector *vector, float fill)
 {
+    if (!vector)
+        return NULLPTR_ERROR;
+
     size_t elements = vector->length;
     size_t fill_elements = elements * fill;
     int indices[elements];
@@ -97,6 +100,7 @@ void generate_random_vector(SparseVector *vector, float fill)
         for (size_t j = arr_index; j < elements; ++j)
             indices[j] = indices[j + 1];
     }
+    return SUCCESS;
 }
 
 static void print_full_vector(SparseVector *vector)
@@ -125,13 +129,14 @@ static void print_short_vector(SparseVector *vector)
     printf("\n");
 }
 
-void print_sparse_vector(SparseVector *vector)
+int print_sparse_vector(SparseVector *vector)
 {
     if (!vector)
-        return;
+        return NULLPTR_ERROR;
 
     if (vector->length <= 30)
         print_full_vector(vector);
     else
         print_short_vector(vector);
+    return SUCCESS;
 }
