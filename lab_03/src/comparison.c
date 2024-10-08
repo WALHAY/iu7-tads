@@ -28,6 +28,11 @@ void compare_multiplication_time(size_t rows, size_t columns, float fill)
         multiply_vector_by_matrix_basic(rvector, rmatrix, rresult);
         clock_gettime(CLOCK_MONOTONIC_RAW, &t2);
         regular += difftime(t2.tv_nsec, t1.tv_nsec) + 1000000000 * difftime(t2.tv_sec, t1.tv_sec);
+        free_regular_vector(rresult);
+        free_regular_vector(rvector);
+        free_regular_matrix(rmatrix);
+        free_matrix(matrix);
+        free_vector(vector);
     }
     long long avg_sparse = sparse / TRY;
     long long avg_regular = regular / TRY;
