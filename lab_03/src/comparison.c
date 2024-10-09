@@ -1,7 +1,5 @@
 #include "../inc/comparison.h"
 
-#define TRY 20
-
 void compare_multiplication_time(size_t rows, size_t columns, float fill)
 {
     size_t regular = 0;
@@ -34,7 +32,7 @@ void compare_multiplication_time(size_t rows, size_t columns, float fill)
     }
     size_t sparse_avg = sparse / TRY;
     size_t regular_avg = regular / TRY;
-    printf("%zu - %zu(regular)/%zu(sparse)\n", rows, regular_avg, sparse_avg);
+    printf("%zu:\t\t%zu\t%zu\n", rows, regular_avg, sparse_avg);
 }
 
 void compare_matrix_memory(size_t rows, size_t columns, float fill)
@@ -61,7 +59,12 @@ void compare_vector_memory(size_t length, float fill)
 
 void compare_tads(void)
 {
-    compare_multiplication_time(10, 10, 0.1);
-    compare_multiplication_time(100, 100, 0.1);
-    compare_multiplication_time(500, 500, 0.1);
+    for (float i = 0.01f; i <= 0.251f; i += 0.01f)
+    {
+        printf("\nFill %d%%\n", (int)(i * 100));
+        printf("Elements:\tRegular\tSparse\n");
+        compare_multiplication_time(10, 10, i);
+        compare_multiplication_time(50, 50, i);
+        compare_multiplication_time(100, 100, i);
+    }
 }

@@ -24,13 +24,19 @@ int generate_random_regular_vector(RegularVector *vector, float fill)
     if (!vector)
         return NULLPTR_ERROR;
 
-    size_t fill_elements = vector->length * fill;
+    size_t elements = vector->length;
+    size_t fill_elements = elements * fill;
+    size_t indices[elements];
+    for (size_t i = 0; i < elements; ++i)
+        indices[i] = i;
 
     for (size_t i = 0; i < fill_elements; ++i)
     {
-        size_t index = rand() % vector->length;
+        size_t arr_index = rand() % elements--;
         int value = (rand() % 100) * (rand() % 2 ? -1 : 1);
-        vector->data[index] = value;
+        vector->data[indices[arr_index]] = value;
+
+        indices[arr_index] = indices[elements];
     }
     return SUCCESS;
 }

@@ -90,12 +90,19 @@ int generate_random_vector(SparseVector *vector, float fill)
 
     size_t elements = vector->length;
     size_t fill_elements = elements * fill;
+    size_t indices[elements];
+    for (size_t i = 0; i < elements; ++i)
+        indices[i] = i;
 
     for (size_t i = 0; i < fill_elements; ++i)
     {
-        size_t index = rand() % elements;
+        size_t arr_index = rand() % elements--;
+        size_t index = indices[arr_index];
+
         int value = (rand() % 100) * (rand() % 2 ? -1 : 1);
         add_vector_element(vector, value, index);
+
+        indices[arr_index] = indices[elements];
     }
     return SUCCESS;
 }
