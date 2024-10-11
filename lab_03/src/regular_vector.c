@@ -68,3 +68,18 @@ SparseVector *from_regular_to_sparse_vector(RegularVector *vector)
 
     return result;
 }
+
+int fit_to_size(SparseVector *vector)
+{
+    if (!vector)
+        return NULLPTR_ERROR;
+
+    if (vector->size < vector->allocated)
+    {
+        int *new_ptr = realloc(vector->elements, vector->size * sizeof(int));
+        if (!new_ptr)
+            return ALLOC_ERROR;
+        vector->elements = new_ptr;
+    }
+    return SUCCESS;
+}

@@ -23,3 +23,5 @@ int replace_vector_element(SparseVector *vector, int element, size_t index);
 int generate_random_vector(SparseVector *vector, float fill);
 
 int print_sparse_vector(SparseVector *vector);
+
+int fit_to_size(SparseVector *vector);

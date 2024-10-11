@@ -87,6 +87,24 @@ static void input_vector_positional(SparseVector *vector)
     }
 }
 
+static void collect_statistics(void)
+{
+    char *opts[] = {"Algorithm time comparison", "Vector memory comparison", "Matrix vector compariosn"};
+    size_t opt = input_enum(3, opts);
+    switch (opt)
+    {
+    case 0:
+        multiplication_time_comparison();
+        break;
+    case 1:
+        vector_memory_comparsion();
+        break;
+    case 2:
+        matrix_memory_comparsion();
+        break;
+    }
+}
+
 int execute_operation(SparseMatrix **mptr, SparseVector **vptr)
 {
     SparseMatrix *matrix = *mptr;
@@ -155,8 +173,9 @@ int execute_operation(SparseMatrix **mptr, SparseVector **vptr)
     }
     case MULTIPLICATION_SPARSE:
     {
-        SparseVector *result = create_vector(vector->length, 0);
+        SparseVector *result = create_vector(vector->length, vector->length);
         multiply_vector_by_matrix(vector, matrix, result);
+        fit_to_size(result);
         printf("\nMultiplication result:\n");
         print_sparse_vector(result);
         free_vector(result);
@@ -184,9 +203,11 @@ int execute_operation(SparseMatrix **mptr, SparseVector **vptr)
         printf("\nVector:\n");
         return print_sparse_vector(vector);
     case COMPARISON:
-        compare_tads();
+        collect_statistics();
         break;
     case EXIT:
+        free_vector(vector);
+        free_matrix(matrix);
         exit(SUCCESS);
     }
 

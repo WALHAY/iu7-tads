@@ -21,4 +21,8 @@ void compare_matrix_memory(size_t rows, size_t columns, float fill);
 
 void compare_vector_memory(size_t length, float fill);
 
-void compare_tads(void);
+void multiplication_time_comparison(void);
+
+void matrix_memory_comparsion(void);
+
+void vector_memory_comparsion(void);
