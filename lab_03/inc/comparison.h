@@ -21,7 +21,11 @@ void compare_matrix_memory(size_t rows, size_t columns, float fill, FILE *out);
 
 void compare_vector_memory(size_t length, float fill, FILE *out);
 
+void compare_multiplication_memory(size_t rows, size_t columns, float fill, FILE *out);
+
 void multiplication_time_comparison(void);
+
+void multiplication_memory_comparison(void);
 
 void matrix_memory_comparsion(void);
 

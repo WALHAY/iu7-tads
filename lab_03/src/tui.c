@@ -89,17 +89,21 @@ static void input_vector_positional(SparseVector *vector)
 
 static void collect_statistics(void)
 {
-    char *opts[] = {"Algorithm time comparison", "Vector memory comparison", "Matrix vector compariosn"};
-    size_t opt = input_enum(3, opts);
+    char *opts[] = {"Algorithm time comparison", "Algorithm memory comparison", "Vector memory comparison",
+                    "Matrix vector compariosn"};
+    size_t opt = input_enum(4, opts);
     switch (opt)
     {
     case 0:
         multiplication_time_comparison();
         break;
     case 1:
-        vector_memory_comparsion();
+        multiplication_memory_comparison();
         break;
     case 2:
+        vector_memory_comparsion();
+        break;
+    case 3:
         matrix_memory_comparsion();
         break;
     }
