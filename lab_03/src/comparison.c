@@ -1,6 +1,6 @@
 #include "../inc/comparison.h"
 
-void compare_multiplication_time(size_t rows, size_t columns, float fill)
+void compare_multiplication_time(size_t rows, size_t columns, float fill, FILE *out)
 {
     size_t regular = 0;
     size_t sparse = 0;
@@ -33,10 +33,10 @@ void compare_multiplication_time(size_t rows, size_t columns, float fill)
     long long sparse_avg = sparse / TRY;
     long long regular_avg = regular / TRY;
     float boost = (regular_avg - sparse_avg) * 100.0f / regular_avg;
-    printf("%zu:\t\t%lld\t%lld\t%.1f%%\n", rows, regular_avg, sparse_avg, boost);
+    fprintf(out, "%zu:\t\t%lld\t%lld\t%.1f%%\n", rows, regular_avg, sparse_avg, boost);
 }
 
-void compare_matrix_memory(size_t rows, size_t columns, float fill)
+void compare_matrix_memory(size_t rows, size_t columns, float fill, FILE *out)
 {
     long long regular_size = sizeof(RegularMatrix) + rows * columns * sizeof(int);
     long long elements = (rows * columns) * fill;
@@ -44,17 +44,17 @@ void compare_matrix_memory(size_t rows, size_t columns, float fill)
         sizeof(SparseMatrix) + elements * (sizeof(int) + sizeof(size_t)) + (rows + 1) * sizeof(size_t);
 
     float boost = (regular_size - sparse_size) * 100.0f / regular_size;
-    printf("%zu:\t\t%lld\t%lld\t%.1f%%\n", rows, regular_size, sparse_size, boost);
+    fprintf(out, "%zu:\t\t%lld\t%lld\t%.1f%%\n", rows, regular_size, sparse_size, boost);
 }
 
-void compare_vector_memory(size_t length, float fill)
+void compare_vector_memory(size_t length, float fill, FILE *out)
 {
     long long regular_size = sizeof(RegularVector) + length * sizeof(int);
 
     long long elements = length * fill;
     long long sparse_size = sizeof(SparseVector) + elements * (sizeof(int) + sizeof(size_t));
     float boost = (regular_size - sparse_size) * 100.0f / regular_size;
-    printf("%zu:\t\t%lld\t%lld\t%.1f%%\n", length, regular_size, sparse_size, boost);
+    fprintf(out, "%zu:\t\t%lld\t%lld\t%.1f%%\n", length, regular_size, sparse_size, boost);
 }
 
 void multiplication_time_comparison(void)
@@ -64,9 +64,9 @@ void multiplication_time_comparison(void)
     {
         printf("\nFill %d%%\n", (int)(i * 100));
         printf("Elements:\tRegular\tSparse\tBoost\n");
-        compare_multiplication_time(10, 10, i);
-        compare_multiplication_time(50, 50, i);
-        compare_multiplication_time(500, 500, i);
+        compare_multiplication_time(10, 10, i, stdout);
+        compare_multiplication_time(50, 50, i, stdout);
+        compare_multiplication_time(500, 500, i, stdout);
     }
 }
 
@@ -77,9 +77,9 @@ void matrix_memory_comparsion(void)
     {
         printf("\nFill %d%%\n", (int)(i * 100));
         printf("Elements:\tRegular\tSparse\tBoost\n");
-        compare_matrix_memory(10, 10, i);
-        compare_matrix_memory(50, 50, i);
-        compare_matrix_memory(500, 500, i);
+        compare_matrix_memory(10, 10, i, stdout);
+        compare_matrix_memory(50, 50, i, stdout);
+        compare_matrix_memory(500, 500, i, stdout);
     }
 }
 
@@ -90,8 +90,40 @@ void vector_memory_comparsion(void)
     {
         printf("\nFill %d%%\n", (int)(i * 100));
         printf("Elements:\tRegular\tSparse\tBoost\n");
-        compare_vector_memory(10, i);
-        compare_vector_memory(50, i);
-        compare_vector_memory(500, i);
+        compare_vector_memory(10, i, stdout);
+        compare_vector_memory(50, i, stdout);
+        compare_vector_memory(500, i, stdout);
     }
+}
+
+void collect_all_data_to_file(FILE *file)
+{
+    fprintf(file, "Memory comparison vector\n");
+    for (float f = 0.05f; f <= 0.501f; f += 0.05f)
+        compare_vector_memory(10, f, file);
+    for (float f = 0.05f; f <= 0.501f; f += 0.05f)
+        compare_vector_memory(50, f, file);
+    for (float f = 0.05f; f <= 0.501f; f += 0.05f)
+        compare_vector_memory(500, f, file);
+    fflush(file);
+
+    fprintf(file, "Memory comparison matrix\n");
+    for (float f = 0.05f; f <= 0.501f; f += 0.05f)
+        compare_matrix_memory(10, 10, f, file);
+    for (float f = 0.05f; f <= 0.501f; f += 0.05f)
+        compare_matrix_memory(50, 50, f, file);
+    for (float f = 0.05f; f <= 0.501f; f += 0.05f)
+        compare_matrix_memory(500, 500, f, file);
+    fflush(file);
+
+    fprintf(file, "Multiplication time comparison\n");
+    for (float f = 0.01f; f <= 0.201f; f += 0.01f)
+        compare_multiplication_time(10, 10, f, file);
+    fflush(file);
+    for (float f = 0.01f; f <= 0.151f; f += 0.01f)
+        compare_multiplication_time(50, 50, f, file);
+    fflush(file);
+    for (float f = 0.01f; f <= 0.151f; f += 0.01f)
+        compare_multiplication_time(500, 500, f, file);
+    fflush(file);
 }
