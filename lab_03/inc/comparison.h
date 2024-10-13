@@ -15,14 +15,6 @@
 #define MAX_OUT_TIME_WIDTH 10
 #define MAX_OUT_ELEMENT_WIDTH 8
 
-void compare_multiplication_time(size_t rows, size_t columns, float fill, FILE *out);
-
-void compare_matrix_memory(size_t rows, size_t columns, float fill, FILE *out);
-
-void compare_vector_memory(size_t length, float fill, FILE *out);
-
-void compare_multiplication_memory(size_t rows, size_t columns, float fill, FILE *out);
-
 void multiplication_time_comparison(void);
 
 void multiplication_memory_comparison(void);

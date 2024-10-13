@@ -7,7 +7,7 @@ static int safe_int_input(int *value)
     char *end = NULL;
     errno = 0;
     long val = strtol(temp, &end, 10);
-    if (errno == ERANGE || errno == EINVAL)
+    if (errno == ERANGE || errno == EINVAL || end == temp)
         return NAN_ERROR;
     *value = val;
     return SUCCESS;
@@ -201,10 +201,8 @@ int execute_operation(SparseMatrix **mptr, SparseVector **vptr)
         break;
     }
     case PRINT_MATRIX:
-        printf("\nMatrix:\n");
         return print_sparse_matrix(matrix);
     case PRINT_VECTOR:
-        printf("\nVector:\n");
         return print_sparse_vector(vector);
     case COMPARISON:
         collect_statistics();
@@ -285,6 +283,21 @@ char *get_error_message(int error)
 {
     switch (error)
     {
+    case SUCCESS:
+        return "Everything is fine!";
+        break;
+    case WRONG_POS_ERROR:
+        return "Error: Wrong position of element specified!";
+    case NULLPTR_ERROR:
+        return "Error: Null pointer passed to function!";
+    case ALLOC_ERROR:
+        return "Error: Failed to allocate memory!";
+    case ELEMENT_EXIST_ERROR:
+        return "Error: Element is already exist in structure!";
+    case NAN_ERROR:
+        return "Error: Not a number!";
+    case REPLACE_ERROR:
+        return "Error: Failed to replace exisiting element!";
     default:
         return "Error: Error message not specified!";
     }

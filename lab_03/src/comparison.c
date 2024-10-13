@@ -1,6 +1,6 @@
 #include "../inc/comparison.h"
 
-void compare_multiplication_time(size_t rows, size_t columns, float fill, FILE *out)
+static void compare_multiplication_time(size_t rows, size_t columns, float fill, FILE *out)
 {
     size_t regular = 0;
     size_t sparse = 0;
@@ -36,7 +36,7 @@ void compare_multiplication_time(size_t rows, size_t columns, float fill, FILE *
     fprintf(out, "%zu:\t\t%lld\t%lld\t%.1f%%\n", rows, regular_avg, sparse_avg, boost);
 }
 
-void compare_matrix_memory(size_t rows, size_t columns, float fill, FILE *out)
+static void compare_matrix_memory(size_t rows, size_t columns, float fill, FILE *out)
 {
     long long regular_size = sizeof(RegularMatrix) + rows * columns * sizeof(int);
     long long elements = (rows * columns) * fill;
@@ -47,7 +47,7 @@ void compare_matrix_memory(size_t rows, size_t columns, float fill, FILE *out)
     fprintf(out, "%zu:\t\t%lld\t%lld\t%.1f%%\n", rows, regular_size, sparse_size, boost);
 }
 
-void compare_vector_memory(size_t length, float fill, FILE *out)
+static void compare_vector_memory(size_t length, float fill, FILE *out)
 {
     long long regular_size = sizeof(RegularVector) + length * sizeof(int);
 
@@ -57,7 +57,7 @@ void compare_vector_memory(size_t length, float fill, FILE *out)
     fprintf(out, "%zu:\t\t%lld\t%lld\t%.1f%%\n", length, regular_size, sparse_size, boost);
 }
 
-void compare_multiplication_memory(size_t rows, size_t columns, float fill, FILE *out)
+static void compare_multiplication_memory(size_t rows, size_t columns, float fill, FILE *out)
 {
     long long regular_size =
         sizeof(RegularVector) + rows * sizeof(int) + sizeof(RegularMatrix) + rows * columns * sizeof(int);

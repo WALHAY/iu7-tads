@@ -172,8 +172,12 @@ static void print_short_matrix(SparseMatrix *matrix)
 int print_sparse_matrix(SparseMatrix *matrix)
 {
     if (!matrix)
+    {
+        printf("\nError: Matrix not specified!\n");
         return NULLPTR_ERROR;
+    }
 
+    printf("\nMatrix:\n");
     if (matrix->columns > 30 || matrix->rows > 30)
         print_short_matrix(matrix);
     else

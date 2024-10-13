@@ -136,8 +136,12 @@ static void print_short_vector(SparseVector *vector)
 int print_sparse_vector(SparseVector *vector)
 {
     if (!vector)
+    {
+        printf("\nError: Vector not specified!\n");
         return NULLPTR_ERROR;
+    }
 
+    printf("\nVector:\n");
     if (vector->length <= 30)
         print_full_vector(vector);
     else
