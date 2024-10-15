@@ -1,5 +1,7 @@
 #include "../inc/sparse_matrix.h"
 
+#define MAX(a, b) ((a > b) ? a : b)
+
 SparseMatrix *create_matrix(size_t rows, size_t columns, size_t initial_size)
 {
     SparseMatrix *matrix = malloc(sizeof(SparseMatrix));
@@ -152,21 +154,21 @@ static void print_full_matrix(SparseMatrix *matrix)
 
 static void print_short_matrix(SparseMatrix *matrix)
 {
-    printf("A: ");
-    for (size_t i = 0; i < matrix->size; ++i)
-        printf("%d\t", matrix->elements[i]);
-    printf("\n");
+    printf("JA\tIA\tA\n");
+    for (size_t i = 0; i < MAX(matrix->size, matrix->rows + 1); ++i)
+    {
+        if (i < matrix->rows + 1)
+            printf("%zu", matrix->columnStartIndex[i]);
+        printf("\t");
 
-    printf("IA: ");
-    for (size_t column = 0; column < matrix->rows; ++column)
-        for (size_t pos = matrix->columnStartIndex[column]; pos < matrix->columnStartIndex[column + 1]; ++pos)
-            printf("%zu\t", matrix->rowIndex[pos]);
-    printf("\n");
+        if (i < matrix->size)
+            printf("%zu", matrix->rowIndex[i]);
+        printf("\t");
 
-    printf("JA: ");
-    for (size_t i = 0; i <= matrix->rows; ++i)
-        printf("%zu\t", matrix->columnStartIndex[i]);
-    printf("\n");
+        if (i < matrix->size)
+            printf("%d", matrix->elements[i]);
+        printf("\n");
+    }
 }
 
 int print_sparse_matrix(SparseMatrix *matrix)

@@ -187,6 +187,11 @@ int execute_operation(SparseMatrix **mptr, SparseVector **vptr)
     }
     case MULTIPLICATION_REGULAR:
     {
+        if (matrix->rows * matrix->columns >= 1e6)
+        {
+            printf("\nMatrix is too big for regulat matrix multiplication!\n");
+            break;
+        }
         RegularVector *rvector = from_sparse_to_regular_vector(vector);
         RegularMatrix *rmatrix = from_sparse_to_regular_matrix(matrix);
         RegularVector *rresult = create_regular_vector(rvector->length);

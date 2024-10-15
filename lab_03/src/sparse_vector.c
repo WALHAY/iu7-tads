@@ -1,5 +1,7 @@
 #include "../inc/sparse_vector.h"
 
+#define MAX(a, b) ((a > b) ? a : b)
+
 SparseVector *create_vector(size_t length, size_t initial_size)
 {
     SparseVector *vector = malloc(sizeof(SparseVector));
@@ -123,14 +125,9 @@ static void print_full_vector(SparseVector *vector)
 
 static void print_short_vector(SparseVector *vector)
 {
-    printf("B: ");
+    printf("JB\tB\n");
     for (size_t i = 0; i < vector->size; ++i)
-        printf("%d\t", vector->elements[i]);
-    printf("\n");
-    printf("JB: ");
-    for (size_t i = 0; i < vector->size; ++i)
-        printf("%zu\t", vector->index[i]);
-    printf("\n");
+        printf("%zu\t%d\n", vector->index[i], vector->elements[i]);
 }
 
 int print_sparse_vector(SparseVector *vector)
