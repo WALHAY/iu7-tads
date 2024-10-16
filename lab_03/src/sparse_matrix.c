@@ -180,9 +180,10 @@ int print_sparse_matrix(SparseMatrix *matrix)
     }
 
     printf("\nMatrix:\n");
-    if (matrix->columns > 30 || matrix->rows > 30)
-        print_short_matrix(matrix);
-    else
+    if (matrix->columns < 30 && matrix->rows < 30)
         print_full_matrix(matrix);
+
+    printf("\nSparse format:\n");
+    print_short_matrix(matrix);
     return SUCCESS;
 }

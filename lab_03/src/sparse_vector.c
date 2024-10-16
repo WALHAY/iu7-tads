@@ -141,7 +141,8 @@ int print_sparse_vector(SparseVector *vector)
     printf("\nVector:\n");
     if (vector->length <= 30)
         print_full_vector(vector);
-    else
-        print_short_vector(vector);
+
+    printf("\nSparse format:\n");
+    print_short_vector(vector);
     return SUCCESS;
 }
