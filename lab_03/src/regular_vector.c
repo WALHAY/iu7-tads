@@ -8,15 +8,14 @@ RegularVector *create_regular_vector(size_t length)
     return result;
 }
 
-RegularVector *free_regular_vector(RegularVector *vector)
+void free_regular_vector(RegularVector *vector)
 {
     if (!vector)
-        return NULL;
+        return;
 
     if (vector->data)
-        free(vector);
-
-    return NULL;
+        free(vector->data);
+    free(vector);
 }
 
 int generate_random_regular_vector(RegularVector *vector, float fill)

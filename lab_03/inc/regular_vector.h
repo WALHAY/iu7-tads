@@ -11,7 +11,7 @@ typedef struct
 
 RegularVector *create_regular_vector(size_t length);
 
-RegularVector *free_regular_vector(RegularVector *vector);
+void free_regular_vector(RegularVector *vector);
 
 int generate_random_regular_vector(RegularVector *vector, float fill);
 

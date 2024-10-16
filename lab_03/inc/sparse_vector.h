@@ -14,7 +14,7 @@ typedef struct
 
 SparseVector *create_vector(size_t length, size_t initial_size);
 
-SparseVector *free_vector(SparseVector *vector);
+void free_vector(SparseVector *vector);
 
 int add_vector_element(SparseVector *vector, int element, size_t index);
 

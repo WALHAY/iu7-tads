@@ -12,10 +12,10 @@ RegularMatrix *create_regular_matrix(size_t rows, size_t columns)
     return result;
 }
 
-RegularMatrix *free_regular_matrix(RegularMatrix *matrix)
+void free_regular_matrix(RegularMatrix *matrix)
 {
     if (!matrix)
-        return NULL;
+        return;
 
     if (matrix->buffer)
         free(matrix->buffer);
@@ -23,7 +23,7 @@ RegularMatrix *free_regular_matrix(RegularMatrix *matrix)
     if (matrix->matrix)
         free(matrix->matrix);
 
-    return NULL;
+    free(matrix);
 }
 
 int generate_random_regular_matrix(RegularMatrix *matrix, float fill)

@@ -19,21 +19,20 @@ SparseMatrix *create_matrix(size_t rows, size_t columns, size_t initial_size)
     return matrix;
 }
 
-SparseMatrix *free_matrix(SparseMatrix *matrix)
+void free_matrix(SparseMatrix *matrix)
 {
     if (!matrix)
-        return NULL;
+        return;
 
-    if (!matrix->elements)
+    if (matrix->elements)
         free(matrix->elements);
 
-    if (!matrix->rowIndex)
+    if (matrix->rowIndex)
         free(matrix->rowIndex);
 
-    if (!matrix->columnStartIndex)
+    if (matrix->columnStartIndex)
         free(matrix->columnStartIndex);
     free(matrix);
-    return NULL;
 }
 
 int add_matrix_element(SparseMatrix *matrix, int element, size_t row, size_t column)

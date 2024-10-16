@@ -17,18 +17,17 @@ SparseVector *create_vector(size_t length, size_t initial_size)
     return vector;
 }
 
-SparseVector *free_vector(SparseVector *vector)
+void free_vector(SparseVector *vector)
 {
     if (!vector)
-        return NULL;
+        return;
 
-    if (!vector->elements)
+    if (vector->elements)
         free(vector->elements);
 
-    if (!vector->index)
+    if (vector->index)
         free(vector->index);
     free(vector);
-    return NULL;
 }
 
 int add_vector_element(SparseVector *vector, int element, size_t index)

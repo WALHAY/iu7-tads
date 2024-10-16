@@ -13,7 +13,7 @@ typedef struct
 
 RegularMatrix *create_regular_matrix(size_t rows, size_t columns);
 
-RegularMatrix *free_regular_matrix(RegularMatrix *matrix);
+void free_regular_matrix(RegularMatrix *matrix);
 
 int generate_random_regular_matrix(RegularMatrix *matrix, float fill);
 
