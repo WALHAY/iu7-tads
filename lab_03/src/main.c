@@ -16,6 +16,7 @@ int main(int argc, char **argv)
         }
         return 0;
     }
+    print_rules();
     SparseMatrix *matrix = create_matrix(3, 3, 0);
     SparseVector *vector = create_vector(3, 0);
 

@@ -109,6 +109,16 @@ static void collect_statistics(void)
     }
 }
 
+void print_rules(void)
+{
+    printf("Program for vectory by matrix multiplication in sparse and standard formats\n"
+           "Limitations:\n"
+           "\t1) Empty string is not allowed\n"
+           "\t2) Using empty matrix (0 size) is not allowed\n"
+           "\t3) Standart matrix should be less than 1e6 elements"
+           "\n\n");
+}
+
 int execute_operation(SparseMatrix **mptr, SparseVector **vptr)
 {
     SparseMatrix *matrix = *mptr;

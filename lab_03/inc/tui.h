@@ -13,6 +13,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+void print_rules(void);
+
 int execute_operation(SparseMatrix **matrix, SparseVector **vector);
 
 size_t input_enum(size_t max_options, char **options);
