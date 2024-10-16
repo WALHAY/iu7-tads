@@ -193,7 +193,7 @@ int execute_operation(SparseMatrix **mptr, SparseVector **vptr)
         SparseVector *result = create_vector(matrix->columns, matrix->columns);
         multiply_vector_by_matrix(vector, matrix, result);
         fit_to_size(result);
-        printf("\nMultiplication result:\n");
+        printf("\n -- Multiplication result --");
         print_sparse_vector(result);
         free_vector(result);
         break;
@@ -210,7 +210,7 @@ int execute_operation(SparseMatrix **mptr, SparseVector **vptr)
         RegularMatrix *rmatrix = from_sparse_to_regular_matrix(matrix);
         RegularVector *rresult = create_regular_vector(rmatrix->columns);
         multiply_vector_by_matrix_basic(rvector, rmatrix, rresult);
-        printf("\nMultiplication result:\n");
+        printf("\n -- Multiplication result --");
         SparseVector *sresult = from_regular_to_sparse_vector(rresult);
         print_sparse_vector(sresult);
         free_regular_vector(rvector);

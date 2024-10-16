@@ -12,7 +12,7 @@ SparseMatrix *create_matrix(size_t rows, size_t columns, size_t initial_size)
     matrix->size = 0;
     matrix->elements = calloc(initial_size, sizeof(int));
     matrix->rowIndex = calloc(initial_size, sizeof(size_t));
-    matrix->columnStartIndex = calloc(rows + 1, sizeof(size_t));
+    matrix->columnStartIndex = calloc(columns + 1, sizeof(size_t));
     matrix->rows = rows;
     matrix->columns = columns;
 
