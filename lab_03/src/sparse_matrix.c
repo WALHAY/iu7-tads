@@ -154,21 +154,19 @@ static void print_full_matrix(SparseMatrix *matrix)
 
 static void print_short_matrix(SparseMatrix *matrix)
 {
-    printf("JA\tIA\tA\n");
-    for (size_t i = 0; i < MAX(matrix->size, matrix->rows + 1); ++i)
-    {
-        if (i < matrix->rows + 1)
-            printf("%zu", matrix->columnStartIndex[i]);
-        printf("\t");
-
-        if (i < matrix->size)
-            printf("%zu", matrix->rowIndex[i]);
-        printf("\t");
-
-        if (i < matrix->size)
-            printf("%d", matrix->elements[i]);
-        printf("\n");
-    }
+    printf("A:  ");
+    for (size_t i = 0; i < matrix->size; ++i)
+        printf("%d\t", matrix->elements[i]);
+    printf("\n");
+    printf("IA: ");
+    for (size_t column = 0; column < matrix->rows; ++column)
+        for (size_t pos = matrix->columnStartIndex[column]; pos < matrix->columnStartIndex[column + 1]; ++pos)
+            printf("%zu\t", matrix->rowIndex[pos]);
+    printf("\n");
+    printf("JA: ");
+    for (size_t i = 0; i <= matrix->columns; ++i)
+        printf("%zu\t", matrix->columnStartIndex[i]);
+    printf("\n");
 }
 
 int print_sparse_matrix(SparseMatrix *matrix)

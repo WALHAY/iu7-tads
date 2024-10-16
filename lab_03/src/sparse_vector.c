@@ -125,9 +125,14 @@ static void print_full_vector(SparseVector *vector)
 
 static void print_short_vector(SparseVector *vector)
 {
-    printf("JB\tB\n");
+    printf("B:  ");
     for (size_t i = 0; i < vector->size; ++i)
-        printf("%zu\t%d\n", vector->index[i], vector->elements[i]);
+        printf("%d\t", vector->elements[i]);
+    printf("\n");
+    printf("JB: ");
+    for (size_t i = 0; i < vector->size; ++i)
+        printf("%zu\t", vector->index[i]);
+    printf("\n");
 }
 
 int print_sparse_vector(SparseVector *vector)

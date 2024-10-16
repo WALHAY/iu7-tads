@@ -10,11 +10,11 @@ void multiply_vector_by_matrix(SparseVector *vector, SparseMatrix *matrix, Spars
 
     for (size_t column = 0; column < matrix->columns; ++column)
     {
-        size_t columnStart = matrix->columnStartIndex[column];
-        size_t columnEnd = matrix->columnStartIndex[column + 1];
-        size_t index = 0;
+        size_t rowStart = matrix->columnStartIndex[column];
+        size_t rowEnd = matrix->columnStartIndex[column + 1];
         int sum = 0;
-        for (size_t pos = columnStart; pos < columnEnd; ++pos)
+        size_t index = 0;
+        for (size_t pos = rowStart; pos < rowEnd; ++pos)
         {
             int value = matrix->elements[pos];
             size_t row = matrix->rowIndex[pos];
@@ -38,11 +38,11 @@ void multiply_vector_by_matrix_basic(RegularVector *vector, RegularMatrix *matri
     if (vector->length != matrix->rows)
         return;
 
-    for (size_t column = 0; column < vector->length; ++column)
+    for (size_t column = 0; column < matrix->columns; ++column)
     {
         int sum = 0;
-        for (size_t i = 0; i < vector->length; ++i)
-            sum += vector->data[i] * matrix->matrix[i][column];
+        for (size_t row = 0; row < matrix->rows; ++row)
+            sum += vector->data[row] * matrix->matrix[row][column];
         result->data[column] = sum;
     }
 }

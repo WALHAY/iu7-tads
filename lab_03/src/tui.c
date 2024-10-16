@@ -44,7 +44,7 @@ static void input_matrix_full(SparseMatrix *matrix)
         for (size_t column = 0; column < matrix->columns; ++column)
         {
             char title[120];
-            sprintf(title, "value of element in %zu row %zu column", row, column);
+            sprintf(title, "value of element in %zu row %zu column", row + 1, column + 1);
             int value = input_value(title, false, false, 0, 0);
             overwrite_matrix_add(matrix, value, row, column);
         }
@@ -57,9 +57,9 @@ static void input_matrix_positional(SparseMatrix *matrix)
     for (size_t i = 0; i < size; ++i)
     {
         int value = input_value("element value", false, false, 0, 0);
-        size_t row = input_value("element row", true, true, 0, matrix->rows - 1);
-        size_t column = input_value("element column", true, true, 0, matrix->columns - 1);
-        overwrite_matrix_add(matrix, value, row, column);
+        size_t row = input_value("element row", true, true, 1, matrix->rows);
+        size_t column = input_value("element column", true, true, 1, matrix->columns);
+        overwrite_matrix_add(matrix, value, row - 1, column - 1);
         printf("\n");
     }
 }
@@ -69,7 +69,7 @@ static void input_vector_full(SparseVector *vector)
     for (size_t i = 0; i < vector->length; ++i)
     {
         char title[120];
-        sprintf(title, "%zu element value", i);
+        sprintf(title, "%zu element value", i + 1);
         int value = input_value(title, false, false, 0, 0);
         overwrite_vector_add(vector, value, i);
     }
@@ -81,8 +81,8 @@ static void input_vector_positional(SparseVector *vector)
     for (size_t i = 0; i < size; ++i)
     {
         int value = input_value("element value", false, false, 0, 0);
-        size_t index = input_value("element index", true, true, 0, vector->length - 1);
-        overwrite_vector_add(vector, value, index);
+        size_t index = input_value("element position", true, true, 1, vector->length);
+        overwrite_vector_add(vector, value, index - 1);
         printf("\n");
     }
 }
@@ -148,10 +148,13 @@ int execute_operation(SparseMatrix **mptr, SparseVector **vptr)
         *mptr = create_matrix(rows, columns, 0);
         printf("Created matrix of size rows: %zu - columns: %zu\n", rows, columns);
 
-        free_vector(vector);
+        if (vector->length != rows)
+        {
+            free_vector(vector);
 
-        *vptr = create_vector(rows, 0);
-        printf("Created vector of length %zu\n", rows);
+            *vptr = create_vector(rows, 0);
+            printf("\nCreated vector of length %zu\n", rows);
+        }
         break;
     }
     case CREATE_VECTOR:
@@ -187,7 +190,7 @@ int execute_operation(SparseMatrix **mptr, SparseVector **vptr)
     }
     case MULTIPLICATION_SPARSE:
     {
-        SparseVector *result = create_vector(vector->length, vector->length);
+        SparseVector *result = create_vector(matrix->columns, matrix->columns);
         multiply_vector_by_matrix(vector, matrix, result);
         fit_to_size(result);
         printf("\nMultiplication result:\n");
@@ -202,9 +205,10 @@ int execute_operation(SparseMatrix **mptr, SparseVector **vptr)
             printf("\nMatrix is too big for regulat matrix multiplication!\n");
             break;
         }
+
         RegularVector *rvector = from_sparse_to_regular_vector(vector);
         RegularMatrix *rmatrix = from_sparse_to_regular_matrix(matrix);
-        RegularVector *rresult = create_regular_vector(rvector->length);
+        RegularVector *rresult = create_regular_vector(rmatrix->columns);
         multiply_vector_by_matrix_basic(rvector, rmatrix, rresult);
         printf("\nMultiplication result:\n");
         SparseVector *sresult = from_regular_to_sparse_vector(rresult);
