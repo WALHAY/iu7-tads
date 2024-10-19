@@ -1,12 +1,13 @@
 #pragma once
 
+#include <stdint.h>
 #include <stdlib.h>
 
 typedef struct LinkedStackNode LinkedStackNode;
 
 struct LinkedStackNode
 {
-    void *data;
+    uintptr_t data;
     LinkedStackNode *next;
 };
 
@@ -23,6 +24,6 @@ LinkedStackNode *linkedStackNode();
 
 void destroyNode(LinkedStackNode *node);
 
-LinkedStackNode *push(LinkedStack *stack);
+uintptr_t push(LinkedStack *stack);
 
-LinkedStackNode *pop(LinkedStack *stack);
+uintptr_t pop(LinkedStack *stack);

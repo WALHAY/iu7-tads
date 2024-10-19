@@ -17,7 +17,7 @@ void destroyStack(LinkedStack *stack)
 LinkedStackNode *linkedStackNode()
 {
     LinkedStackNode *node = malloc(sizeof(LinkedStackNode));
-    node->data = node;
+    node->data = (uintptr_t)node;
     return node;
 }
 
@@ -27,7 +27,7 @@ void destroyNode(LinkedStackNode *node)
         free(node);
 }
 
-LinkedStackNode *push(LinkedStack *stack)
+uintptr_t push(LinkedStack *stack)
 {
     LinkedStackNode *node = linkedStackNode();
 
@@ -36,14 +36,16 @@ LinkedStackNode *push(LinkedStack *stack)
         node->next = head;
 
     stack->stackPointer = node;
-    return node;
+    return node->data;
 }
 
-LinkedStackNode *pop(LinkedStack *stack)
+uintptr_t pop(LinkedStack *stack)
 {
     LinkedStackNode *tmp = stack->stackPointer;
 
     stack->stackPointer = tmp->next;
+    uintptr_t value = tmp->data;
     destroyNode(tmp);
-    return stack->stackPointer;
+
+    return value;
 }
