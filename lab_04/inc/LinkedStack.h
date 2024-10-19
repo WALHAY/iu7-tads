@@ -16,11 +16,11 @@ typedef struct
     LinkedStackNode *stackPointer;
 } LinkedStack;
 
-LinkedStack *linkedStack();
+LinkedStack *linkedStack(void);
 
 void destroyStack(LinkedStack *stack);
 
-LinkedStackNode *linkedStackNode();
+LinkedStackNode *linkedStackNode(void);
 
 void destroyNode(LinkedStackNode *node);
 

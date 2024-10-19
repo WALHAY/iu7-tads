@@ -1,6 +1,6 @@
 #include "../inc/LinkedStack.h"
 
-LinkedStack *linkedStack()
+LinkedStack *linkedStack(void)
 {
     LinkedStack *stack = malloc(sizeof(LinkedStack));
     stack->stackPointer = NULL;
@@ -14,7 +14,7 @@ void destroyStack(LinkedStack *stack)
     free(stack);
 }
 
-LinkedStackNode *linkedStackNode()
+LinkedStackNode *linkedStackNode(void)
 {
     LinkedStackNode *node = malloc(sizeof(LinkedStackNode));
     node->data = (uintptr_t)node;
