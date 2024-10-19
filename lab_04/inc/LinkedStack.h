@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Defines.h"
 #include <stdint.h>
 #include <stdlib.h>
 
@@ -16,14 +17,14 @@ typedef struct
     LinkedStackNode *stackPointer;
 } LinkedStack;
 
-LinkedStack *linkedStack(void);
+LinkedStack *linkedStack(int *rc);
 
 void destroyStack(LinkedStack *stack);
 
-LinkedStackNode *linkedStackNode(void);
+LinkedStackNode *linkedStackNode(int *rc);
 
 void destroyNode(LinkedStackNode *node);
 
-uintptr_t push(LinkedStack *stack);
+uintptr_t push(LinkedStack *stack, int *rc);
 
-uintptr_t pop(LinkedStack *stack);
+uintptr_t pop(LinkedStack *stack, int *rc);

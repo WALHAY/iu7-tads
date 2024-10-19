@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Defines.h"
 #include <ctype.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -13,8 +14,10 @@ typedef struct
     uintptr_t *stackPointer;
 } ArrayStack;
 
-ArrayStack *arrayStack(size_t init_size);
+ArrayStack *arrayStack(size_t init_size, int *rc);
 
-uintptr_t push_arr(ArrayStack *stack, uintptr_t ptr);
+void destroyStackArr(ArrayStack *stack);
 
-uintptr_t pop_arr(ArrayStack *stack);
+uintptr_t pushArr(ArrayStack *stack, uintptr_t ptr, int *rc);
+
+uintptr_t popArr(ArrayStack *stack, int *rc);

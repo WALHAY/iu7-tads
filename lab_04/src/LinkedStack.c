@@ -1,24 +1,39 @@
 #include "../inc/LinkedStack.h"
 
-LinkedStack *linkedStack(void)
+LinkedStack *linkedStack(int *rc)
 {
     LinkedStack *stack = malloc(sizeof(LinkedStack));
-    stack->stackPointer = NULL;
-    return stack;
+    if (stack)
+    {
+        stack->stackPointer = NULL;
+        return stack;
+    }
+    *rc = ALLOC_ERROR;
+    return NULL;
 }
 
 void destroyStack(LinkedStack *stack)
 {
-    while (stack->stackPointer)
-        pop(stack);
+    LinkedStackNode *node = stack->stackPointer;
+    while (node)
+    {
+        LinkedStackNode *next = node->next;
+        destroyNode(node);
+        node = next;
+    }
     free(stack);
 }
 
-LinkedStackNode *linkedStackNode(void)
+LinkedStackNode *linkedStackNode(int *rc)
 {
     LinkedStackNode *node = malloc(sizeof(LinkedStackNode));
-    node->data = (uintptr_t)node;
-    return node;
+    if (node)
+    {
+        node->data = (uintptr_t)node;
+        return node;
+    }
+    *rc = ALLOC_ERROR;
+    return NULL;
 }
 
 void destroyNode(LinkedStackNode *node)
@@ -27,25 +42,34 @@ void destroyNode(LinkedStackNode *node)
         free(node);
 }
 
-uintptr_t push(LinkedStack *stack)
+uintptr_t push(LinkedStack *stack, int *rc)
 {
-    LinkedStackNode *node = linkedStackNode();
+    LinkedStackNode *node = linkedStackNode(rc);
 
-    LinkedStackNode *head = stack->stackPointer;
-    if (head)
-        node->next = head;
+    if (!*rc)
+    {
+        LinkedStackNode *head = stack->stackPointer;
+        if (head)
+            node->next = head;
 
-    stack->stackPointer = node;
-    return node->data;
+        stack->stackPointer = node;
+        return node->data;
+    }
+    return 0;
 }
 
-uintptr_t pop(LinkedStack *stack)
+uintptr_t pop(LinkedStack *stack, int *rc)
 {
     LinkedStackNode *tmp = stack->stackPointer;
 
-    stack->stackPointer = tmp->next;
-    uintptr_t value = tmp->data;
-    destroyNode(tmp);
+    if (tmp)
+    {
+        stack->stackPointer = tmp->next;
+        uintptr_t value = tmp->data;
+        destroyNode(tmp);
+        return value;
+    }
 
-    return value;
+    *rc = EMPTY_STACK_POP;
+    return 0;
 }

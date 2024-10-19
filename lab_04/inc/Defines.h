@@ -6,10 +6,10 @@
 typedef enum
 {
     SUCCESS = 0,
-    WRONG_SIZE_ERROR,
     NULLPTR_ERROR,
     ALLOC_ERROR,
-    NAN_ERROR
+    NAN_ERROR,
+    EMPTY_STACK_POP
 } ERRORS;
 
 typedef enum

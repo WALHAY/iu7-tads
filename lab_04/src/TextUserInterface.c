@@ -37,7 +37,23 @@ int inputValue(char *title, bool min_limit, bool max_limit, int min_value, int m
     return value;
 }
 
-void executeOperation(LinkedStack *linkedStack, ArrayStack *arrayStack)
+char *getErrorMessage(int rc)
+{
+    switch (rc)
+    {
+        case NULLPTR_ERROR:
+            return "Error: Null pointer passed to function!";
+        case ALLOC_ERROR:
+            return "Error: Failed to allocate memory!";
+        case NAN_ERROR:
+            return "Error: Not A Number!";
+        case EMPTY_STACK_POP:
+            return "Error: Trying to pop element in empty stack!";
+    }
+    return "Error: No Error?";
+}
+
+int executeOperation(LinkedStack *linkedStack, ArrayStack *arrayStack)
 {
     char *opts[] = {"Array Stack Push",
                     "Array Stack Pop",
@@ -47,34 +63,47 @@ void executeOperation(LinkedStack *linkedStack, ArrayStack *arrayStack)
                     "Exit"};
     size_t option = inputEnum(6, opts);
     printf("Executing: %s\n\n", opts[option]);
+    int rc = SUCCESS;
     switch (option)
     {
         case ARR_PUSH:
             {
-                push_arr(arrayStack, (uintptr_t)NULL);
+                uintptr_t ptr = 0;
+                pushArr(arrayStack, ptr, &rc);
+                if (!rc)
+                    printf("Element pushed (array stack): %p\n", (void *)ptr);
+                return rc;
             }
-            break;
         case ARR_POP:
             {
-                uintptr_t ptr = pop_arr(arrayStack);
-                printf("Element popped(array stack): %p\n", (void *)ptr);
+                uintptr_t ptr = popArr(arrayStack, &rc);
+                if (!rc)
+                    printf("Element popped (array stack): %p\n", (void *)ptr);
+                return rc;
             }
-            break;
         case LINKED_PUSH:
             {
-                uintptr_t ptr = push(linkedStack);
-                printf("Element pushed(linked stack): %p\n", (void *)ptr);
+                uintptr_t ptr = push(linkedStack, &rc);
+                if (!rc)
+                    printf("Element pushed (linked stack): %p\n", (void *)ptr);
+                return rc;
             }
-            break;
         case LINKED_POP:
             {
-                uintptr_t ptr = pop(linkedStack);
-                printf("Element popped(linked stack): %p\n", (void *)ptr);
+                uintptr_t ptr = pop(linkedStack, &rc);
+                if (!rc)
+                    printf("Element popped (linked stack): %p\n", (void *)ptr);
+                return rc;
             }
             break;
         case COMPARISON:
             break;
         case EXIT:
-            break;
+            {
+                destroyStack(linkedStack);
+                destroyStackArr(arrayStack);
+                exit(SUCCESS);
+            }
     }
+    return rc;
 }

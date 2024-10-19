@@ -6,9 +6,20 @@
 int main(void)
 {
 
-    ArrayStack *aStack = arrayStack(8);
-    LinkedStack *lStack = linkedStack();
+    int rc = SUCCESS;
+    ArrayStack *aStack = arrayStack(8, &rc);
+    LinkedStack *lStack = linkedStack(&rc);
+    if (rc)
+    {
+        printf("%s\n", getErrorMessage(rc));
+        return rc;
+    }
+
     while (true)
-        executeOperation(lStack, aStack);
+    {
+        rc = executeOperation(lStack, aStack);
+        if (rc)
+            printf("%s\n", getErrorMessage(rc));
+    }
     return 0;
 }
