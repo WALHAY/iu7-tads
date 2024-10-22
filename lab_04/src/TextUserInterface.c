@@ -97,6 +97,7 @@ int executeOperation(LinkedStack *linkedStack, ArrayStack *arrayStack)
             }
             break;
         case COMPARISON:
+            compareTaDS(stdout);
             break;
         case EXIT:
             {

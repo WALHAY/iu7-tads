@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ArrayStack.h"
+#include "Comparison.h"
 #include "Defines.h"
 #include "LinkedStack.h"
 #include <errno.h>
