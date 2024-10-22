@@ -52,13 +52,17 @@ void destroyNode(LinkedStackNode *node)
 
 uintptr_t push(LinkedStack *stack, int *rc)
 {
+    if (!stack)
+    {
+        *rc = NULLPTR_ERROR;
+        return 0;
+    }
+
     LinkedStackNode *node = linkedStackNode(rc);
 
     if (!*rc)
     {
-        LinkedStackNode *head = stack->stackPointer;
-        if (head)
-            node->next = head;
+        node->next = stack->stackPointer;
 
         stack->stackPointer = node;
         return node->data;
@@ -68,6 +72,12 @@ uintptr_t push(LinkedStack *stack, int *rc)
 
 uintptr_t pop(LinkedStack *stack, int *rc)
 {
+    if (!stack)
+    {
+        *rc = NULLPTR_ERROR;
+        return 0;
+    }
+
     LinkedStackNode *tmp = stack->stackPointer;
 
     if (tmp)

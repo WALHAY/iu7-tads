@@ -1,88 +1,70 @@
 #include "Comparison.h"
 
-#define TRIES 50
+#define TRIES 10000
 
 static void compareMemory(size_t elements, FILE *out)
 {
-    int arrElements = 8 * pow(2, (int)log2(elements / 8.0));
+    int arrElements = 8 * pow(2, (int)ceil(log2(elements / 8.0)));
     size_t linkedMemory = sizeof(LinkedStack) + sizeof(LinkedStackNode) * elements;
     size_t arrayMemory = sizeof(ArrayStack) + sizeof(uintptr_t *) * arrElements;
 
     fprintf(out, "%zu\t\t%zu\t%zu\n", elements, linkedMemory, arrayMemory);
 }
 
-static void compareTimePush(size_t elements, FILE *out)
+static void compareTimePush(FILE *out)
 {
     int rc = SUCCESS;
 
     struct timespec t1, t2;
 
-    size_t linked = 0;
-    size_t array = 0;
+    LinkedStack *lStack = linkedStack(&rc);
+    clock_gettime(CLOCK_MONOTONIC_RAW, &t1);
+    for (size_t i = 0; i < TRIES; ++i)
+        push(lStack, &rc);
+    clock_gettime(CLOCK_MONOTONIC_RAW, &t2);
+    size_t linked = (1000000000 * difftime(t2.tv_sec, t1.tv_sec) + difftime(t2.tv_nsec, t1.tv_nsec)) / TRIES;
+    destroyStack(lStack);
 
-    for (size_t k = 0; k < TRIES; ++k)
-    {
-        LinkedStack *lStack = linkedStack(&rc);
-        clock_gettime(CLOCK_MONOTONIC_RAW, &t1);
-        for (size_t i = 0; i < elements; ++i)
-            push(lStack, &rc);
-        clock_gettime(CLOCK_MONOTONIC_RAW, &t2);
-        linked += (1000000000 * difftime(t2.tv_sec, t1.tv_sec) + difftime(t2.tv_nsec, t1.tv_nsec)) / elements;
-        destroyStack(lStack);
+    ArrayStack *arrStack = arrayStack(TRIES, &rc);
+    clock_gettime(CLOCK_MONOTONIC_RAW, &t1);
+    for (size_t i = 0; i < TRIES; ++i)
+        pushArr(arrStack, rand(), &rc);
+    clock_gettime(CLOCK_MONOTONIC_RAW, &t2);
+    size_t array = (1000000000 * difftime(t2.tv_sec, t1.tv_sec) + difftime(t2.tv_nsec, t1.tv_nsec)) / TRIES;
+    destroyStackArr(arrStack);
 
-        ArrayStack *arrStack = arrayStack(elements, &rc);
-        clock_gettime(CLOCK_MONOTONIC_RAW, &t1);
-        for (size_t i = 0; i < elements; ++i)
-            pushArr(arrStack, rand(), &rc);
-        clock_gettime(CLOCK_MONOTONIC_RAW, &t2);
-        array += (1000000000 * difftime(t2.tv_sec, t1.tv_sec) + difftime(t2.tv_nsec, t1.tv_nsec)) / elements;
-        destroyStackArr(arrStack);
-    }
-
-    linked /= TRIES;
-    array /= TRIES;
-
-    fprintf(out, "%zu\t\t%zu\t%zu\n", elements, linked, array);
+    fprintf(out, "%zu\t%zu\n", linked, array);
 }
 
-static void compareTimePop(size_t elements, FILE *out)
+static void compareTimePop(FILE *out)
 {
     int rc = SUCCESS;
 
     struct timespec t1, t2;
 
-    size_t linked = 0;
-    size_t array = 0;
+    LinkedStack *lStack = linkedStack(&rc);
+    for (size_t i = 0; i < TRIES; ++i)
+        push(lStack, &rc);
 
-    for (size_t k = 0; k < TRIES; ++k)
-    {
-        LinkedStack *lStack = linkedStack(&rc);
-        for (size_t i = 0; i < elements; ++i)
-            push(lStack, &rc);
+    clock_gettime(CLOCK_MONOTONIC_RAW, &t1);
+    for (size_t i = 0; i < TRIES; ++i)
+        pop(lStack, &rc);
+    clock_gettime(CLOCK_MONOTONIC_RAW, &t2);
+    size_t linked = (1000000000 * difftime(t2.tv_sec, t1.tv_sec) + difftime(t2.tv_nsec, t1.tv_nsec)) / TRIES;
+    destroyStack(lStack);
 
-        clock_gettime(CLOCK_MONOTONIC_RAW, &t1);
-        for (size_t i = 0; i < elements; ++i)
-            pop(lStack, &rc);
-        clock_gettime(CLOCK_MONOTONIC_RAW, &t2);
-        linked += (1000000000 * difftime(t2.tv_sec, t1.tv_sec) + difftime(t2.tv_nsec, t1.tv_nsec)) / elements;
-        destroyStack(lStack);
+    ArrayStack *arrStack = arrayStack(TRIES, &rc);
+    for (size_t i = 0; i < TRIES; ++i)
+        pushArr(arrStack, rand(), &rc);
 
-        ArrayStack *arrStack = arrayStack(elements, &rc);
-        for (size_t i = 0; i < elements; ++i)
-            pushArr(arrStack, rand(), &rc);
+    clock_gettime(CLOCK_MONOTONIC_RAW, &t1);
+    for (size_t i = 0; i < TRIES; ++i)
+        popArr(arrStack, &rc);
+    clock_gettime(CLOCK_MONOTONIC_RAW, &t2);
+    size_t array = (1000000000 * difftime(t2.tv_sec, t1.tv_sec) + difftime(t2.tv_nsec, t1.tv_nsec)) / TRIES;
+    destroyStackArr(arrStack);
 
-        clock_gettime(CLOCK_MONOTONIC_RAW, &t1);
-        for (size_t i = 0; i < elements; ++i)
-            popArr(arrStack, &rc);
-        clock_gettime(CLOCK_MONOTONIC_RAW, &t2);
-        array += (1000000000 * difftime(t2.tv_sec, t1.tv_sec) + difftime(t2.tv_nsec, t1.tv_nsec)) / elements;
-        destroyStackArr(arrStack);
-    }
-
-    linked /= TRIES;
-    array /= TRIES;
-
-    fprintf(out, "%zu\t\t%zu\t%zu\n", elements, linked, array);
+    fprintf(out, "%zu\t%zu\n", linked, array);
 }
 
 void compareTaDS(FILE *out)
@@ -92,16 +74,13 @@ void compareTaDS(FILE *out)
     compareMemory(500, out);
     compareMemory(5000, out);
     compareMemory(10000, out);
+    compareMemory(17000, out);
 
     fprintf(out, "\nPush time comparison (in nanoseconds)\n");
-    fprintf(out, "Elements\tLinked\tArray\n");
-    compareTimePush(500, out);
-    compareTimePush(5000, out);
-    compareTimePush(10000, out);
+    fprintf(out, "Linked\tArray\n");
+    compareTimePush(out);
 
     fprintf(out, "\nPop time comparison (in nanoseconds)\n");
-    fprintf(out, "Elements\tLinked\tArray\n");
-    compareTimePop(500, out);
-    compareTimePop(5000, out);
-    compareTimePop(10000, out);
+    fprintf(out, "Linked\tArray\n");
+    compareTimePop(out);
 }

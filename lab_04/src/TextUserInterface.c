@@ -117,11 +117,9 @@ int executeOperation(LinkedStack *linkedStack, ArrayStack *arrayStack)
             compareTaDS(stdout);
             break;
         case EXIT:
-            {
-                destroyStack(linkedStack);
-                destroyStackArr(arrayStack);
-                exit(SUCCESS);
-            }
+            destroyStack(linkedStack);
+            destroyStackArr(arrayStack);
+            exit(SUCCESS);
     }
     return rc;
 }
