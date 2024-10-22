@@ -11,7 +11,8 @@ typedef enum
     ALLOC_ERROR,
     ELEMENT_EXIST_ERROR,
     NAN_ERROR,
-    REPLACE_ERROR
+    REPLACE_ERROR,
+    ZERO_ADD
 } ERRORS;
 
 typedef enum

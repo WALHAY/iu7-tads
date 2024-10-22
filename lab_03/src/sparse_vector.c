@@ -32,6 +32,9 @@ void free_vector(SparseVector *vector)
 
 int add_vector_element(SparseVector *vector, int element, size_t index)
 {
+    if (!element)
+        return ZERO_ADD;
+
     if (!vector)
         return NULLPTR_ERROR;
 
@@ -66,13 +69,16 @@ int add_vector_element(SparseVector *vector, int element, size_t index)
 
 int replace_vector_element(SparseVector *vector, int element, size_t index)
 {
+    if (!element)
+        return ZERO_ADD;
+
     if (!vector)
         return NULLPTR_ERROR;
 
     if (index > vector->length)
         return WRONG_POS_ERROR;
 
-    for (size_t i = 0; i < vector->size && vector->index[i] > index; ++i)
+    for (size_t i = 0; i < vector->size && vector->index[i] <= index; ++i)
     {
         if (vector->index[i] == index)
         {
@@ -101,7 +107,8 @@ int generate_random_vector(SparseVector *vector, float fill)
         size_t index = indices[arr_index];
 
         int value = (rand() % 100) * (rand() % 2 ? -1 : 1);
-        add_vector_element(vector, value, index);
+        if (add_vector_element(vector, value, index) == ELEMENT_EXIST_ERROR)
+            replace_vector_element(vector, value, index);
 
         indices[arr_index] = indices[elements];
     }

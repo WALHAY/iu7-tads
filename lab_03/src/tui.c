@@ -44,7 +44,7 @@ static void input_matrix_full(SparseMatrix *matrix)
         for (size_t column = 0; column < matrix->columns; ++column)
         {
             char title[120];
-            sprintf(title, "value of element in %zu row %zu column", row + 1, column + 1);
+            sprintf(title, "value of element in %zu row %zu column", row, column);
             int value = input_value(title, false, false, 0, 0);
             overwrite_matrix_add(matrix, value, row, column);
         }
@@ -56,10 +56,10 @@ static void input_matrix_positional(SparseMatrix *matrix)
     size_t size = input_value("count of elements you want to input", true, true, 0, matrix->rows * matrix->columns);
     for (size_t i = 0; i < size; ++i)
     {
+        size_t row = input_value("element row", true, true, 0, matrix->rows - 1);
+        size_t column = input_value("element column", true, true, 0, matrix->columns - 1);
         int value = input_value("element value", false, false, 0, 0);
-        size_t row = input_value("element row", true, true, 1, matrix->rows);
-        size_t column = input_value("element column", true, true, 1, matrix->columns);
-        overwrite_matrix_add(matrix, value, row - 1, column - 1);
+        overwrite_matrix_add(matrix, value, row, column);
         printf("\n");
     }
 }
@@ -94,18 +94,18 @@ static void collect_statistics(void)
     size_t opt = input_enum(4, opts);
     switch (opt)
     {
-    case 0:
-        multiplication_time_comparison();
-        break;
-    case 1:
-        multiplication_memory_comparison();
-        break;
-    case 2:
-        vector_memory_comparsion();
-        break;
-    case 3:
-        matrix_memory_comparsion();
-        break;
+        case 0:
+            multiplication_time_comparison();
+            break;
+        case 1:
+            multiplication_memory_comparison();
+            break;
+        case 2:
+            vector_memory_comparsion();
+            break;
+        case 3:
+            matrix_memory_comparsion();
+            break;
     }
 }
 
@@ -139,97 +139,97 @@ int execute_operation(SparseMatrix **mptr, SparseVector **vptr)
     printf("Processing: %s\n", *(options + opt));
     switch (opt)
     {
-    case CREATE_MATRIX:
-    {
-        free_matrix(matrix);
+        case CREATE_MATRIX:
+            {
+                free_matrix(matrix);
 
-        size_t rows = input_value("matrix rows count", true, false, 1, 0);
-        size_t columns = input_value("matrix columns count", true, false, 1, 0);
-        *mptr = create_matrix(rows, columns, 0);
-        printf("Created matrix of size rows: %zu - columns: %zu\n", rows, columns);
+                size_t rows = input_value("matrix rows count", true, false, 1, 0);
+                size_t columns = input_value("matrix columns count", true, false, 1, 0);
+                *mptr = create_matrix(rows, columns, 0);
+                printf("Created matrix of size rows: %zu - columns: %zu\n", rows, columns);
 
-        if (vector->length != rows)
-        {
+                if (vector->length != rows)
+                {
+                    free_vector(vector);
+
+                    *vptr = create_vector(rows, 0);
+                    printf("\nCreated vector of length %zu\n", rows);
+                }
+                break;
+            }
+        case CREATE_VECTOR:
+            {
+                if (!matrix)
+                {
+                    printf("Specify matrix first\n");
+                    break;
+                }
+
+                free_vector(vector);
+
+                size_t length = 0;
+                if (matrix)
+                    length = matrix->rows;
+                *vptr = create_vector(length, 0);
+                printf("Created vector of length %zu\n", length);
+                break;
+            }
+        case INPUT_MATRIX:
+            return input_matrix(matrix);
+        case INPUT_VECTOR:
+            return input_vector(vector);
+        case RANDOMIZE_MATRIX:
+            {
+                int fill_percent = input_value("matrix fill percent", true, true, 1, 100);
+                return generate_random_matrix(matrix, fill_percent / 100.0f);
+            }
+        case RANDOMIZE_VECTOR:
+            {
+                int fill_percent = input_value("vector fill percent", true, true, 1, 100);
+                return generate_random_vector(vector, fill_percent / 100.0f);
+            }
+        case MULTIPLICATION_SPARSE:
+            {
+                SparseVector *result = create_vector(matrix->columns, matrix->columns);
+                multiply_vector_by_matrix(vector, matrix, result);
+                fit_to_size(result);
+                printf("\n -- Multiplication result --");
+                print_sparse_vector(result);
+                free_vector(result);
+                break;
+            }
+        case MULTIPLICATION_REGULAR:
+            {
+                if (matrix->rows * matrix->columns >= 1e6)
+                {
+                    printf("\nMatrix is too big for regulat matrix multiplication!\n");
+                    break;
+                }
+
+                RegularVector *rvector = from_sparse_to_regular_vector(vector);
+                RegularMatrix *rmatrix = from_sparse_to_regular_matrix(matrix);
+                RegularVector *rresult = create_regular_vector(rmatrix->columns);
+                multiply_vector_by_matrix_basic(rvector, rmatrix, rresult);
+                printf("\n -- Multiplication result --");
+                SparseVector *sresult = from_regular_to_sparse_vector(rresult);
+                print_sparse_vector(sresult);
+                free_regular_vector(rvector);
+                free_regular_matrix(rmatrix);
+                free_regular_vector(rresult);
+                free_vector(sresult);
+                break;
+            }
+        case PRINT_MATRIX:
+            return print_sparse_matrix(matrix);
+        case PRINT_VECTOR:
+            return print_sparse_vector(vector);
+        case COMPARISON:
+            collect_statistics();
+            break;
+        case EXIT:
             free_vector(vector);
-
-            *vptr = create_vector(rows, 0);
-            printf("\nCreated vector of length %zu\n", rows);
-        }
-        break;
-    }
-    case CREATE_VECTOR:
-    {
-        if (!matrix)
-        {
-            printf("Specify matrix first\n");
-            break;
-        }
-
-        free_vector(vector);
-
-        size_t length = 0;
-        if (matrix)
-            length = matrix->rows;
-        *vptr = create_vector(length, 0);
-        printf("Created vector of length %zu\n", length);
-        break;
-    }
-    case INPUT_MATRIX:
-        return input_matrix(matrix);
-    case INPUT_VECTOR:
-        return input_vector(vector);
-    case RANDOMIZE_MATRIX:
-    {
-        int fill_percent = input_value("matrix fill percent", true, true, 1, 100);
-        return generate_random_matrix(matrix, fill_percent / 100.0f);
-    }
-    case RANDOMIZE_VECTOR:
-    {
-        int fill_percent = input_value("vector fill percent", true, true, 1, 100);
-        return generate_random_vector(vector, fill_percent / 100.0f);
-    }
-    case MULTIPLICATION_SPARSE:
-    {
-        SparseVector *result = create_vector(matrix->columns, matrix->columns);
-        multiply_vector_by_matrix(vector, matrix, result);
-        fit_to_size(result);
-        printf("\n -- Multiplication result --");
-        print_sparse_vector(result);
-        free_vector(result);
-        break;
-    }
-    case MULTIPLICATION_REGULAR:
-    {
-        if (matrix->rows * matrix->columns >= 1e6)
-        {
-            printf("\nMatrix is too big for regulat matrix multiplication!\n");
-            break;
-        }
-
-        RegularVector *rvector = from_sparse_to_regular_vector(vector);
-        RegularMatrix *rmatrix = from_sparse_to_regular_matrix(matrix);
-        RegularVector *rresult = create_regular_vector(rmatrix->columns);
-        multiply_vector_by_matrix_basic(rvector, rmatrix, rresult);
-        printf("\n -- Multiplication result --");
-        SparseVector *sresult = from_regular_to_sparse_vector(rresult);
-        print_sparse_vector(sresult);
-        free_regular_vector(rvector);
-        free_regular_matrix(rmatrix);
-        free_regular_vector(rresult);
-        free_vector(sresult);
-        break;
-    }
-    case PRINT_MATRIX:
-        return print_sparse_matrix(matrix);
-    case PRINT_VECTOR:
-        return print_sparse_vector(vector);
-    case COMPARISON:
-        collect_statistics();
-        break;
-    case EXIT:
-        free_vector(vector);
-        free_matrix(matrix);
-        exit(SUCCESS);
+            free_matrix(matrix);
+            exit(SUCCESS);
     }
 
     return SUCCESS;
@@ -302,22 +302,24 @@ char *get_error_message(int error)
 {
     switch (error)
     {
-    case SUCCESS:
-        return "Everything is fine!";
-        break;
-    case WRONG_POS_ERROR:
-        return "Error: Wrong position of element specified!";
-    case NULLPTR_ERROR:
-        return "Error: Null pointer passed to function!";
-    case ALLOC_ERROR:
-        return "Error: Failed to allocate memory!";
-    case ELEMENT_EXIST_ERROR:
-        return "Error: Element is already exist in structure!";
-    case NAN_ERROR:
-        return "Error: Not a number!";
-    case REPLACE_ERROR:
-        return "Error: Failed to replace exisiting element!";
-    default:
-        return "Error: Error message not specified!";
+        case SUCCESS:
+            return "Everything is fine!";
+            break;
+        case WRONG_POS_ERROR:
+            return "Error: Wrong position of element specified!";
+        case NULLPTR_ERROR:
+            return "Error: Null pointer passed to function!";
+        case ALLOC_ERROR:
+            return "Error: Failed to allocate memory!";
+        case ELEMENT_EXIST_ERROR:
+            return "Error: Element is already exist in structure!";
+        case NAN_ERROR:
+            return "Error: Not a number!";
+        case REPLACE_ERROR:
+            return "Error: Failed to replace exisiting element!";
+        case ZERO_ADD:
+            return "Error: Trying to add zero into sparse matrix!";
+        default:
+            return "Error: Error message not specified!";
     }
 }

@@ -37,6 +37,9 @@ void free_matrix(SparseMatrix *matrix)
 
 int add_matrix_element(SparseMatrix *matrix, int element, size_t row, size_t column)
 {
+    if (!element)
+        return ZERO_ADD;
+
     if (!matrix)
         return NULLPTR_ERROR;
 
@@ -158,7 +161,7 @@ static void print_short_matrix(SparseMatrix *matrix)
         printf("%d\t", matrix->elements[i]);
     printf("\n");
     printf("IA: ");
-    for (size_t column = 0; column < matrix->rows; ++column)
+    for (size_t column = 0; column < matrix->columns; ++column)
         for (size_t pos = matrix->columnStartIndex[column]; pos < matrix->columnStartIndex[column + 1]; ++pos)
             printf("%zu\t", matrix->rowIndex[pos]);
     printf("\n");
