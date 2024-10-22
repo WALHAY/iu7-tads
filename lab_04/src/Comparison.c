@@ -1,4 +1,4 @@
-#include "../inc/Comparison.h"
+#include "Comparison.h"
 
 #define TRIES 50
 

@@ -1,4 +1,4 @@
-#include "../inc/LinkedStack.h"
+#include "LinkedStack.h"
 
 LinkedStack *linkedStack(int *rc)
 {

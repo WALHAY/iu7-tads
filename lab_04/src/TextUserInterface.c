@@ -1,4 +1,4 @@
-#include "../inc/TextUserInterface.h"
+#include "TextUserInterface.h"
 
 static int safeIntInput(int *value)
 {
@@ -37,6 +37,17 @@ int inputValue(char *title, bool min_limit, bool max_limit, int min_value, int m
     return value;
 }
 
+uintptr_t inputAddress(char *title)
+{
+    void *ptr = NULL;
+    printf("Enter %s: ", title);
+    while (scanf("%p", &ptr) != 1)
+        printf("Error: Wrong address!\n"
+               "Enter %s again: ",
+               title);
+    return (uintptr_t)ptr;
+}
+
 char *getErrorMessage(int rc)
 {
     switch (rc)
@@ -68,7 +79,7 @@ int executeOperation(LinkedStack *linkedStack, ArrayStack *arrayStack)
     {
         case ARR_PUSH:
             {
-                uintptr_t ptr = 0;
+                uintptr_t ptr = inputAddress("random address in memory");
                 pushArr(arrayStack, ptr, &rc);
                 if (!rc)
                     printf("Element pushed (array stack): %p\n", (void *)ptr);

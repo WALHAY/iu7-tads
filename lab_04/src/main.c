@@ -1,6 +1,6 @@
-#include "../inc/ArrayStack.h"
-#include "../inc/LinkedStack.h"
-#include "../inc/TextUserInterface.h"
+#include "ArrayStack.h"
+#include "LinkedStack.h"
+#include "TextUserInterface.h"
 #include <stdbool.h>
 
 int main(void)
