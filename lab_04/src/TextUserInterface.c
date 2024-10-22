@@ -45,6 +45,7 @@ uintptr_t inputAddress(char *title)
         printf("Error: Wrong address!\n"
                "Enter %s again: ",
                title);
+    fflush(stdin);
     return (uintptr_t)ptr;
 }
 

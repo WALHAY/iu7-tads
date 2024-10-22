@@ -6,6 +6,7 @@
 #include <stdlib.h>
 
 #define LOAD_FACTOR 2
+#define INITIAL_SIZE 8
 
 typedef struct
 {
