@@ -19,5 +19,6 @@ typedef enum
     LINKED_PUSH,
     LINKED_POP,
     COMPARISON,
+    PRINT_FREED,
     EXIT
 } OPCODES;

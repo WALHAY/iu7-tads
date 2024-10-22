@@ -1,5 +1,10 @@
 #include "LinkedStack.h"
 
+#define MAX_FREED 100000
+
+uintptr_t freedMemory[MAX_FREED];
+size_t freedIndex = 0;
+
 LinkedStack *linkedStack(int *rc)
 {
     LinkedStack *stack = malloc(sizeof(LinkedStack));
@@ -39,7 +44,10 @@ LinkedStackNode *linkedStackNode(int *rc)
 void destroyNode(LinkedStackNode *node)
 {
     if (node)
+    {
+        freedMemory[freedIndex++] = (uintptr_t)node;
         free(node);
+    }
 }
 
 uintptr_t push(LinkedStack *stack, int *rc)
@@ -72,4 +80,10 @@ uintptr_t pop(LinkedStack *stack, int *rc)
 
     *rc = EMPTY_STACK_POP;
     return 0;
+}
+
+void printFreedMemory(void)
+{
+    for (size_t i = 0; i < freedIndex; ++i)
+        printf("%p\n", (void *)freedMemory[i]);
 }

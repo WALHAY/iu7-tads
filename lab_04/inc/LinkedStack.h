@@ -2,6 +2,7 @@
 
 #include "Defines.h"
 #include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 typedef struct LinkedStackNode LinkedStackNode;
@@ -28,3 +29,5 @@ void destroyNode(LinkedStackNode *node);
 uintptr_t push(LinkedStack *stack, int *rc);
 
 uintptr_t pop(LinkedStack *stack, int *rc);
+
+void printFreedMemory(void);

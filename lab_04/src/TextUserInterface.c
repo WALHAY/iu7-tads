@@ -72,8 +72,9 @@ int executeOperation(LinkedStack *linkedStack, ArrayStack *arrayStack)
                     "Linked Stack Push",
                     "Linked Stack Pop",
                     "Compare Array and Linked Stack",
+                    "Print All Freed Memory",
                     "Exit"};
-    size_t option = inputEnum(6, opts);
+    size_t option = inputEnum(7, opts);
     printf("Executing: %s\n\n", opts[option]);
     int rc = SUCCESS;
     switch (option)
@@ -107,6 +108,10 @@ int executeOperation(LinkedStack *linkedStack, ArrayStack *arrayStack)
                     printf("Element popped (linked stack): %p\n", (void *)ptr);
                 return rc;
             }
+            break;
+        case PRINT_FREED:
+            printf("Freed Memory:\n");
+            printFreedMemory();
             break;
         case COMPARISON:
             compareTaDS(stdout);
