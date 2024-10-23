@@ -6,7 +6,6 @@
 
 int main(void)
 {
-    compareTaDS(fopen("data.txt", "w"));
     int rc = SUCCESS;
     ArrayStack *aStack = arrayStack(INITIAL_SIZE, &rc);
     LinkedStack *lStack = linkedStack(&rc);

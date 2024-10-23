@@ -33,7 +33,8 @@ static void compareTimePush(FILE *out)
     size_t array = (1000000000 * difftime(t2.tv_sec, t1.tv_sec) + difftime(t2.tv_nsec, t1.tv_nsec)) / TRIES;
     destroyStackArr(arrStack);
 
-    fprintf(out, "%zu\t%zu\n", linked, array);
+    int boost = (linked - array) * 100.0f / linked;
+    fprintf(out, "%zu\t%zu\t%d%%\n", linked, array, boost);
 }
 
 static void compareTimePop(FILE *out)
@@ -64,7 +65,8 @@ static void compareTimePop(FILE *out)
     size_t array = (1000000000 * difftime(t2.tv_sec, t1.tv_sec) + difftime(t2.tv_nsec, t1.tv_nsec)) / TRIES;
     destroyStackArr(arrStack);
 
-    fprintf(out, "%zu\t%zu\n", linked, array);
+    int boost = (linked - array) * 100.0f / linked;
+    fprintf(out, "%zu\t%zu\t%d%%\n", linked, array, boost);
 }
 
 void compareTaDS(FILE *out)
@@ -77,10 +79,10 @@ void compareTaDS(FILE *out)
     compareMemory(17000, out);
 
     fprintf(out, "\nPush time comparison (in nanoseconds)\n");
-    fprintf(out, "Linked\tArray\n");
+    fprintf(out, "Linked\tArray\tArray Boost\n");
     compareTimePush(out);
 
     fprintf(out, "\nPop time comparison (in nanoseconds)\n");
-    fprintf(out, "Linked\tArray\n");
+    fprintf(out, "Linked\tArray\tArray Boost\n");
     compareTimePop(out);
 }

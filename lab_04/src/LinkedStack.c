@@ -45,7 +45,7 @@ void destroyNode(LinkedStackNode *node)
 {
     if (node)
     {
-        freedMemory[freedIndex++] = (uintptr_t)node;
+        freedMemory[freedIndex++] = node->data;
         free(node);
     }
 }
