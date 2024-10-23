@@ -90,7 +90,7 @@ static void input_vector_positional(SparseVector *vector)
 static void collect_statistics(void)
 {
     char *opts[] = {"Algorithm time comparison", "Algorithm memory comparison", "Vector memory comparison",
-                    "Matrix vector compariosn"};
+                    "Matrix memory compariosn"};
     size_t opt = input_enum(4, opts);
     switch (opt)
     {
@@ -180,11 +180,20 @@ int execute_operation(SparseMatrix **mptr, SparseVector **vptr)
             return input_vector(vector);
         case RANDOMIZE_MATRIX:
             {
+                size_t rows = matrix->rows;
+                size_t columns = matrix->columns;
+                free_matrix(matrix);
+                *mptr = create_matrix(rows, columns, 0);
+                matrix = *mptr;
                 int fill_percent = input_value("matrix fill percent", true, true, 1, 100);
                 return generate_random_matrix(matrix, fill_percent / 100.0f);
             }
         case RANDOMIZE_VECTOR:
             {
+                size_t length = vector->length;
+                free_vector(vector);
+                *vptr = create_vector(length, 0);
+                vector = *vptr;
                 int fill_percent = input_value("vector fill percent", true, true, 1, 100);
                 return generate_random_vector(vector, fill_percent / 100.0f);
             }

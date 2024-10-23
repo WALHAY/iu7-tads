@@ -4,9 +4,8 @@
 
 static void compareMemory(size_t elements, FILE *out)
 {
-    int arrElements = 8 * pow(2, (int)ceil(log2(elements / 8.0)));
     size_t linkedMemory = sizeof(LinkedStack) + sizeof(LinkedStackNode) * elements;
-    size_t arrayMemory = sizeof(ArrayStack) + sizeof(uintptr_t *) * arrElements;
+    size_t arrayMemory = sizeof(ArrayStack) + sizeof(uintptr_t *) * ARR_SIZE;
 
     fprintf(out, "%zu\t\t%zu\t%zu\n", elements, linkedMemory, arrayMemory);
 }
@@ -25,7 +24,7 @@ static void compareTimePush(FILE *out)
     size_t linked = (1000000000 * difftime(t2.tv_sec, t1.tv_sec) + difftime(t2.tv_nsec, t1.tv_nsec)) / TRIES;
     destroyStack(lStack);
 
-    ArrayStack *arrStack = arrayStack(TRIES, &rc);
+    ArrayStack *arrStack = arrayStack(&rc);
     clock_gettime(CLOCK_MONOTONIC_RAW, &t1);
     for (size_t i = 0; i < TRIES; ++i)
         pushArr(arrStack, rand(), &rc);
@@ -54,7 +53,7 @@ static void compareTimePop(FILE *out)
     size_t linked = (1000000000 * difftime(t2.tv_sec, t1.tv_sec) + difftime(t2.tv_nsec, t1.tv_nsec)) / TRIES;
     destroyStack(lStack);
 
-    ArrayStack *arrStack = arrayStack(TRIES, &rc);
+    ArrayStack *arrStack = arrayStack(&rc);
     for (size_t i = 0; i < TRIES; ++i)
         pushArr(arrStack, rand(), &rc);
 

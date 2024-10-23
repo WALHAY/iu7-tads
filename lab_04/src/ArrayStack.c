@@ -1,6 +1,6 @@
 #include "ArrayStack.h"
 
-ArrayStack *arrayStack(size_t init_size, int *rc)
+ArrayStack *arrayStack(int *rc)
 {
     ArrayStack *stack = malloc(sizeof(ArrayStack));
     if (!stack)
@@ -9,14 +9,14 @@ ArrayStack *arrayStack(size_t init_size, int *rc)
         return NULL;
     }
 
-    stack->begin = malloc(init_size * sizeof(void *));
+    stack->begin = malloc(ARR_SIZE * sizeof(void *));
     if (!stack->begin)
     {
         *rc = ALLOC_ERROR;
         return NULL;
     }
 
-    stack->end = stack->begin + init_size;
+    stack->end = stack->begin + ARR_SIZE;
     stack->stackPointer = stack->begin - 1;
     return stack;
 }
@@ -24,23 +24,15 @@ ArrayStack *arrayStack(size_t init_size, int *rc)
 void destroyStackArr(ArrayStack *stack)
 {
     if (stack)
-    {
-        if (stack->begin)
-            free(stack->begin);
         free(stack);
-    }
 }
 
 uintptr_t pushArr(ArrayStack *stack, uintptr_t ptr, int *rc)
 {
     if (stack->stackPointer >= stack->end)
     {
-        size_t currentSize = stack->begin - stack->end;
-        uintptr_t *newBuf = realloc(stack->begin, currentSize * LOAD_FACTOR * sizeof(uintptr_t));
-        if (!newBuf)
-            *rc = ALLOC_ERROR;
-
-        stack->begin = newBuf;
+        *rc = STACK_OVERFLOW;
+        return 0;
     }
 
     stack->stackPointer++;

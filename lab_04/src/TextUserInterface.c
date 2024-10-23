@@ -39,9 +39,9 @@ int inputValue(char *title, bool min_limit, bool max_limit, int min_value, int m
 
 uintptr_t inputAddress(char *title)
 {
-    void *ptr = NULL;
+    uintptr_t ptr = 0;
     printf("Enter %s: ", title);
-    while (scanf("%p", &ptr) != 1)
+    while (scanf("%llx", (unsigned long long *)&ptr) != 1)
         printf("Error: Wrong address!\n"
                "Enter %s again: ",
                title);
@@ -115,6 +115,7 @@ int executeOperation(LinkedStack *linkedStack, ArrayStack *arrayStack)
             break;
         case COMPARISON:
             compareTaDS(stdout);
+            clearFreedMemory();
             break;
         case EXIT:
             destroyStack(linkedStack);

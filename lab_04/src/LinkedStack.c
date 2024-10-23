@@ -45,7 +45,8 @@ void destroyNode(LinkedStackNode *node)
 {
     if (node)
     {
-        freedMemory[freedIndex++] = node->data;
+        if (freedIndex < MAX_FREED)
+            freedMemory[freedIndex++] = node->data;
         free(node);
     }
 }
@@ -96,4 +97,9 @@ void printFreedMemory(void)
 {
     for (size_t i = 0; i < freedIndex; ++i)
         printf("%p\n", (void *)freedMemory[i]);
+}
+
+void clearFreedMemory(void)
+{
+    freedIndex = 0;
 }

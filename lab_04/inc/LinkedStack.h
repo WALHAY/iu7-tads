@@ -31,3 +31,5 @@ uintptr_t push(LinkedStack *stack, int *rc);
 uintptr_t pop(LinkedStack *stack, int *rc);
 
 void printFreedMemory(void);
+
+void clearFreedMemory(void);

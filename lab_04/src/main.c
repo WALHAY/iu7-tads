@@ -7,7 +7,7 @@
 int main(void)
 {
     int rc = SUCCESS;
-    ArrayStack *aStack = arrayStack(INITIAL_SIZE, &rc);
+    ArrayStack *aStack = arrayStack(&rc);
     LinkedStack *lStack = linkedStack(&rc);
     if (rc)
     {

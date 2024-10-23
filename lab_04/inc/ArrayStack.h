@@ -6,7 +6,7 @@
 #include <stdlib.h>
 
 #define LOAD_FACTOR 2
-#define INITIAL_SIZE 8
+#define ARR_SIZE 20000
 
 typedef struct
 {
@@ -15,7 +15,7 @@ typedef struct
     uintptr_t *stackPointer;
 } ArrayStack;
 
-ArrayStack *arrayStack(size_t init_size, int *rc);
+ArrayStack *arrayStack(int *rc);
 
 void destroyStackArr(ArrayStack *stack);
 

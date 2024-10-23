@@ -9,7 +9,8 @@ typedef enum
     NULLPTR_ERROR,
     ALLOC_ERROR,
     NAN_ERROR,
-    EMPTY_STACK_POP
+    EMPTY_STACK_POP,
+    STACK_OVERFLOW
 } ERRORS;
 
 typedef enum
