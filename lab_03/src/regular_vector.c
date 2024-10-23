@@ -24,7 +24,7 @@ int generate_random_regular_vector(RegularVector *vector, float fill)
         return NULLPTR_ERROR;
 
     size_t elements = vector->length;
-    size_t fill_elements = elements * fill;
+    size_t fill_elements = ceil(elements * fill);
     size_t indices[elements];
     for (size_t i = 0; i < elements; ++i)
         indices[i] = i;

@@ -106,7 +106,7 @@ int generate_random_matrix(SparseMatrix *matrix, float fill)
         return NULLPTR_ERROR;
 
     size_t elements = matrix->rows * matrix->columns;
-    size_t fill_elements = elements * fill;
+    size_t fill_elements = ceil(elements * fill);
     size_t indices[elements];
     for (size_t i = 0; i < elements; ++i)
         indices[i] = i;
