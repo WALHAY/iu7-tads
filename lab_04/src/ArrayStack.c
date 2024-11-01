@@ -1,4 +1,4 @@
-#include "ArrayStack.h"
+#include "../inc/ArrayStack.h"
 
 ArrayStack *arrayStack(int *rc)
 {

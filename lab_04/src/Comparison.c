@@ -1,6 +1,6 @@
-#include "Comparison.h"
+#include "../inc/Comparison.h"
 
-#define TRIES 10000
+#define TRIES 100
 
 static void compareMemory(size_t elements, FILE *out)
 {
@@ -21,7 +21,7 @@ static void compareTimePush(FILE *out)
     for (size_t i = 0; i < TRIES; ++i)
         push(lStack, &rc);
     clock_gettime(CLOCK_MONOTONIC_RAW, &t2);
-    size_t linked = (1000000000 * difftime(t2.tv_sec, t1.tv_sec) + difftime(t2.tv_nsec, t1.tv_nsec)) / TRIES;
+    ssize_t linked = (1000000000 * difftime(t2.tv_sec, t1.tv_sec) + difftime(t2.tv_nsec, t1.tv_nsec)) / TRIES;
     destroyStack(lStack);
 
     ArrayStack *arrStack = arrayStack(&rc);
@@ -29,7 +29,7 @@ static void compareTimePush(FILE *out)
     for (size_t i = 0; i < TRIES; ++i)
         pushArr(arrStack, rand(), &rc);
     clock_gettime(CLOCK_MONOTONIC_RAW, &t2);
-    size_t array = (1000000000 * difftime(t2.tv_sec, t1.tv_sec) + difftime(t2.tv_nsec, t1.tv_nsec)) / TRIES;
+    ssize_t array = (1000000000 * difftime(t2.tv_sec, t1.tv_sec) + difftime(t2.tv_nsec, t1.tv_nsec)) / TRIES;
     destroyStackArr(arrStack);
 
     int boost = (linked - array) * 100.0f / linked;
@@ -50,7 +50,7 @@ static void compareTimePop(FILE *out)
     for (size_t i = 0; i < TRIES; ++i)
         pop(lStack, &rc);
     clock_gettime(CLOCK_MONOTONIC_RAW, &t2);
-    size_t linked = (1000000000 * difftime(t2.tv_sec, t1.tv_sec) + difftime(t2.tv_nsec, t1.tv_nsec)) / TRIES;
+    ssize_t linked = (1000000000 * difftime(t2.tv_sec, t1.tv_sec) + difftime(t2.tv_nsec, t1.tv_nsec)) / TRIES;
     destroyStack(lStack);
 
     ArrayStack *arrStack = arrayStack(&rc);
@@ -61,7 +61,7 @@ static void compareTimePop(FILE *out)
     for (size_t i = 0; i < TRIES; ++i)
         popArr(arrStack, &rc);
     clock_gettime(CLOCK_MONOTONIC_RAW, &t2);
-    size_t array = (1000000000 * difftime(t2.tv_sec, t1.tv_sec) + difftime(t2.tv_nsec, t1.tv_nsec)) / TRIES;
+    ssize_t array = (1000000000 * difftime(t2.tv_sec, t1.tv_sec) + difftime(t2.tv_nsec, t1.tv_nsec)) / TRIES;
     destroyStackArr(arrStack);
 
     int boost = (linked - array) * 100.0f / linked;
@@ -71,6 +71,7 @@ static void compareTimePop(FILE *out)
 void compareTaDS(FILE *out)
 {
     fprintf(out, "Memory comparison (in bytes)\n");
+    fprintf(out, "Array Stack is limited to %d elements\n", ARR_SIZE);
     fprintf(out, "Elements\tLinked\tArray\n");
     compareMemory(500, out);
     compareMemory(5000, out);

@@ -1,4 +1,4 @@
-#include "TextUserInterface.h"
+#include "../inc/TextUserInterface.h"
 
 static int safeIntInput(int *value)
 {

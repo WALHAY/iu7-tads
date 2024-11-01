@@ -1,4 +1,4 @@
-#include "LinkedStack.h"
+#include "../inc/LinkedStack.h"
 
 #define MAX_FREED 100000
 

@@ -5,7 +5,6 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-#define LOAD_FACTOR 2
 #define ARR_SIZE 20000
 
 typedef struct
