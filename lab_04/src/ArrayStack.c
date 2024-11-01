@@ -9,7 +9,8 @@ ArrayStack *arrayStack(int *rc)
         return NULL;
     }
 
-    stack->begin = malloc(ARR_SIZE * sizeof(void *));
+    uintptr_t static_arr[ARR_SIZE];
+    stack->begin = static_arr;
     if (!stack->begin)
     {
         *rc = ALLOC_ERROR;
