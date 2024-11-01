@@ -3,15 +3,29 @@
 static int safeIntInput(int *value)
 {
     char temp[20];
-    fgets(temp, 20, stdin);
+    fgets(temp, 19, stdin);
     char *end = NULL;
     errno = 0;
     long val = strtol(temp, &end, 10);
-    if (errno == ERANGE || errno == EINVAL || end == temp)
+    if (errno == ERANGE || errno == EINVAL || end == temp || end - temp + 1 != (long) strlen(temp))
         return NAN_ERROR;
     *value = val;
     return SUCCESS;
 }
+
+static int safeAddressInput(uintptr_t *value)
+{
+    char temp[sizeof(uintptr_t) + 2];
+    fgets(temp, sizeof(uintptr_t) + 1, stdin);
+    char *end = NULL;
+    errno = 0;
+    long val = strtoll(temp, &end, 16);
+    if (errno == ERANGE || errno == EINVAL || end == temp || end - temp != (long) strlen(temp))
+        return NAN_ERROR;
+    *value = val;
+    return SUCCESS;
+}
+
 size_t inputEnum(size_t max_options, char **options)
 {
     printf("\nPossible variants:\n");
@@ -40,13 +54,12 @@ int inputValue(char *title, bool min_limit, bool max_limit, int min_value, int m
 uintptr_t inputAddress(char *title)
 {
     uintptr_t ptr = 0;
-    printf("Enter %s: ", title);
-    while (scanf("%llx", (unsigned long long *)&ptr) != 1)
+    printf("Enter %s: 0x", title);
+    while (safeAddressInput(&ptr))
         printf("Error: Wrong address!\n"
-               "Enter %s again: ",
+               "Enter %s again: 0x",
                title);
-    fflush(stdin);
-    return (uintptr_t)ptr;
+    return ptr;
 }
 
 char *getErrorMessage(int rc)
@@ -67,6 +80,8 @@ char *getErrorMessage(int rc)
 
 int executeOperation(LinkedStack *linkedStack, ArrayStack *arrayStack)
 {
+    fflush(stdin);
+    fflush(stdout);
     char *opts[] = {"Array Stack Push",
                     "Array Stack Pop",
                     "Linked Stack Push",
