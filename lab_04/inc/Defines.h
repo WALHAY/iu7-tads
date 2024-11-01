@@ -14,8 +14,10 @@ typedef enum
 {
     ARR_PUSH,
     ARR_POP,
+    ARR_PRINT,
     LINKED_PUSH,
     LINKED_POP,
+    LINKED_PRINT,
     COMPARISON,
     PRINT_FREED,
     EXIT

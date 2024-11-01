@@ -9,7 +9,7 @@ static int safeIntInput(int *value)
     char *end = NULL;
     errno = 0;
     long val = strtol(temp, &end, 10);
-    if (errno == ERANGE || errno == EINVAL || end == temp || end - temp + 1 != (long) strlen(temp))
+    if (errno == ERANGE || errno == EINVAL || end == temp || end - temp + 1 != (long)strlen(temp))
         return NAN_ERROR;
     *value = val;
     return SUCCESS;
@@ -22,7 +22,7 @@ static int safeAddressInput(uintptr_t *value)
     char *end = NULL;
     errno = 0;
     long val = strtoll(temp, &end, 16);
-    if (errno == ERANGE || errno == EINVAL || end == temp || end - temp + 1 != (long) strlen(temp))
+    if (errno == ERANGE || errno == EINVAL || end == temp || end - temp + 1 != (long)strlen(temp))
         return NAN_ERROR;
     *value = val;
     return SUCCESS;
@@ -80,18 +80,48 @@ char *getErrorMessage(int rc)
     return "Error: No Error?";
 }
 
+void printArrayStack(ArrayStack *stack)
+{
+    if (stack->stackPointer < stack->begin)
+        printf("Empty Array Stack!\n");
+    else
+    {
+        printf("\nArray Stack Elements:\n");
+        for (uintptr_t *ptr = stack->stackPointer; ptr >= stack->begin; --ptr)
+            printf("\t%p\n", (void *)*ptr);
+    }
+}
+
+void printStack(LinkedStack *stack)
+{
+    if (stack->stackPointer)
+    {
+        printf("\nLinked Stack Elements:\n");
+        LinkedStackNode *head = stack->stackPointer;
+        while (head)
+        {
+            printf("\t%p\n", (void *)head->data);
+            head = head->next;
+        }
+    }
+    else
+        printf("Empty Linked Stack!\n");
+}
+
 int executeOperation(LinkedStack *linkedStack, ArrayStack *arrayStack)
 {
     fflush(stdin);
     fflush(stdout);
     char *opts[] = {"Array Stack Push",
                     "Array Stack Pop",
+                    "Print Array Stack",
                     "Linked Stack Push",
                     "Linked Stack Pop",
+                    "Print Linked Stack",
                     "Compare Array and Linked Stack",
                     "Print All Freed Memory",
                     "Exit"};
-    size_t option = inputEnum(7, opts);
+    size_t option = inputEnum(9, opts);
     printf("Executing: %s\n\n", opts[option]);
     int rc = SUCCESS;
     switch (option)
@@ -111,6 +141,9 @@ int executeOperation(LinkedStack *linkedStack, ArrayStack *arrayStack)
                     printf("Element popped (array stack): %p\n", (void *)ptr);
                 return rc;
             }
+        case ARR_PRINT:
+            printArrayStack(arrayStack);
+            break;
         case LINKED_PUSH:
             {
                 uintptr_t ptr = push(linkedStack, &rc);
@@ -125,6 +158,8 @@ int executeOperation(LinkedStack *linkedStack, ArrayStack *arrayStack)
                     printf("Element popped (linked stack): %p\n", (void *)ptr);
                 return rc;
             }
+        case LINKED_PRINT:
+            printStack(linkedStack);
             break;
         case PRINT_FREED:
             printf("Freed Memory:\n");

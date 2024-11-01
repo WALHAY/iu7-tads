@@ -23,15 +23,17 @@ static void compareTimePush(FILE *out)
     for (size_t i = 0; i < TRIES; ++i)
         push(lStack, &rc);
     clock_gettime(CLOCK_MONOTONIC_RAW, &t2);
-    linked += (1000000000 * difftime(t2.tv_sec, t1.tv_sec) + difftime(t2.tv_nsec, t1.tv_nsec)) / TRIES;
+    linked += (1000000000 * difftime(t2.tv_sec, t1.tv_sec) + difftime(t2.tv_nsec, t1.tv_nsec));
     destroyStack(lStack);
+
+    rc = SUCCESS;
 
     ArrayStack *arrStack = arrayStack(&rc);
     clock_gettime(CLOCK_MONOTONIC_RAW, &t1);
     for (size_t i = 0; i < TRIES; ++i)
         pushArr(arrStack, rand(), &rc);
     clock_gettime(CLOCK_MONOTONIC_RAW, &t2);
-    array += (1000000000 * difftime(t2.tv_sec, t1.tv_sec) + difftime(t2.tv_nsec, t1.tv_nsec)) / TRIES;
+    array += (1000000000 * difftime(t2.tv_sec, t1.tv_sec) + difftime(t2.tv_nsec, t1.tv_nsec));
     destroyStackArr(arrStack);
 
     int boost = (linked - array) * 100.0f / linked;
@@ -54,7 +56,7 @@ static void compareTimePop(FILE *out)
     for (size_t i = 0; i < TRIES; ++i)
         pop(lStack, &rc);
     clock_gettime(CLOCK_MONOTONIC_RAW, &t2);
-    linked += (1000000000 * difftime(t2.tv_sec, t1.tv_sec) + difftime(t2.tv_nsec, t1.tv_nsec)) / TRIES;
+    linked += (1000000000 * difftime(t2.tv_sec, t1.tv_sec) + difftime(t2.tv_nsec, t1.tv_nsec));
     destroyStack(lStack);
 
     ArrayStack *arrStack = arrayStack(&rc);
@@ -65,7 +67,7 @@ static void compareTimePop(FILE *out)
     for (size_t i = 0; i < TRIES; ++i)
         popArr(arrStack, &rc);
     clock_gettime(CLOCK_MONOTONIC_RAW, &t2);
-    array += (1000000000 * difftime(t2.tv_sec, t1.tv_sec) + difftime(t2.tv_nsec, t1.tv_nsec)) / TRIES;
+    array += (1000000000 * difftime(t2.tv_sec, t1.tv_sec) + difftime(t2.tv_nsec, t1.tv_nsec));
     destroyStackArr(arrStack);
 
     int boost = (linked - array) * 100.0f / linked;

@@ -1,6 +1,6 @@
 CC := gcc
 
-CFLAGS := -Werror -Wextra -Wpedantic -Wall -std=gnu99 -g3 -O0
+CFLAGS := -Werror -Wextra -Wpedantic -Wall -std=gnu99 -g3 -O3
 
 SRC_PATH := ./src
 OUT_PATH := ./out
