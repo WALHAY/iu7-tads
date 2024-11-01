@@ -1,6 +1,6 @@
 #include "../inc/Comparison.h"
 
-#define TRIES 100
+#define TRIES 20000
 
 static void compareMemory(size_t elements, FILE *out)
 {

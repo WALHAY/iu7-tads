@@ -1,5 +1,7 @@
 #include "../inc/TextUserInterface.h"
 
+#define DIGITS 14
+
 static int safeIntInput(int *value)
 {
     char temp[20];
@@ -15,12 +17,12 @@ static int safeIntInput(int *value)
 
 static int safeAddressInput(uintptr_t *value)
 {
-    char temp[sizeof(uintptr_t) + 2];
-    fgets(temp, sizeof(uintptr_t) + 1, stdin);
+    char temp[DIGITS + 1];
+    fgets(temp, DIGITS, stdin);
     char *end = NULL;
     errno = 0;
     long val = strtoll(temp, &end, 16);
-    if (errno == ERANGE || errno == EINVAL || end == temp || end - temp != (long) strlen(temp))
+    if (errno == ERANGE || errno == EINVAL || end == temp || end - temp + 1 != (long) strlen(temp))
         return NAN_ERROR;
     *value = val;
     return SUCCESS;
@@ -56,7 +58,7 @@ uintptr_t inputAddress(char *title)
     uintptr_t ptr = 0;
     printf("Enter %s: 0x", title);
     while (safeAddressInput(&ptr))
-        printf("Error: Wrong address!\n"
+        printf("\nError: Wrong address!\n"
                "Enter %s again: 0x",
                title);
     return ptr;
