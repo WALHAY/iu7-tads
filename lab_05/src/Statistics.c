@@ -58,7 +58,5 @@ void printResultData(QueueRequestsData *first, QueueRequestsData *second, size_t
     float allWorkTime = first->allTime + second->allTime;
     float waitTime = allTime - allWorkTime;
 
-    printf("%f - %f\n", first->allTime, second->allTime);
-
     printf("\nВремя простоя = %.2f\n", waitTime);
 }

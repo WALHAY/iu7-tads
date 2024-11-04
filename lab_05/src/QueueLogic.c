@@ -20,12 +20,13 @@ void task(size_t requests, TimeSpecification *timings)
     QueueRequestsData qData2 = {0, 0, 0, 0, 0, 0};
     float reqTimeIn2 = 0;
 
-    bool queueType = false; // false - 1, true = 2
-    // время работы автомата
+    bool queueType = false; // false - 1, true - 2
+    // текущее время работы автомата
     float oaTime = 0;
     // общее время работы
     float allTime = 0;
-    size_t toShow = 0;
+    // запоминает промежуточные выводы данных
+    size_t showed = 0;
 
     while (qData1.out < requests)
     {
@@ -107,9 +108,9 @@ void task(size_t requests, TimeSpecification *timings)
 
         allTime += minTime;
 
-        if (qData1.out % 100 == 0 && qData1.out != toShow)
+        if (qData1.out % 100 == 0 && qData1.out != showed)
         {
-            toShow = qData1.out;
+            showed = qData1.out;
             printMiddleData(&qData1, &qData2);
         }
     }
