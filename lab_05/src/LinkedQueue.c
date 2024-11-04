@@ -16,7 +16,7 @@ struct LinkedNode
 
 LinkedQueue createQueue(int *rc)
 {
-    LinkedQueue queue = malloc(sizeof(LinkedQueue));
+    LinkedQueue queue = malloc(sizeof(struct LinkedQueueType));
     if (queue)
     {
         queue->back = NULL;
