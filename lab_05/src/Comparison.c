@@ -37,7 +37,7 @@ static void compareTimePush(FILE *out)
     freeArrayQueue(arrayQueue);
 
     int boost = (linked - array) * 100.0f / linked;
-    fprintf(out, "%zu\t%zu\t%d%%\n", linked, array, boost);
+    fprintf(out, "%zu\t%zu\t%d%%\n", linked / TRIES, array / TRIES, boost);
 }
 
 static void compareTimePop(FILE *out)
@@ -71,7 +71,7 @@ static void compareTimePop(FILE *out)
     freeArrayQueue(arrayQueue);
 
     int boost = (linked - array) * 100.0f / linked;
-    fprintf(out, "%zu\t%zu\t%d%%\n", linked, array, boost);
+    fprintf(out, "%zu\t%zu\t%d%%\n", linked / TRIES, array / TRIES, boost);
 }
 
 void compareTaDS(FILE *out)

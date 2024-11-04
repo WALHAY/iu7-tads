@@ -4,16 +4,10 @@
 
 void printMiddleData(QueueRequestsData *first, QueueRequestsData *second)
 {
-
-    printf("Заявок 1го типа обработано = %zu\n\n", first->out);
-
-    printf("Текущая длина очереди 1го типа = %zu\n", first->currentLength);
-    printf("Средняя длина очереди 1го типа = %f\n\n", (float)(first->length) / first->all);
-
-    printf("Текущая длина очереди 2го типа = %zu\n", second->currentLength);
-    printf("Средняя длина очереди 2го типа = %f\n\n", (float)(second->length) / second->all);
-
-    printf("---------------------------------------\n\n");
+    printf("\nType 1 requests processed: %zu\n", first->out);
+    printf("Queue\tLength\tAvg Length\n");
+    printf("1\t%zu\t%.2f\n", first->currentLength, (float)first->length / first->all);
+    printf("2\t%zu\t%.2f\n", second->currentLength, (float)second->length / second->all);
 }
 
 void printResultData(QueueRequestsData *first, QueueRequestsData *second, size_t requests, TimeSpecification *timings,
@@ -31,19 +25,12 @@ void printResultData(QueueRequestsData *first, QueueRequestsData *second, size_t
     float estimatedTime = MAX(avgInTimeFirstAll, avgOutTimeFirstAll);
     float errorEstimatedTime = fabs((allTime - estimatedTime) * 100 / estimatedTime);
 
-    printf("Общее время моделировния = %.2f"
-           "\nПогрешность моделирования = %.2f%%\n",
-           allTime, errorEstimatedTime);
+    printf("\nEstimated time\tSimulation time\tError\n");
+    printf("%.2f\t\t%.2f\t\t%.2f%%\n", estimatedTime, allTime, errorEstimatedTime);
 
-    printf("\nЗаявок вошло в 1ую очередь = %zu"
-           "\nЗаявок 1ой очереди вышло = %zu"
-           "\nСреднее время обработки заявки в 1ой очереди (ожидаемое) = %.2f\n",
-           first->in, first->out, avgInTimeFirst);
-
-    printf("\nЗаявок вошло в 2ую очередь = %zu"
-           "\nЗаявок 2ой очереди вышло = %zu"
-           "\nСреднее время обработки заявки в 2ой очереди (ожидаемое) = %.2f\n",
-           second->in, second->out, avgInTimeSecond);
+    printf("\nQueue Requests\tIn\tOut\tAvg expected\n");
+    printf("1\t\t%zu\t%zu\t%.2f\n", first->in, first->out, avgInTimeFirst);
+    printf("2\t\t%zu\t%zu\t%.2f\n", second->in, second->out, avgInTimeSecond);
 
     float requestsInFirst = allTime / avgInTimeFirst;
     float errorRequestsInFirst = fabs((first->in - requestsInFirst) * 100 / requestsInFirst);
@@ -51,12 +38,12 @@ void printResultData(QueueRequestsData *first, QueueRequestsData *second, size_t
     float requestsInSecond = allTime / avgInTimeSecond;
     float errorRequestsInSecond = fabs((second->in - requestsInSecond) * 100 / requestsInSecond);
 
-    printf("\nПогрешность ввода заявок в 1ую очередь %.2f%%"
-           "\nПогрешность ввода заявок во 2ую очередь %.2f%%\n",
-           errorRequestsInFirst, errorRequestsInSecond);
+    printf("\nQueue\tExpected\tRequests\tError\n");
+    printf("1\t%.2f\t\t%zu\t\t%.2f%%\n", requestsInFirst, first->in, errorRequestsInFirst);
+    printf("2\t%.2f\t\t%zu\t\t%.2f%%\n", requestsInSecond, second->in, errorRequestsInSecond);
 
     float allWorkTime = first->allTime + second->allTime;
     float waitTime = allTime - allWorkTime;
 
-    printf("\nВремя простоя = %.2f\n", waitTime);
+    printf("\nIdle time: %.2f\n", waitTime);
 }
