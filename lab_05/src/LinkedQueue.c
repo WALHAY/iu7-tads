@@ -2,7 +2,7 @@
 
 typedef struct LinkedNode LinkedNode;
 
-struct LinkedQueue
+struct LinkedQueueType
 {
     LinkedNode *front;
     LinkedNode *back;
@@ -11,11 +11,12 @@ struct LinkedQueue
 struct LinkedNode
 {
     LinkedNode *next;
+    int value;
 };
 
-LinkedQueue *createQueue(int *rc)
+LinkedQueue createQueue(int *rc)
 {
-    LinkedQueue *queue = malloc(sizeof(LinkedQueue));
+    LinkedQueue queue = malloc(sizeof(LinkedQueue));
     if (queue)
     {
         queue->back = NULL;
@@ -27,34 +28,47 @@ LinkedQueue *createQueue(int *rc)
     return queue;
 }
 
-void pop(LinkedQueue *queue, int *rc)
+int pop(LinkedQueue queue, int *rc)
 {
-    LinkedNode *front = queue->front;
-    if (front)
+    if (isEmpty(queue))
     {
-        front = queue->front;
-        free(queue->front);
-        queue->front = front;
-    }
-    else
         *rc = EMPTY_QUEUE_POP;
+        return 0;
+    }
+
+    LinkedNode *temp = queue->front;
+    queue->front = queue->front->next;
+    int value = temp->value;
+    free(temp);
+    return value;
 }
 
-void push(LinkedQueue *queue, int *rc)
+void push(LinkedQueue queue, int value, int *rc)
 {
     LinkedNode *node = malloc(sizeof(LinkedNode));
-    if (node)
+    if (!node)
     {
-        LinkedNode *back = queue->back;
-        if (back)
-            back->next = node;
-        queue->back = node;
-    }
-    else
         *rc = ALLOC_ERROR;
+        return;
+    }
+
+    node->value = value;
+    if (isEmpty(queue))
+    {
+        queue->front = queue->back = node;
+        return;
+    }
+
+    queue->back->next = node;
+    queue->back = node;
 }
 
-void freeQueue(LinkedQueue *queue)
+bool isEmpty(LinkedQueue queue)
+{
+    return queue->front == NULL;
+}
+
+void freeQueue(LinkedQueue queue)
 {
     if (queue)
     {

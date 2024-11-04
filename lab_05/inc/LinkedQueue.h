@@ -2,13 +2,18 @@
 
 #include <stdlib.h>
 #include "Defines.h"
+#include <stdbool.h>
 
-typedef struct LinkedQueue LinkedQueue;
+struct LinkedQueueType;
 
-LinkedQueue *createQueue(int *rc);
+typedef struct LinkedQueueType* LinkedQueue;
 
-void pop(LinkedQueue *queue, int *rc);
+LinkedQueue createQueue(int *rc);
 
-void push(LinkedQueue *queue, int *rc);
+int pop(LinkedQueue queue, int *rc);
 
-void freeQueue(LinkedQueue *queue);
+void push(LinkedQueue queue, int value, int *rc);
+
+bool isEmpty(LinkedQueue queue);
+
+void freeQueue(LinkedQueue queue);
