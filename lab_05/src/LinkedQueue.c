@@ -1,16 +1,16 @@
 #include "../inc/LinkedQueue.h"
 
-typedef struct LinkedNode LinkedNode;
+typedef struct LinkedQueueNode LinkedQueueNode;
 
 struct LinkedQueueType
 {
-    LinkedNode *front;
-    LinkedNode *back;
+    LinkedQueueNode *front;
+    LinkedQueueNode *back;
 };
 
-struct LinkedNode
+struct LinkedQueueNode
 {
-    LinkedNode *next;
+    LinkedQueueNode *next;
     int value;
 };
 
@@ -36,7 +36,7 @@ int pop(LinkedQueue queue, int *rc)
         return 0;
     }
 
-    LinkedNode *temp = queue->front;
+    LinkedQueueNode *temp = queue->front;
     queue->front = queue->front->next;
     int value = temp->value;
     free(temp);
@@ -45,7 +45,7 @@ int pop(LinkedQueue queue, int *rc)
 
 void push(LinkedQueue queue, int value, int *rc)
 {
-    LinkedNode *node = malloc(sizeof(LinkedNode));
+    LinkedQueueNode *node = malloc(sizeof(LinkedQueueNode));
     if (!node)
     {
         *rc = ALLOC_ERROR;
@@ -72,13 +72,23 @@ void freeQueue(LinkedQueue queue)
 {
     if (queue)
     {
-        LinkedNode *node = queue->front;
+        LinkedQueueNode *node = queue->front;
         while (node)
         {
-            LinkedNode *next_node = node->next;
+            LinkedQueueNode *next_node = node->next;
             free(node);
             node = next_node;
         }
         free(queue);
     }
+}
+
+inline size_t sizeofQueue(void)
+{
+    return sizeof(struct LinkedQueueType);
+}
+
+inline size_t sizeofNode(void)
+{
+    return sizeof(struct LinkedQueueNode);
 }

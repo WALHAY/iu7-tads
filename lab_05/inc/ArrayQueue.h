@@ -6,6 +6,8 @@
 #include <stdint.h>
 #include <memory.h>
 
+#define SIZE 5000
+
 struct ArrayQueueType;
 
 typedef struct ArrayQueueType *ArrayQueue;
@@ -21,3 +23,5 @@ bool isEmptyArr(ArrayQueue queue);
 bool isFullArr(ArrayQueue queue);
 
 void freeArrayQueue(ArrayQueue queue);
+
+size_t sizeofArrayQueue(void);

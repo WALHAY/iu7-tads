@@ -1,7 +1,4 @@
 #include "../inc/ArrayQueue.h"
-#include <stdio.h>
-
-#define SIZE 4
 
 struct ArrayQueueType
 {
@@ -69,4 +66,16 @@ bool isFullArr(ArrayQueue queue)
     return queue->back == SIZE;
 }
 
-void freeArrayQueue(ArrayQueue queue);
+void freeArrayQueue(ArrayQueue queue)
+{
+    if (queue)
+    {
+        queue->front = -1;
+        queue->back = 0;
+    }
+}
+
+inline size_t sizeofArrayQueue(void)
+{
+    return sizeof(ArrayQueue);
+}

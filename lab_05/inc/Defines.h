@@ -12,5 +12,9 @@ typedef enum
 
 typedef enum
 {
+    SIMULATE_ARR,
+    SIMULATE_LINKED,
+    COMPARE_TADS,
+    PRINT_FREED,
     EXIT
 } OPCODES;

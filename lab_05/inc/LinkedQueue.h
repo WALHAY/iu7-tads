@@ -6,6 +6,8 @@
 
 struct LinkedQueueType;
 
+struct LinkedQueueNode;
+
 typedef struct LinkedQueueType* LinkedQueue;
 
 LinkedQueue createQueue(int *rc);
@@ -17,3 +19,7 @@ void push(LinkedQueue queue, int value, int *rc);
 bool isEmpty(LinkedQueue queue);
 
 void freeQueue(LinkedQueue queue);
+
+size_t sizeofQueue(void);
+
+size_t sizeofNode(void);

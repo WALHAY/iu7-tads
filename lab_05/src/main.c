@@ -1,10 +1,14 @@
-#include "../inc/QueueLogic.h"
+#include "../inc/TextUserInterface.h"
 #include <time.h>
 
 int main(void)
 {
     srand(time(NULL));
-    TimeSpecification timings = {1, 5, 0, 3, 0, 4, 0, 1};
-    taskArray(1000, &timings);
+    while (true)
+    {
+        int rc = executeOperation();
+        if (rc)
+            printf("%s\n", getErrorMessage(rc));
+    }
     return 0;
 }
