@@ -1,5 +1,3 @@
-#include "../inc/Defines.h"
-#include "../inc/LinkedQueue.h"
 #include "../inc/QueueLogic.h"
 #include <time.h>
 

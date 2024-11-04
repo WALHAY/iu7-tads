@@ -26,7 +26,7 @@ void printResultData(QueueRequestsData *first, QueueRequestsData *second, size_t
     float avgOutTimeFirst = (timings->oaFirstMin + timings->oaFirstMax) / 2.0f;
     float avgOutTimeFirstAll = avgOutTimeFirst * requests;
 
-    float avgInTimeSecond = (timings->oaSecondMin + timings->oaSecondMax) / 2.0f;
+    float avgInTimeSecond = (timings->secondMin + timings->secondMax) / 2.0f;
 
     float estimatedTime = MAX(avgInTimeFirstAll, avgOutTimeFirstAll);
     float errorEstimatedTime = fabs((allTime - estimatedTime) * 100 / estimatedTime);
@@ -37,12 +37,12 @@ void printResultData(QueueRequestsData *first, QueueRequestsData *second, size_t
 
     printf("\nЗаявок вошло в 1ую очередь = %zu"
            "\nЗаявок 1ой очереди вышло = %zu"
-           "\nСреднее время обработки заявки в 1ой очереди (ожидаемое) = %f\n",
+           "\nСреднее время обработки заявки в 1ой очереди (ожидаемое) = %.2f\n",
            first->in, first->out, avgInTimeFirst);
 
     printf("\nЗаявок вошло в 2ую очередь = %zu"
            "\nЗаявок 2ой очереди вышло = %zu"
-           "\nСреднее время обработки заявки в 2ой очереди (ожидаемое) = %f\n",
+           "\nСреднее время обработки заявки в 2ой очереди (ожидаемое) = %.2f\n",
            second->in, second->out, avgInTimeSecond);
 
     float requestsInFirst = allTime / avgInTimeFirst;
@@ -58,5 +58,7 @@ void printResultData(QueueRequestsData *first, QueueRequestsData *second, size_t
     float allWorkTime = first->allTime + second->allTime;
     float waitTime = allTime - allWorkTime;
 
-    printf("\nВремя простоя = %f\n", waitTime);
+    printf("%f - %f\n", first->allTime, second->allTime);
+
+    printf("\nВремя простоя = %.2f\n", waitTime);
 }

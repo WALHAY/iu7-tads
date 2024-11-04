@@ -2,9 +2,9 @@
 #include "../inc/Statistic.h"
 
 #define MIN(a, b) ((a < b) ? a : b)
-static float randBetween(int min, int max)
+static float randBetween(float min, float max)
 {
-    return (max - min) * (float)rand() / (float)RAND_MAX + min;
+    return (max - min) * (float)rand() / (float) RAND_MAX + min;
 }
 
 void task(size_t requests, TimeSpecification *timings)
