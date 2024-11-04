@@ -1,5 +1,10 @@
 #include "../inc/LinkedQueue.h"
 
+#define MAX_FREED 100000
+
+uintptr_t freedMemory[MAX_FREED];
+size_t freedIndex = 0;
+
 typedef struct LinkedQueueNode LinkedQueueNode;
 
 struct LinkedQueueType
@@ -39,6 +44,7 @@ int pop(LinkedQueue queue, int *rc)
     LinkedQueueNode *temp = queue->front;
     queue->front = queue->front->next;
     int value = temp->value;
+    freedMemory[freedIndex++] = (uintptr_t)temp;
     free(temp);
     return value;
 }
@@ -81,6 +87,17 @@ void freeQueue(LinkedQueue queue)
         }
         free(queue);
     }
+}
+
+void printFreedMemory(void)
+{
+    for (size_t i = 0; i < freedIndex; ++i)
+        printf("%p\n", (void *)freedMemory[i]);
+}
+
+void clearFreedMemory(void)
+{
+    freedIndex = 0;
 }
 
 inline size_t sizeofQueue(void)

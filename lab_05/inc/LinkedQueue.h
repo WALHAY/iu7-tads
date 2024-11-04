@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include "Defines.h"
 #include <stdbool.h>
+#include <stdio.h>
 
 struct LinkedQueueType;
 
@@ -19,6 +20,10 @@ void push(LinkedQueue queue, int value, int *rc);
 bool isEmpty(LinkedQueue queue);
 
 void freeQueue(LinkedQueue queue);
+
+void printFreedMemory(void);
+
+void clearFreedMemory(void);
 
 size_t sizeofQueue(void);
 

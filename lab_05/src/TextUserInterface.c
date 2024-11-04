@@ -66,7 +66,7 @@ int executeOperation(void)
             compareTaDS(stdout);
             break;
         case PRINT_FREED:
-            printf("Print freed\n");
+            printFreedMemory();
             break;
         case EXIT:
             exit(SUCCESS);
