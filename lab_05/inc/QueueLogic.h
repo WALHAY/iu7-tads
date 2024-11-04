@@ -1,10 +1,21 @@
 #pragma once
 
 #include "../inc/LinkedQueue.h"
-#include <stdbool.h>
-#include <stdlib.h>
-#include <stdio.h>
 #include <math.h>
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
 
-void task(size_t timeFirstMin, size_t timeFirstMax, size_t timeSecondMin, size_t timeSecondMax, size_t timeOaFirstMin,
-          size_t timeOaFirstMax, size_t timeOaSecondMin, size_t timeOaSecondMax);
+typedef struct
+{
+    size_t firstMin;
+    size_t firstMax;
+    size_t secondMin;
+    size_t secondMax;
+    size_t oaFirstMin;
+    size_t oaFirstMax;
+    size_t oaSecondMin;
+    size_t oaSecondMax;
+} TimeSpecification;
+
+void task(size_t requests, TimeSpecification *timings);
