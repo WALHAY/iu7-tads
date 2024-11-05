@@ -48,7 +48,8 @@ void task(size_t requests, TimeSpecification *timings)
                 pop(q1, &rc);
 
                 qData1.all++;
-                qData1.length += --qData1.currentLength;
+                qData1.currentLength--;
+                qData1.length += qData1.currentLength;
 
                 qData1.allTime += oaTime;
             }
@@ -59,7 +60,8 @@ void task(size_t requests, TimeSpecification *timings)
                 pop(q2, &rc);
 
                 qData2.all++;
-                qData2.length += --qData2.currentLength;
+                qData2.currentLength--;
+                qData2.length += qData2.currentLength;
 
                 qData2.allTime += oaTime;
             }
@@ -158,7 +160,8 @@ void taskArray(size_t requests, TimeSpecification *timings)
                 popArr(q1, &rc);
 
                 qData1.all++;
-                qData1.length += --qData1.currentLength;
+                qData1.currentLength--;
+                qData1.length += qData1.currentLength;
 
                 qData1.allTime += oaTime;
             }
@@ -169,7 +172,8 @@ void taskArray(size_t requests, TimeSpecification *timings)
                 popArr(q2, &rc);
 
                 qData2.all++;
-                qData2.length += --qData2.currentLength;
+                qData2.currentLength--;
+                qData2.length += qData2.currentLength;
 
                 qData2.allTime += oaTime;
             }
