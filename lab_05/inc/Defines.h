@@ -12,6 +12,8 @@ typedef enum
 
 typedef enum
 {
+    CHANGE_REQUESTS,
+    CHANGE_TIMINGS,
     SIMULATE_ARR,
     SIMULATE_LINKED,
     COMPARE_TADS,

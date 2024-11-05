@@ -1,7 +1,6 @@
 #include "../inc/TextUserInterface.h"
 
-#define REQUESTS 1000
-
+static int requests = 1000;
 static TimeSpecification timings = {1, 5, 0, 3, 0, 4, 0, 1};
 
 static int safeIntInput(int *value)
@@ -31,6 +30,17 @@ size_t inputEnum(size_t max_options, char **options)
     return option;
 }
 
+int inputValue(char *title, bool min_limit, bool max_limit, int min_value, int max_value)
+{
+    int value = 0;
+    printf("Enter %s: ", title);
+    while (safeIntInput(&value) || (max_limit && value > max_value) || (min_limit && value < min_value))
+        printf("Error: Wrong value!\n"
+               "Enter %s again: ",
+               title);
+    return value;
+}
+
 char *getErrorMessage(int rc)
 {
     switch (rc)
@@ -47,20 +57,41 @@ char *getErrorMessage(int rc)
     return "Error: No Error?";
 }
 
+void inputTimeSpecification(TimeSpecification *timings)
+{
+    timings->firstMin = inputValue("First queue enter min time", true, false, 0, 0);
+    timings->firstMax = inputValue("First queue enter max time", true, false, 0, 0);
+
+    timings->secondMin = inputValue("Second queue enter min time", true, false, 0, 0);
+    timings->secondMax = inputValue("Second queue enter max time", true, false, 0, 0);
+
+    timings->oaFirstMin = inputValue("First queue request process min time", true, false, 0, 0);
+    timings->oaFirstMax = inputValue("First queue request process max time", true, false, 0, 0);
+
+    timings->oaSecondMin = inputValue("Second queue request process min time", true, false, 0, 0);
+    timings->oaSecondMax = inputValue("Second queue request process max time", true, false, 0, 0);
+}
+
 int executeOperation(void)
 {
-    char *opts[] = {"Simulate 1000 requests : Array Queue ", "Simulate 1000 requests : Linked Queue ",
+    char *opts[] = {"Change requests", "Change timings", "Simulate 1000 requests : Array Queue ", "Simulate 1000 requests : Linked Queue ",
                     "Compare Array and Linked Queue", "Print All Freed Memory", "Exit"};
-    OPCODES option = inputEnum(5, opts);
+    OPCODES option = inputEnum(7, opts);
     printf("Executing: %s\n\n", opts[option]);
     int rc = SUCCESS;
     switch (option)
     {
+        case CHANGE_REQUESTS:
+            requests = inputValue("first type requests amount", true, false, 0, 0);
+            break;
+        case CHANGE_TIMINGS:
+            inputTimeSpecification(&timings);
+            break;
         case SIMULATE_ARR:
-            taskArray(REQUESTS, &timings);
+            taskArray(requests, &timings);
             break;
         case SIMULATE_LINKED:
-            task(REQUESTS, &timings);
+            task(requests, &timings);
             break;
         case COMPARE_TADS:
             compareTaDS(stdout);
