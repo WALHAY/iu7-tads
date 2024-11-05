@@ -38,7 +38,7 @@ void pushArr(ArrayQueue queue, int value, int *rc)
             shiftArrayQueue(queue, queue->front);
         else
         {
-            *rc = PUSH_FULL_ARR_QUEUE;
+            *rc = QUEUE_OVERFLOW;
             return;
         }
     }

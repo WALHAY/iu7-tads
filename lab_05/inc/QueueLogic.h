@@ -9,14 +9,14 @@
 
 typedef struct
 {
-    size_t firstMin;
-    size_t firstMax;
-    size_t secondMin;
-    size_t secondMax;
-    size_t oaFirstMin;
-    size_t oaFirstMax;
-    size_t oaSecondMin;
-    size_t oaSecondMax;
+    float firstMin;
+    float firstMax;
+    float secondMin;
+    float secondMax;
+    float oaFirstMin;
+    float oaFirstMax;
+    float oaSecondMin;
+    float oaSecondMax;
 } TimeSpecification;
 
 void task(size_t requests, TimeSpecification *timings);

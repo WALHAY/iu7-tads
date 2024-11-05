@@ -16,6 +16,19 @@ static int safeIntInput(int *value)
     return SUCCESS;
 }
 
+static int safeFloatInput(float *value)
+{
+    char temp[20];
+    fgets(temp, 19, stdin);
+    char *end = NULL;
+    errno = 0;
+    float val = strtof(temp, &end);
+    if (errno == ERANGE || errno == EINVAL || end == temp || end - temp + 1 != (long)strlen(temp))
+        return NAN_ERROR;
+    *value = val;
+    return SUCCESS;
+}
+
 size_t inputEnum(size_t max_options, char **options)
 {
     printf("\nPossible variants:\n");
@@ -30,11 +43,11 @@ size_t inputEnum(size_t max_options, char **options)
     return option;
 }
 
-int inputValue(char *title, bool min_limit, bool max_limit, int min_value, int max_value)
+float inputValue(char *title, bool min_limit, bool max_limit, float min_value, float max_value)
 {
-    int value = 0;
+    float value = 0;
     printf("Enter %s: ", title);
-    while (safeIntInput(&value) || (max_limit && value > max_value) || (min_limit && value < min_value))
+    while (safeFloatInput(&value) || (max_limit && value > max_value) || (min_limit && value < min_value))
         printf("Error: Wrong value!\n"
                "Enter %s again: ",
                title);
@@ -72,6 +85,22 @@ void inputTimeSpecification(TimeSpecification *timings)
     timings->oaSecondMax = inputValue("Second queue request process max time", true, false, 0, 0);
 }
 
+void printCurrentTimings(void)
+{
+    printf("--- Current timings ---\n");
+    printf("First queue enter min time: %.2f\n", timings.firstMin);
+    printf("First queue enter max time: %.2f\n", timings.firstMax);
+
+    printf("Second queue enter min time: %.2f\n", timings.secondMin);
+    printf("Second queue enter max time: %.2f\n", timings.secondMax);
+
+    printf("First queue request process min time: %.2f\n", timings.oaFirstMin);
+    printf("First queue request process max time: %.2f\n", timings.oaFirstMax);
+
+    printf("Second queue request process min time: %.2f\n",timings.oaSecondMin);
+    printf("Second queue request process max time: %.2f\n\n",timings.oaSecondMax);
+}
+
 int executeOperation(void)
 {
     char *opts[] = {"Change requests", "Change timings", "Simulate 1000 requests : Array Queue ", "Simulate 1000 requests : Linked Queue ",
@@ -85,6 +114,7 @@ int executeOperation(void)
             requests = inputValue("first type requests amount", true, false, 0, 0);
             break;
         case CHANGE_TIMINGS:
+            printCurrentTimings();
             inputTimeSpecification(&timings);
             break;
         case SIMULATE_ARR:
@@ -94,6 +124,7 @@ int executeOperation(void)
             task(requests, &timings);
             break;
         case COMPARE_TADS:
+            clearFreedMemory();
             compareTaDS(stdout);
             break;
         case PRINT_FREED:

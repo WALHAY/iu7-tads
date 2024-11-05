@@ -7,7 +7,7 @@ typedef enum
     ALLOC_ERROR,
     NAN_ERROR,
     EMPTY_QUEUE_POP,
-    PUSH_FULL_ARR_QUEUE
+    QUEUE_OVERFLOW
 } ERRORS;
 
 typedef enum

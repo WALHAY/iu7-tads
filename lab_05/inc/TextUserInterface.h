@@ -13,8 +13,10 @@ int executeOperation(void);
 
 size_t inputEnum(size_t max_options, char **options);
 
-int inputValue(char *title, bool min_limit, bool max_limit, int min_value, int max_value);
+float inputValue(char *title, bool min_limit, bool max_limit, float min_value, float max_value);
 
 void inputTimeSpecification(TimeSpecification *timings);
+
+void printCurrentTimings(void);
 
 char *getErrorMessage(int rc);
