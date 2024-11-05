@@ -60,7 +60,6 @@ int executeOperation(void)
             taskArray(REQUESTS, &timings);
             break;
         case SIMULATE_LINKED:
-            clearFreedMemory();
             task(REQUESTS, &timings);
             break;
         case COMPARE_TADS:

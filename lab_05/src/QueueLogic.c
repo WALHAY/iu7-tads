@@ -86,8 +86,9 @@ void task(size_t requests, TimeSpecification *timings)
             push(q1, 1, &rc);
 
             qData1.in++;
+            qData1.currentLength++;
             qData1.all++;
-            qData1.length += ++qData1.currentLength;
+            qData1.length += qData1.currentLength;
         }
         // самое быстрое действие - добавление заявки 2 типа
         else if (reqTimeIn2 == minTime)
@@ -95,8 +96,9 @@ void task(size_t requests, TimeSpecification *timings)
             push(q2, 2, &rc);
 
             qData2.in++;
+            qData2.currentLength++;
             qData2.all++;
-            qData2.length += ++qData2.currentLength;
+            qData2.length += qData2.currentLength;
         }
 
         reqTimeIn1 -= minTime;
@@ -194,8 +196,9 @@ void taskArray(size_t requests, TimeSpecification *timings)
             pushArr(q1, 1, &rc);
 
             qData1.in++;
+            qData1.currentLength++;
             qData1.all++;
-            qData1.length += ++qData1.currentLength;
+            qData1.length += qData1.currentLength;
         }
         // самое быстрое действие - добавление заявки 2 типа
         else if (reqTimeIn2 == minTime)
@@ -203,8 +206,9 @@ void taskArray(size_t requests, TimeSpecification *timings)
             pushArr(q2, 2, &rc);
 
             qData2.in++;
+            qData2.currentLength++;
             qData2.all++;
-            qData2.length += ++qData2.currentLength;
+            qData2.length += qData2.currentLength;
         }
 
         reqTimeIn1 -= minTime;
