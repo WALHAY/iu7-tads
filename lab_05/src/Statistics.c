@@ -38,12 +38,13 @@ void printResultData(QueueRequestsData *first, QueueRequestsData *second, size_t
     float requestsInSecond = allTime / avgInTimeSecond;
     float errorRequestsInSecond = fabs((second->in - requestsInSecond) * 100 / requestsInSecond);
 
-    printf("\nQueue\tExpected\tRequests\tError\n");
-    printf("1\t%.2f\t\t%zu\t\t%.2f%%\n", requestsInFirst, first->in, errorRequestsInFirst);
-    printf("2\t%.2f\t\t%zu\t\t%.2f%%\n", requestsInSecond, second->in, errorRequestsInSecond);
+    printf("\nQueue In\tExpected\tRequests\tError\n");
+    printf("1\t\t%.2f\t\t%zu\t\t%.2f%%\n", requestsInFirst, first->in, errorRequestsInFirst);
+    printf("2\t\t%.2f\t\t%zu\t\t%.2f%%\n", requestsInSecond, second->in, errorRequestsInSecond);
 
     float allWorkTime = first->allTime + second->allTime;
     float waitTime = allTime - allWorkTime;
 
     printf("\nIdle time: %.2f\n", waitTime);
+    printf("\nWork time: %.2f\n", allWorkTime);
 }

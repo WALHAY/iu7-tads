@@ -97,14 +97,19 @@ void printCurrentTimings(void)
     printf("First queue request process min time: %.2f\n", timings.oaFirstMin);
     printf("First queue request process max time: %.2f\n", timings.oaFirstMax);
 
-    printf("Second queue request process min time: %.2f\n",timings.oaSecondMin);
-    printf("Second queue request process max time: %.2f\n\n",timings.oaSecondMax);
+    printf("Second queue request process min time: %.2f\n", timings.oaSecondMin);
+    printf("Second queue request process max time: %.2f\n\n", timings.oaSecondMax);
 }
 
 int executeOperation(void)
 {
-    char *opts[] = {"Change requests", "Change timings", "Simulate 1000 requests : Array Queue ", "Simulate 1000 requests : Linked Queue ",
-                    "Compare Array and Linked Queue", "Print All Freed Memory", "Exit"};
+    char *opts[] = {"Change requests",
+                    "Change timings",
+                    "Simulate 1000 requests : Array Queue ",
+                    "Simulate 1000 requests : Linked Queue ",
+                    "Compare Array and Linked Queue",
+                    "Print All Freed Memory",
+                    "Exit"};
     OPCODES option = inputEnum(7, opts);
     printf("Executing: %s\n\n", opts[option]);
     int rc = SUCCESS;
@@ -124,8 +129,8 @@ int executeOperation(void)
             task(requests, &timings);
             break;
         case COMPARE_TADS:
-            clearFreedMemory();
             compareTaDS(stdout);
+            clearFreedMemory();
             break;
         case PRINT_FREED:
             printFreedMemory();

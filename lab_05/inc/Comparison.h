@@ -2,6 +2,7 @@
 
 #include "ArrayQueue.h"
 #include "LinkedQueue.h"
+#include "QueueLogic.h"
 #include <math.h>
 #include <stdio.h>
 #include <time.h>
