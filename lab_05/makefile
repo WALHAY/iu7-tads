@@ -1,6 +1,11 @@
 CC := gcc
 
-CFLAGS := -Wextra -Wpedantic -Wall -std=gnu99 -g3 -O0 -DALGCOMP
+CFLAGS := -Wextra -Wpedantic -Wall -std=gnu99 -g3 -O0
+ifeq ($(mode), time)
+	CFLAGS += -DALGCOMP
+else
+	CFLAGS += -Werror
+endif
 
 SRC_PATH := ./src
 OUT_PATH := ./out
