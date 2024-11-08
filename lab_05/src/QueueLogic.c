@@ -114,10 +114,14 @@ void task(size_t requests, TimeSpecification *timings)
         if (qData1.out % 100 == 0 && qData1.out != showed)
         {
             showed = qData1.out;
+#ifndef ALGCOMP
             printMiddleData(&qData1, &qData2);
+#endif
         }
     }
+#ifndef ALGCOMP
     printResultData(&qData1, &qData2, requests, timings, allTime);
+#endif
 }
 
 void taskArray(size_t requests, TimeSpecification *timings)
@@ -226,8 +230,13 @@ void taskArray(size_t requests, TimeSpecification *timings)
         if (qData1.out % 100 == 0 && qData1.out != showed)
         {
             showed = qData1.out;
+
+#ifndef ALGCOMP
             printMiddleData(&qData1, &qData2);
+#endif
         }
     }
+#ifndef ALGCOMP
     printResultData(&qData1, &qData2, requests, timings, allTime);
+#endif
 }

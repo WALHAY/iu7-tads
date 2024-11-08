@@ -44,7 +44,8 @@ int pop(LinkedQueue queue, int *rc)
     LinkedQueueNode *temp = queue->front;
     queue->front = queue->front->next;
     int value = temp->value;
-    freedMemory[freedIndex++] = (uintptr_t)temp;
+    if (freedIndex < MAX_FREED)
+        freedMemory[freedIndex++] = (uintptr_t)temp;
     free(temp);
     return value;
 }

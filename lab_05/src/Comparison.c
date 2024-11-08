@@ -97,7 +97,7 @@ void compareAlgorithm(int requests, FILE *out)
     }
 
     int boost = (linked - array) * 100.0f / linked;
-    fprintf(out, "%zu\t%zu\t%d%%\n", linked / TRIES, array / TRIES, boost);
+    fprintf(out, "%d\t%zu\t%zu\t%d%%\n", requests, linked / TRIES, array / TRIES, boost);
 }
 
 void compareTaDS(FILE *out)
@@ -117,9 +117,11 @@ void compareTaDS(FILE *out)
     fprintf(out, "Linked\tArray\tArray Boost\n");
     compareTimePop(out);
 
-    // fprintf(out, "\nAlgorithm time comparison (in nanoseconds)\n");
-    // fprintf(out, "Linked\tArray\tArray Boost\n");
-    // compareAlgorithm(100, out);
-    // compareAlgorithm(500, out);
-    // compareAlgorithm(1000, out);
+#ifdef ALGCOMP
+    fprintf(out, "\nAlgorithm time comparison (in nanoseconds)\n");
+    fprintf(out, "Elements\tLinked\tArray\tArray Boost\n");
+    compareAlgorithm(100, out);
+    compareAlgorithm(500, out);
+    compareAlgorithm(1000, out);
+#endif
 }
