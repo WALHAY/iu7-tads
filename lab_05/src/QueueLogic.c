@@ -185,7 +185,7 @@ void taskArray(size_t requests, TimeSpecification *timings)
             minTime = MIN(minTime, oaTime);
 
         // самое быстрое действие - обработка заявки
-        if (oaTime != 0 && oaTime == minTime)
+        if (oaTime == minTime)
         {
             oaTime = 0;
 

@@ -105,8 +105,8 @@ int executeOperation(void)
 {
     char *opts[] = {"Change requests",
                     "Change timings",
-                    "Simulate 1000 requests : Array Queue ",
-                    "Simulate 1000 requests : Linked Queue ",
+                    "Simulate requests : Array Queue ",
+                    "Simulate requests : Linked Queue ",
                     "Compare Array and Linked Queue",
                     "Print All Freed Memory",
                     "Exit"};
