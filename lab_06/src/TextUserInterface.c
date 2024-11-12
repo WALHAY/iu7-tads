@@ -1,0 +1,94 @@
+#include "../inc/TextUserInterface.h"
+
+static int safeIntInput(int *value)
+{
+    char temp[20];
+    fgets(temp, 19, stdin);
+    char *end = NULL;
+    errno = 0;
+    long val = strtol(temp, &end, 10);
+    if (errno == ERANGE || errno == EINVAL || end == temp || end - temp + 1 != (long)strlen(temp))
+        return NAN_ERROR;
+    *value = val;
+    return SUCCESS;
+}
+
+static int safeFloatInput(float *value)
+{
+    char temp[20];
+    fgets(temp, 19, stdin);
+    char *end = NULL;
+    errno = 0;
+    float val = strtof(temp, &end);
+    if (errno == ERANGE || errno == EINVAL || end == temp || end - temp + 1 != (long)strlen(temp))
+        return NAN_ERROR;
+    *value = val;
+    return SUCCESS;
+}
+
+size_t inputEnum(size_t max_options, char **options)
+{
+    printf("\nPossible variants:\n");
+    for (size_t i = 0; i < max_options; ++i)
+        printf("\t%zu. %s\n", i, options[i]);
+
+    size_t option = 0;
+    printf("Option: ");
+    while (safeIntInput((int *)&option) || option >= max_options)
+        printf("Error: Wrong option!\n"
+               "Enter option again: ");
+    return option;
+}
+
+float inputValue(char *title, bool min_limit, bool max_limit, float min_value, float max_value)
+{
+    float value = 0;
+    printf("Enter %s: ", title);
+    while (safeFloatInput(&value) || (max_limit && value > max_value) || (min_limit && value < min_value))
+        printf("Error: Wrong value!\n"
+               "Enter %s again: ",
+               title);
+    return value;
+}
+
+char *getErrorMessage(int rc)
+{
+    switch (rc)
+    {
+        case NULLPTR_ERROR:
+            return "Error: Null pointer passed to function!";
+        case ALLOC_ERROR:
+            return "Error: Failed to allocate memory!";
+        case NAN_ERROR:
+            return "Error: Not A Number!";
+    }
+    return "Error: No Error?";
+}
+
+int executeOperation(TreeNode **head_ptr)
+{
+    TreeNode *head = *head_ptr;
+    char *opts[] = {"Add student",  "Find Student", "Remove Student", "Print Tree", "Remove Low Score",
+                    "Compare TaDS", "Exit"};
+    OPCODES option = inputEnum(7, opts);
+    printf("Executing: %s\n", opts[option]);
+    int rc = SUCCESS;
+    switch (option)
+    {
+        case ADD:
+            break;
+        case FIND:
+            break;
+        case REMOVE:
+            break;
+        case PRINT:
+            break;
+        case REMOVE_LOW:
+            break;
+        case COMPARE_TADS:
+            break;
+        case EXIT:
+            exit(SUCCESS);
+    }
+    return rc;
+}

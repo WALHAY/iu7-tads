@@ -1,32 +1,31 @@
 #include "../inc/BinaryTree.h"
 
-TreeNode *createNode(TreeNode *parent, char *name, float score, int *rc)
+static TreeNode *createNode(TreeNode *parent, void *data, int *rc)
 {
     TreeNode *node = malloc(sizeof(TreeNode));
     if (node)
     {
         node->parent = parent;
-        node->data.name = name;
-        node->data.score = score;
+        node->data = data;
     }
     else
         *rc = ALLOC_ERROR;
     return node;
 }
 
-TreeNode *treeInsert(TreeNode *parent, TreeNode *head, char *name, float score, int *rc)
+TreeNode *treeInsert(TreeNode *parent, TreeNode *head, StudentData *data, int *rc)
 {
     if (!head)
-        return createNode(parent, name, score, rc);
+        return createNode(parent, data, rc);
 
-    int comparison = strcmp(name, head->data.name);
+    int comparison = strcmp(head->data->name, data->name);
     if (!comparison)
         return head;
 
     if (comparison < 0)
-        head->left = treeInsert(head, head->left, name, score, rc);
+        head->left = treeInsert(head, head->left, data, rc);
     else
-        head->right = treeInsert(head, head->right, name, score, rc);
+        head->right = treeInsert(head, head->right, data, rc);
 
     return head;
 }
@@ -38,16 +37,51 @@ static TreeNode *treeGetSmallest(TreeNode *head)
     return head;
 }
 
-TreeNode *treeRemove(TreeNode *head, char *name, int *rc)
+TreeNode *removeIfLowScore(TreeNode *head)
 {
     if (!head)
         return head;
 
-    int comparison = strcmp(name, head->data.name);
+    if (head->left)
+        head->left = removeIfLowScore(head->left);
+
+    if (head->right)
+        head->right = removeIfLowScore(head->right);
+
+    if (head->data->score <= 2)
+    {
+        if (!head->left)
+        {
+            TreeNode *temp = head->right;
+            freeNode(head);
+            return removeIfLowScore(temp);
+        }
+
+        if (!head->right)
+        {
+            TreeNode *temp = head->left;
+            freeNode(head);
+            return removeIfLowScore(temp);
+        }
+
+        TreeNode *successor = treeGetSmallest(head->right);
+        head->data = successor->data;
+        head->right = treeRemove(head->right, successor->data->name);
+    }
+
+    return head;
+}
+
+TreeNode *treeRemove(TreeNode *head, const char *name)
+{
+    if (!head)
+        return head;
+
+    int comparison = strcmp(name, head->data->name);
     if (comparison < 0)
-        head->left = treeRemove(head->left, name, rc);
+        head->left = treeRemove(head->left, name);
     else if (comparison > 0)
-        head->right = treeRemove(head->right, name, rc);
+        head->right = treeRemove(head->right, name);
     else
     {
         if (!head->left)
@@ -66,31 +100,19 @@ TreeNode *treeRemove(TreeNode *head, char *name, int *rc)
 
         TreeNode *successor = treeGetSmallest(head->right);
         head->data = successor->data;
-        head->right = treeRemove(head->right, successor->data.name, rc);
+        head->right = treeRemove(head->right, successor->data->name);
     }
 
     return head;
-}
-
-void removeLowScore(TreeNode *head)
-{
-}
-
-static void copyInsert(TreeNode *node)
-{
-}
-
-TreeNode *treeRebuild(TreeNode *head)
-{
 }
 
 void depthFirstSearch(TreeNode *head, void (*action)(TreeNode *))
 {
     if (!head)
         return;
-    action(head);
     depthFirstSearch(head->left, action);
     depthFirstSearch(head->right, action);
+    action(head);
 }
 
 void freeNode(TreeNode *node)

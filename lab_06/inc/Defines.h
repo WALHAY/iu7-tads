@@ -11,5 +11,11 @@ typedef enum
 
 typedef enum
 {
+    ADD,
+    FIND,
+    REMOVE,
+    PRINT,
+    REMOVE_LOW,
+    COMPARE_TADS,
     EXIT
 } OPCODES;
