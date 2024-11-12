@@ -20,6 +20,8 @@ TreeNode *treeInsert(TreeNode *parent, TreeNode *head, StudentData *data, int *r
 
 TreeNode *treeRemove(TreeNode *head, const char *name);
 
+TreeNode *treeFind(TreeNode *head, const char *prefix);
+
 TreeNode *removeIfLowScore(TreeNode *head);
 
 void depthFirstSearch(TreeNode *head, void (*action)(TreeNode *));

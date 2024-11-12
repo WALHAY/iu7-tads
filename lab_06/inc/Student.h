@@ -1,14 +1,17 @@
 #pragma once
 
 #include "Defines.h"
+#include <stdio.h>
 #include <stdlib.h>
 
 typedef struct
 {
-    const char *name;
+    char *name;
     float score;
 } StudentData;
 
-StudentData *createData(const char *name, float score, int *rc);
+StudentData *createData(char *name, float score, int *rc);
+
+void printStudent(StudentData *data);
 
 void freeData(StudentData *data);

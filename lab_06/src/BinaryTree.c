@@ -106,6 +106,22 @@ TreeNode *treeRemove(TreeNode *head, const char *name)
     return head;
 }
 
+TreeNode *treeFind(TreeNode *head, const char *prefix)
+{
+    if (!head)
+        return NULL;
+
+    int comparison = strncmp(prefix, head->data->name, strlen(prefix));
+    if (comparison == 0)
+        return head;
+    else if (comparison < 0)
+        return treeFind(head->left, prefix);
+    else
+        return treeFind(head->right, prefix);
+
+    return NULL;
+}
+
 void depthFirstSearch(TreeNode *head, void (*action)(TreeNode *))
 {
     if (!head)

@@ -110,7 +110,15 @@ int executeOperation(TreeNode **head_ptr)
             *head_ptr = treeInsert(NULL, head, inputStudentData(&rc), &rc);
             break;
         case FIND:
-            break;
+            {
+                char *prefix = inputString("surname prefix");
+                TreeNode *node = treeFind(head, prefix);
+                if (node)
+                    printStudent(node->data);
+                else
+                    printf("Student not found!\n");
+                break;
+            }
         case REMOVE:
             break;
         case PRINT:

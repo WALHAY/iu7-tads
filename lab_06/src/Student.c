@@ -1,6 +1,6 @@
 #include "../inc/Student.h"
 
-StudentData *createData(const char *name, float score, int *rc)
+StudentData *createData(char *name, float score, int *rc)
 {
     StudentData *data = malloc(sizeof(StudentData));
     if (data)
@@ -13,4 +13,19 @@ StudentData *createData(const char *name, float score, int *rc)
     return data;
 }
 
-void freeData(StudentData *data);
+void printStudent(StudentData *data)
+{
+    if (!data)
+        return;
+
+    printf("%s: %f\n", data->name, data->score);
+}
+
+void freeData(StudentData *data)
+{
+    if (data)
+    {
+        free(data->name);
+        free(data);
+    }
+}
