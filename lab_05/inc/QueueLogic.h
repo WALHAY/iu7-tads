@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../inc/LinkedQueue.h"
 #include "../inc/ArrayQueue.h"
+#include "../inc/LinkedQueue.h"
 #include <math.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -19,6 +19,6 @@ typedef struct
     float oaSecondMax;
 } TimeSpecification;
 
-void task(size_t requests, TimeSpecification *timings);
+int task(size_t requests, TimeSpecification *timings);
 
-void taskArray(size_t requests, TimeSpecification *timings);
+int taskArray(size_t requests, TimeSpecification *timings);

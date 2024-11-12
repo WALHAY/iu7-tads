@@ -66,6 +66,8 @@ char *getErrorMessage(int rc)
             return "Error: Not A Number!";
         case EMPTY_QUEUE_POP:
             return "Error: Trying to pop element in empty queue!";
+        case QUEUE_OVERFLOW:
+            return "Error: Array Queue Overflow!";
     }
     return "Error: No Error?";
 }
@@ -123,11 +125,9 @@ int executeOperation(void)
             inputTimeSpecification(&timings);
             break;
         case SIMULATE_ARR:
-            taskArray(requests, &timings);
-            break;
+            return taskArray(requests, &timings);
         case SIMULATE_LINKED:
-            task(requests, &timings);
-            break;
+            return task(requests, &timings);
         case COMPARE_TADS:
             compareTaDS(stdout);
             clearFreedMemory();

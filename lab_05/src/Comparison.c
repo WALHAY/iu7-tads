@@ -97,7 +97,7 @@ void compareAlgorithm(int requests, FILE *out)
     }
 
     int boost = (linked - array) * 100.0f / linked;
-    fprintf(out, "%d\t%zu\t%zu\t%d%%\n", requests, linked / TRIES, array / TRIES, boost);
+    fprintf(out, "%d\t\t%zu\t%zu\t%d%%\n", requests, linked / TRIES, array / TRIES, boost);
 }
 
 void compareTaDS(FILE *out)

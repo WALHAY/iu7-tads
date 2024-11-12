@@ -8,7 +8,7 @@ static float randBetween(float min, float max)
     return (max - min) * (float)rand() / (float)RAND_MAX + min;
 }
 
-void task(size_t requests, TimeSpecification *timings)
+int task(size_t requests, TimeSpecification *timings)
 {
     int rc = SUCCESS;
     LinkedQueue q1 = createQueue(&rc);
@@ -87,6 +87,9 @@ void task(size_t requests, TimeSpecification *timings)
         {
             push(q1, 1, &rc);
 
+            if (rc)
+                return rc;
+
             qData1.in++;
             qData1.currentLength++;
             qData1.all++;
@@ -96,6 +99,9 @@ void task(size_t requests, TimeSpecification *timings)
         else if (reqTimeIn2 == minTime)
         {
             push(q2, 2, &rc);
+
+            if (rc)
+                return rc;
 
             qData2.in++;
             qData2.currentLength++;
@@ -122,9 +128,10 @@ void task(size_t requests, TimeSpecification *timings)
 #ifndef ALGCOMP
     printResultData(&qData1, &qData2, requests, timings, allTime);
 #endif
+    return SUCCESS;
 }
 
-void taskArray(size_t requests, TimeSpecification *timings)
+int taskArray(size_t requests, TimeSpecification *timings)
 {
     int rc = SUCCESS;
     ArrayQueue q1 = createArrayQueue(&rc);
@@ -203,6 +210,9 @@ void taskArray(size_t requests, TimeSpecification *timings)
         {
             pushArr(q1, 1, &rc);
 
+            if (rc)
+                return rc;
+
             qData1.in++;
             qData1.currentLength++;
             qData1.all++;
@@ -212,6 +222,9 @@ void taskArray(size_t requests, TimeSpecification *timings)
         else if (reqTimeIn2 == minTime)
         {
             pushArr(q2, 2, &rc);
+
+            if (rc)
+                return rc;
 
             qData2.in++;
             qData2.currentLength++;
@@ -239,4 +252,5 @@ void taskArray(size_t requests, TimeSpecification *timings)
 #ifndef ALGCOMP
     printResultData(&qData1, &qData2, requests, timings, allTime);
 #endif
+    return SUCCESS;
 }
