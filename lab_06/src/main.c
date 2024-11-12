@@ -10,6 +10,10 @@ int main(void)
     TreeNode *head = NULL;
 
     while (true)
-        printf("%s\n", getErrorMessage(executeOperation(&head)));
+    {
+        int rc = executeOperation(&head);
+        if (rc)
+            printf("%s\n", getErrorMessage(rc));
+    }
     return SUCCESS;
 }

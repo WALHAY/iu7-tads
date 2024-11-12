@@ -51,6 +51,31 @@ float inputValue(char *title, bool min_limit, bool max_limit, float min_value, f
     return value;
 }
 
+char *inputString(char *title)
+{
+    char *temp = NULL;
+    size_t size = 0;
+    while (true)
+    {
+        temp = NULL;
+        printf("Enter %s: ", title);
+        if (getline(&temp, &size, stdin) == -1)
+        {
+            free(temp);
+            continue;
+        }
+
+        temp[strcspn(temp, "\n")] = '\0';
+        break;
+    }
+    return temp;
+}
+
+StudentData *inputStudentData(int *rc)
+{
+    return createData(inputString("student surname"), inputValue("student score", 1, 1, 0, 5), rc);
+}
+
 char *getErrorMessage(int rc)
 {
     switch (rc)
@@ -65,6 +90,12 @@ char *getErrorMessage(int rc)
     return "Error: No Error?";
 }
 
+void printNode(TreeNode *node)
+{
+    StudentData *data = node->data;
+    printf("%s %f\n", data->name, data->score);
+}
+
 int executeOperation(TreeNode **head_ptr)
 {
     TreeNode *head = *head_ptr;
@@ -76,12 +107,14 @@ int executeOperation(TreeNode **head_ptr)
     switch (option)
     {
         case ADD:
+            *head_ptr = treeInsert(NULL, head, inputStudentData(&rc), &rc);
             break;
         case FIND:
             break;
         case REMOVE:
             break;
         case PRINT:
+            depthFirstSearch(head, printNode);
             break;
         case REMOVE_LOW:
             break;

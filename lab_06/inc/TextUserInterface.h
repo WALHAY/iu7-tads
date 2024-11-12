@@ -14,4 +14,6 @@ size_t inputEnum(size_t max_options, char **options);
 
 float inputValue(char *title, bool min_limit, bool max_limit, float min_value, float max_value);
 
+char *inputString(char *title);
+
 char *getErrorMessage(int rc);
