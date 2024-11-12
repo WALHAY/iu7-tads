@@ -7,7 +7,7 @@ static TimeSpecification timings = {1, 5, 0, 3, 0, 4, 0, 1};
 static void compareMemory(size_t elements, FILE *out)
 {
     size_t linkedMemory = sizeofQueue() + sizeofNode() * elements;
-    size_t arrayMemory = sizeofArrayQueue() + sizeof(uintptr_t *) * SIZE;
+    size_t arrayMemory = sizeofArrayQueue() + sizeof(size_t) * SIZE;
 
     fprintf(out, "%zu\t\t%zu\t%zu\n", elements, linkedMemory, arrayMemory);
 }
@@ -76,14 +76,14 @@ static void compareTimePop(FILE *out)
     fprintf(out, "%zu\t%zu\t%d%%\n", linked / TRIES, array / TRIES, boost);
 }
 
-void compareAlgorithm(int requests, FILE *out)
+void compareAlgorithmTime(int requests, FILE *out)
 {
     struct timespec t1, t2;
     size_t linked = 0, array = 0;
     for (size_t i = 0; i < TRIES; ++i)
     {
         clock_gettime(CLOCK_MONOTONIC_RAW, &t1);
-        task(requests, &timings);
+        task(requests, &timings, NULL);
         clock_gettime(CLOCK_MONOTONIC_RAW, &t2);
         linked += difftime(t2.tv_sec, t1.tv_sec) * 1000000000 + difftime(t2.tv_nsec, t1.tv_nsec);
     }
@@ -91,13 +91,25 @@ void compareAlgorithm(int requests, FILE *out)
     for (size_t i = 0; i < TRIES; ++i)
     {
         clock_gettime(CLOCK_MONOTONIC_RAW, &t1);
-        taskArray(requests, &timings);
+        taskArray(requests, &timings, NULL);
         clock_gettime(CLOCK_MONOTONIC_RAW, &t2);
         array += difftime(t2.tv_sec, t1.tv_sec) * 1000000000 + difftime(t2.tv_nsec, t1.tv_nsec);
     }
 
     int boost = (linked - array) * 100.0f / linked;
     fprintf(out, "%d\t\t%zu\t%zu\t%d%%\n", requests, linked / TRIES, array / TRIES, boost);
+}
+
+void compareAlgorithmMemory(int requests, FILE *out)
+{
+    size_t linked = 0;
+    size_t array = sizeofArrayQueue() + sizeof(size_t) * SIZE;
+    task(requests, &timings, &linked);
+    linked *= sizeofNode();
+    linked += sizeofQueue();
+
+    int boost = (array - linked) * 100.0f / linked;
+    fprintf(out, "%d\t\t%zu\t%zu\t%d%%\n", requests, linked, array, boost);
 }
 
 void compareTaDS(FILE *out)
@@ -120,8 +132,14 @@ void compareTaDS(FILE *out)
 #ifdef ALGCOMP
     fprintf(out, "\nAlgorithm time comparison (in nanoseconds)\n");
     fprintf(out, "Elements\tLinked\tArray\tArray Boost\n");
-    compareAlgorithm(100, out);
-    compareAlgorithm(500, out);
-    compareAlgorithm(1000, out);
+    compareAlgorithmTime(100, out);
+    compareAlgorithmTime(500, out);
+    compareAlgorithmTime(1000, out);
+
+    fprintf(out, "\nAlgorithm memory comparison (in nanoseconds)\n");
+    fprintf(out, "Elements\tLinked\tArray\Linked Boost\n");
+    compareAlgorithmMemory(100, out);
+    compareAlgorithmMemory(500, out);
+    compareAlgorithmMemory(1000, out);
 #endif
 }

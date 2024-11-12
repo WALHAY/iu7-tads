@@ -16,7 +16,7 @@ struct LinkedQueueType
 struct LinkedQueueNode
 {
     LinkedQueueNode *next;
-    int value;
+    size_t value;
 };
 
 LinkedQueue createQueue(int *rc)

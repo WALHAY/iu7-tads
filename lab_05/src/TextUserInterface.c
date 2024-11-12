@@ -125,9 +125,9 @@ int executeOperation(void)
             inputTimeSpecification(&timings);
             break;
         case SIMULATE_ARR:
-            return taskArray(requests, &timings);
+            return taskArray(requests, &timings, NULL);
         case SIMULATE_LINKED:
-            return task(requests, &timings);
+            return task(requests, &timings, NULL);
         case COMPARE_TADS:
             compareTaDS(stdout);
             clearFreedMemory();

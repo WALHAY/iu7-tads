@@ -2,9 +2,9 @@
 
 struct ArrayQueueType
 {
-    int data[SIZE];
-    int front;
-    int back;
+    size_t data[SIZE];
+    size_t front;
+    size_t back;
 };
 
 static void shiftArrayQueue(ArrayQueue queue, size_t offset)
@@ -77,5 +77,5 @@ void freeArrayQueue(ArrayQueue queue)
 
 inline size_t sizeofArrayQueue(void)
 {
-    return sizeof(ArrayQueue);
+    return 24;
 }

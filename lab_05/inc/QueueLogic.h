@@ -19,6 +19,6 @@ typedef struct
     float oaSecondMax;
 } TimeSpecification;
 
-int task(size_t requests, TimeSpecification *timings);
+int task(size_t requests, TimeSpecification *timings, size_t *maxQueue);
 
-int taskArray(size_t requests, TimeSpecification *timings);
+int taskArray(size_t requests, TimeSpecification *timings, size_t *maxQueue);

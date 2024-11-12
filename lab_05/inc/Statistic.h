@@ -1,8 +1,8 @@
 #pragma once
 
-#include <stdlib.h>
-#include <stdio.h>
 #include "../inc/QueueLogic.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 typedef struct
 {
@@ -11,9 +11,11 @@ typedef struct
     size_t all;
     size_t length;
     size_t currentLength;
+    size_t maxLength;
     float allTime;
 } QueueRequestsData;
 
 void printMiddleData(QueueRequestsData *first, QueueRequestsData *second);
 
-void printResultData(QueueRequestsData *first, QueueRequestsData *second, size_t requests, TimeSpecification *timings, float allTime);
+void printResultData(QueueRequestsData *first, QueueRequestsData *second, size_t requests, TimeSpecification *timings,
+                     float allTime);

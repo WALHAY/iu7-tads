@@ -2,23 +2,24 @@
 #include "../inc/Statistic.h"
 
 #define MIN(a, b) ((a < b) ? a : b)
+#define MAX(a, b) ((a > b) ? a : b)
 
 static float randBetween(float min, float max)
 {
     return (max - min) * (float)rand() / (float)RAND_MAX + min;
 }
 
-int task(size_t requests, TimeSpecification *timings)
+int task(size_t requests, TimeSpecification *timings, size_t *maxQueue)
 {
     int rc = SUCCESS;
     LinkedQueue q1 = createQueue(&rc);
     LinkedQueue q2 = createQueue(&rc);
 
     // данные по первым типам заявок
-    QueueRequestsData qData1 = {0, 0, 0, 0, 0, 0};
+    QueueRequestsData qData1 = {0, 0, 0, 0, 0, 0, 0};
     float reqTimeIn1 = 0;
     // данные по вторым типам заявок
-    QueueRequestsData qData2 = {0, 0, 0, 0, 0, 0};
+    QueueRequestsData qData2 = {0, 0, 0, 0, 0, 0, 0};
     float reqTimeIn2 = 0;
 
     bool queueType = false; // false - 1, true - 2
@@ -94,6 +95,7 @@ int task(size_t requests, TimeSpecification *timings)
             qData1.currentLength++;
             qData1.all++;
             qData1.length += qData1.currentLength;
+            qData1.maxLength = MAX(qData1.maxLength, qData1.currentLength);
         }
         // самое быстрое действие - добавление заявки 2 типа
         else if (reqTimeIn2 == minTime)
@@ -107,6 +109,7 @@ int task(size_t requests, TimeSpecification *timings)
             qData2.currentLength++;
             qData2.all++;
             qData2.length += qData2.currentLength;
+            qData2.maxLength = MAX(qData2.maxLength, qData2.currentLength);
         }
 
         reqTimeIn1 -= minTime;
@@ -128,20 +131,22 @@ int task(size_t requests, TimeSpecification *timings)
 #ifndef ALGCOMP
     printResultData(&qData1, &qData2, requests, timings, allTime);
 #endif
+    if (maxQueue)
+        *maxQueue = MAX(qData1.maxLength, qData2.maxLength);
     return SUCCESS;
 }
 
-int taskArray(size_t requests, TimeSpecification *timings)
+int taskArray(size_t requests, TimeSpecification *timings, size_t *maxQueue)
 {
     int rc = SUCCESS;
     ArrayQueue q1 = createArrayQueue(&rc);
     ArrayQueue q2 = createArrayQueue(&rc);
 
     // данные по первым типам заявок
-    QueueRequestsData qData1 = {0, 0, 0, 0, 0, 0};
+    QueueRequestsData qData1 = {0, 0, 0, 0, 0, 0, 0};
     float reqTimeIn1 = 0;
     // данные по вторым типам заявок
-    QueueRequestsData qData2 = {0, 0, 0, 0, 0, 0};
+    QueueRequestsData qData2 = {0, 0, 0, 0, 0, 0, 0};
     float reqTimeIn2 = 0;
 
     bool queueType = false; // false - 1, true - 2
@@ -217,6 +222,7 @@ int taskArray(size_t requests, TimeSpecification *timings)
             qData1.currentLength++;
             qData1.all++;
             qData1.length += qData1.currentLength;
+            qData1.maxLength = MAX(qData1.maxLength, qData1.currentLength);
         }
         // самое быстрое действие - добавление заявки 2 типа
         else if (reqTimeIn2 == minTime)
@@ -230,6 +236,7 @@ int taskArray(size_t requests, TimeSpecification *timings)
             qData2.currentLength++;
             qData2.all++;
             qData2.length += qData2.currentLength;
+            qData2.maxLength = MAX(qData2.maxLength, qData2.currentLength);
         }
 
         reqTimeIn1 -= minTime;
@@ -252,5 +259,7 @@ int taskArray(size_t requests, TimeSpecification *timings)
 #ifndef ALGCOMP
     printResultData(&qData1, &qData2, requests, timings, allTime);
 #endif
+    if (maxQueue)
+        *maxQueue = MAX(qData1.maxLength, qData2.maxLength);
     return SUCCESS;
 }
