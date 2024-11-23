@@ -24,7 +24,7 @@ TreeNode *treeRemove(TreeNode *head, const char *name);
 
 TreeNode *treeFind(TreeNode *head, const char *prefix);
 
-TreeNode *filterTree(TreeNode *head, bool (*filter)(const TreeNode *node));
+TreeNode *filterTree(TreeNode *head, bool (*filter)(const StudentData *node));
 
 void destroyTree(TreeNode **node);
 

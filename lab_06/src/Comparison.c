@@ -15,6 +15,13 @@ static int studentComparator(const void *first, const void *second)
     return strcmp(fdata->name, sdata->name);
 }
 
+static int studentScoreComparator(const void *first, const void *second)
+{
+    const StudentData *fdata = *(StudentData **)first;
+    const StudentData *sdata = *(StudentData **)second;
+    return fdata->score > sdata->score ? 1 : -(fdata->score < sdata->score);
+}
+
 static char *randomString(int value)
 {
     char string[255];
@@ -156,8 +163,49 @@ static void compareTimePerfect(size_t elements, FILE *out)
     fprintf(out, "%zu\t%zu\t%zu\n", elements, insert, remove);
 }
 
-static void compareAlgorithmTime(int requests, FILE *out)
+static void compareDoubleVsStr(size_t elements, FILE *out)
 {
+    int rc = SUCCESS;
+    struct timespec t1, t2;
+    size_t surname_time = 0;
+    size_t score_time = 0;
+    for (size_t i = 0; i < TRIES; ++i)
+    {
+        TreeNode *surname = NULL;
+        TreeNode *score = NULL;
+        StudentData *arr[elements];
+        for (size_t j = 0; j < elements; ++j)
+        {
+            int value = rand();
+            arr[j] = createData(randomString(value), value, &rc);
+        }
+
+        qsort(arr, elements, sizeof(StudentData *), studentComparator);
+        StudentData *newArr[elements];
+        size_t lastIndex = 0;
+        restructureArray(newArr, arr, 0, elements, &lastIndex);
+
+        for (size_t j = 0; j < elements - 1; ++j)
+            surname = treeInsert(surname, newArr[j], surnameComparator, &rc);
+
+        qsort(arr, elements, sizeof(StudentData *), studentScoreComparator);
+        lastIndex = 0;
+        restructureArray(newArr, arr, 0, elements, &lastIndex);
+        for (size_t j = 0; j < elements - 1; ++j)
+            score = treeInsert(score, newArr[j], scoreComparator, &rc);
+
+        clock_gettime(CLOCK_MONOTONIC_RAW, &t1);
+        filterTree(surname, scoreFilter);
+        clock_gettime(CLOCK_MONOTONIC_RAW, &t2);
+        surname_time += difftime(t2.tv_sec, t1.tv_sec) * 1e9 + difftime(t2.tv_nsec, t1.tv_nsec);
+
+        clock_gettime(CLOCK_MONOTONIC_RAW, &t1);
+        filterTree(score, scoreFilter);
+        clock_gettime(CLOCK_MONOTONIC_RAW, &t2);
+        score_time += difftime(t2.tv_sec, t1.tv_sec) * 1e9 + difftime(t2.tv_nsec, t1.tv_nsec);
+    }
+
+    fprintf(out, "%zu\t%zu\t%zu\n", elements, surname_time / TRIES, score_time / TRIES);
 }
 
 void compareTaDS(FILE *out)
@@ -177,4 +225,9 @@ void compareTaDS(FILE *out)
     compareTimePerfect(500, out);
     compareTimePerfect(1000, out);
     compareTimePerfect(5000, out);
+
+    printf("\nFilter\tSurname\tScore\n");
+    compareDoubleVsStr(500, out);
+    compareDoubleVsStr(1000, out);
+    compareDoubleVsStr(5000, out);
 }

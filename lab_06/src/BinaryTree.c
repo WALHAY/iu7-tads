@@ -65,7 +65,7 @@ static TreeNode *treeRemoveNode(TreeNode *node)
     return node;
 }
 
-TreeNode *filterTree(TreeNode *head, bool (*filter)(const TreeNode *node))
+TreeNode *filterTree(TreeNode *head, bool (*filter)(const StudentData *data))
 {
     if (!head)
         return head;
@@ -76,7 +76,7 @@ TreeNode *filterTree(TreeNode *head, bool (*filter)(const TreeNode *node))
     if (head->right)
         head->right = filterTree(head->right, filter);
 
-    if (head->data->score <= 2)
+    if (filter(head->data))
         return treeRemoveNode(head);
 
     return head;
@@ -129,6 +129,24 @@ TreeNode *treeFind(TreeNode *head, const char *prefix)
         return treeFind(head->right, prefix);
 
     return NULL;
+}
+
+static void addScoreComparedNode(TreeNode *node, void *arg)
+{
+    int rc = SUCCESS;
+    TreeNode **head_ptr = arg;
+
+    *head_ptr = treeInsert(*head_ptr, node->data, scoreComparator, &rc);
+}
+
+// return new head
+TreeNode *rebuildTree(TreeNode *head)
+{
+    TreeNode *new_head = NULL;
+
+    depthFirstSearch(head, addScoreComparedNode, &new_head);
+
+    return new_head;
 }
 
 void destroyTree(TreeNode **node)

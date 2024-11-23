@@ -2,11 +2,6 @@
 
 static size_t graphIndex = 0;
 
-static bool lowScoreFilter(const TreeNode *node)
-{
-    return node->data->score > 2;
-}
-
 static int safeIntInput(int *value)
 {
     char temp[20];
@@ -155,7 +150,7 @@ int executeOperation(TreeNode **head_ptr)
             drawGraph(head, graphName, true);
             break;
         case REMOVE_LOW:
-            *head_ptr = filterTree(head, lowScoreFilter);
+            *head_ptr = filterTree(head, scoreFilter);
             break;
         case COMPARE_TADS:
             compareTaDS(stdout);
