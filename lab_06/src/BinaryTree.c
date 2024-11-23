@@ -4,7 +4,11 @@ static TreeNode *createNode(void *data, int *rc)
 {
     TreeNode *node = malloc(sizeof(TreeNode));
     if (node)
+    {
         node->data = data;
+        node->left = NULL;
+        node->right = NULL;
+    }
     else
         *rc = ALLOC_ERROR;
     return node;

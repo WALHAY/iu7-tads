@@ -68,6 +68,9 @@ char *inputString(char *title)
         }
 
         temp[strcspn(temp, "\n")] = '\0';
+
+        if (!temp || *temp == '\0')
+            continue;
         break;
     }
     return temp;
@@ -75,7 +78,9 @@ char *inputString(char *title)
 
 StudentData *inputStudentData(int *rc)
 {
-    return createData(inputString("student surname"), inputValue("student score", 1, 1, 0, 5), rc);
+    char *surname = inputString("student surname");
+    float score = inputValue("student score", 1, 1, 0, 5);
+    return createData(surname, score, rc);
 }
 
 char *getErrorMessage(int rc)

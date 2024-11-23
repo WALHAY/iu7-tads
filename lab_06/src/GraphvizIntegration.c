@@ -26,6 +26,8 @@ static void addNodeToDot(TreeNode *node, void *stream)
 
 bool prepareGraph(TreeNode *head, const char *graphName, const char *path)
 {
+    if (!head || !graphName || !path)
+        return false;
     FILE *graphFile = fopen(path, "w");
 
     if (!graphFile)
