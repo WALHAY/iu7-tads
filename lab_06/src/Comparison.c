@@ -53,7 +53,7 @@ static void compareTimeBamboo(size_t elements, FILE *out)
         for (size_t j = 0; j < elements; ++j)
         {
             clock_gettime(CLOCK_MONOTONIC_RAW, &t1);
-            head = treeInsert(head, arr[j], &rc);
+            head = treeInsert(head, arr[j], surnameComparator, &rc);
             clock_gettime(CLOCK_MONOTONIC_RAW, &t2);
             l_insert += difftime(t2.tv_sec, t1.tv_sec) * 1e9 + difftime(t2.tv_nsec, t1.tv_nsec);
         }
@@ -80,9 +80,6 @@ static void compareTimeBamboo(size_t elements, FILE *out)
         insert += l_insert / elements;
         remove += l_remove / elements;
     }
-
-    if (rc)
-        printf("Error occured!");
 
     insert /= TRIES;
     remove /= TRIES;
@@ -121,13 +118,12 @@ static void compareTimePerfect(size_t elements, FILE *out)
         StudentData *newArr[elements];
         size_t lastIndex = 0;
         restructureArray(newArr, arr, 0, elements, &lastIndex);
-        printf("Items %zu\n", lastIndex);
 
         size_t l_insert = 0;
         for (size_t j = 0; j < elements - 1; ++j)
         {
             clock_gettime(CLOCK_MONOTONIC_RAW, &t1);
-            head = treeInsert(head, newArr[j], &rc);
+            head = treeInsert(head, newArr[j], surnameComparator, &rc);
             clock_gettime(CLOCK_MONOTONIC_RAW, &t2);
             l_insert += difftime(t2.tv_sec, t1.tv_sec) * 1e9 + difftime(t2.tv_nsec, t1.tv_nsec);
         }

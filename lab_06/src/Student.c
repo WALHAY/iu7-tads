@@ -1,5 +1,23 @@
 #include "../inc/Student.h"
 
+int surnameComparator(const StudentData *first, const StudentData *second)
+{
+    return strcmp(first->name, second->name);
+}
+
+int scoreComparator(const StudentData *first, const StudentData *second)
+{
+    double firstd = first->score;
+    double secondd = second->score;
+
+    return firstd > secondd ? 1 : -(firstd < secondd);
+}
+
+bool scoreFilter(const StudentData *first)
+{
+    return first->score > 2;
+}
+
 StudentData *createData(char *name, float score, int *rc)
 {
     StudentData *data = malloc(sizeof(StudentData));

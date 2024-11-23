@@ -2,6 +2,11 @@
 
 static size_t graphIndex = 0;
 
+static bool lowScoreFilter(const TreeNode *node)
+{
+    return node->data->score > 2;
+}
+
 static int safeIntInput(int *value)
 {
     char temp[20];
@@ -118,7 +123,7 @@ int executeOperation(TreeNode **head_ptr)
     switch (option)
     {
         case ADD:
-            *head_ptr = treeInsert(head, inputStudentData(&rc), &rc);
+            *head_ptr = treeInsert(head, inputStudentData(&rc), surnameComparator, &rc);
             break;
         case FIND:
             {
@@ -150,7 +155,7 @@ int executeOperation(TreeNode **head_ptr)
             drawGraph(head, graphName, true);
             break;
         case REMOVE_LOW:
-            *head_ptr = removeIfLowScore(head);
+            *head_ptr = filterTree(head, lowScoreFilter);
             break;
         case COMPARE_TADS:
             compareTaDS(stdout);

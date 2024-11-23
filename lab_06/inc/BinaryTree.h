@@ -2,6 +2,7 @@
 
 #include "Defines.h"
 #include "Student.h"
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
@@ -16,13 +17,16 @@ struct TreeNode
     TreeNode *right;
 };
 
-TreeNode *treeInsert(TreeNode *head, StudentData *data, int *rc);
+TreeNode *treeInsert(TreeNode *head, StudentData *data, int (*comparator)(const StudentData *data, const StudentData *),
+                     int *rc);
 
 TreeNode *treeRemove(TreeNode *head, const char *name);
 
 TreeNode *treeFind(TreeNode *head, const char *prefix);
 
-TreeNode *removeIfLowScore(TreeNode *head);
+TreeNode *filterTree(TreeNode *head, bool (*filter)(const TreeNode *node));
+
+void destroyTree(TreeNode **node);
 
 void depthFirstSearch(TreeNode *head, void (*action)(TreeNode *, void *), void *param);
 

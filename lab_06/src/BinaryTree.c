@@ -14,19 +14,20 @@ static TreeNode *createNode(void *data, int *rc)
     return node;
 }
 
-TreeNode *treeInsert(TreeNode *head, StudentData *data, int *rc)
+TreeNode *treeInsert(TreeNode *head, StudentData *data, int (*comparator)(const StudentData *data, const StudentData *),
+                     int *rc)
 {
     if (!head)
         return createNode(data, rc);
 
-    int comparison = strcmp(data->name, head->data->name);
+    int comparison = comparator(data, head->data);
     if (!comparison)
         return head;
 
     if (comparison < 0)
-        head->left = treeInsert(head->left, data, rc);
+        head->left = treeInsert(head->left, data, comparator, rc);
     else
-        head->right = treeInsert(head->right, data, rc);
+        head->right = treeInsert(head->right, data, comparator, rc);
 
     return head;
 }
@@ -64,16 +65,16 @@ static TreeNode *treeRemoveNode(TreeNode *node)
     return node;
 }
 
-TreeNode *removeIfLowScore(TreeNode *head)
+TreeNode *filterTree(TreeNode *head, bool (*filter)(const TreeNode *node))
 {
     if (!head)
         return head;
 
     if (head->left)
-        head->left = removeIfLowScore(head->left);
+        head->left = filterTree(head->left, filter);
 
     if (head->right)
-        head->right = removeIfLowScore(head->right);
+        head->right = filterTree(head->right, filter);
 
     if (head->data->score <= 2)
         return treeRemoveNode(head);
@@ -128,6 +129,20 @@ TreeNode *treeFind(TreeNode *head, const char *prefix)
         return treeFind(head->right, prefix);
 
     return NULL;
+}
+
+void destroyTree(TreeNode **node)
+{
+    if (node || *node)
+    {
+        TreeNode *temp = *node;
+        TreeNode *left = temp->left;
+        TreeNode *right = temp->right;
+        freeNode(temp);
+        *node = NULL;
+        destroyTree(&left);
+        destroyTree(&right);
+    }
 }
 
 void depthFirstSearch(TreeNode *head, void (*action)(TreeNode *, void *), void *param)
