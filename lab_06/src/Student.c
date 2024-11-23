@@ -5,7 +5,7 @@ StudentData *createData(char *name, float score, int *rc)
     StudentData *data = malloc(sizeof(StudentData));
     if (data)
     {
-        data->name = name;
+        data->name = strdup(name);
         data->score = score;
     }
     else
@@ -18,7 +18,7 @@ void printStudent(StudentData *data)
     if (!data)
         return;
 
-    printf("%s: %f\n", data->name, data->score);
+    printf("%s: %.2f\n", data->name, data->score);
 }
 
 void freeData(StudentData *data)

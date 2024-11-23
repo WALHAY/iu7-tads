@@ -24,6 +24,8 @@ TreeNode *treeFind(TreeNode *head, const char *prefix);
 
 TreeNode *removeIfLowScore(TreeNode *head);
 
+TreeNode *treeRemoveNode(TreeNode *node);
+
 void depthFirstSearch(TreeNode *head, void (*action)(TreeNode *));
 
 void freeNode(TreeNode *node);

@@ -120,11 +120,26 @@ int executeOperation(TreeNode **head_ptr)
                 break;
             }
         case REMOVE:
+            {
+                char *prefix = inputString("surname prefix");
+                TreeNode *node = treeFind(head, prefix);
+                if (node)
+                {
+                    printf("To remove: \n -\t");
+                    printStudent(node->data);
+
+                    *head_ptr = treeRemoveNode(node);
+                }
+                else
+                    printf("Student not found!\n");
+                break;
+            }
             break;
         case PRINT:
             depthFirstSearch(head, printNode);
             break;
         case REMOVE_LOW:
+            *head_ptr = removeIfLowScore(head);
             break;
         case COMPARE_TADS:
             break;

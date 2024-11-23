@@ -49,27 +49,35 @@ TreeNode *removeIfLowScore(TreeNode *head)
         head->right = removeIfLowScore(head->right);
 
     if (head->data->score <= 2)
-    {
-        if (!head->left)
-        {
-            TreeNode *temp = head->right;
-            freeNode(head);
-            return removeIfLowScore(temp);
-        }
-
-        if (!head->right)
-        {
-            TreeNode *temp = head->left;
-            freeNode(head);
-            return removeIfLowScore(temp);
-        }
-
-        TreeNode *successor = treeGetSmallest(head->right);
-        head->data = successor->data;
-        head->right = treeRemove(head->right, successor->data->name);
-    }
+        return treeRemoveNode(head);
 
     return head;
+}
+
+TreeNode *treeRemoveNode(TreeNode *node)
+{
+    if (!node)
+        return NULL;
+
+    if (!node->left)
+    {
+        TreeNode *temp = node->right;
+        freeNode(node);
+        return temp;
+    }
+
+    if (!node->right)
+    {
+        TreeNode *temp = node->left;
+        freeNode(node);
+        return temp;
+    }
+
+    TreeNode *successor = treeGetSmallest(node->right);
+    node->data = successor->data;
+    node->right = treeRemove(node->right, successor->data->name);
+
+    return node;
 }
 
 TreeNode *treeRemove(TreeNode *head, const char *name)
@@ -83,26 +91,7 @@ TreeNode *treeRemove(TreeNode *head, const char *name)
     else if (comparison > 0)
         head->right = treeRemove(head->right, name);
     else
-    {
-        if (!head->left)
-        {
-            TreeNode *temp = head->right;
-            freeNode(head);
-            return temp;
-        }
-
-        if (!head->right)
-        {
-            TreeNode *temp = head->left;
-            freeNode(head);
-            return temp;
-        }
-
-        TreeNode *successor = treeGetSmallest(head->right);
-        head->data = successor->data;
-        head->right = treeRemove(head->right, successor->data->name);
-    }
-
+        return treeRemoveNode(head);
     return head;
 }
 
