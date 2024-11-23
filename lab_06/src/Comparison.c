@@ -1,6 +1,6 @@
 #include "../inc/Comparison.h"
 
-#define TRIES 10
+#define TRIES 1
 
 static void compareMemory(size_t elements, FILE *out)
 {
@@ -89,7 +89,18 @@ static void compareTimeBamboo(size_t elements, FILE *out)
     fprintf(out, "%zu\t%zu\t%zu\n", elements, insert, remove);
 }
 
-static void compareTimeDense(size_t elements, FILE *out)
+static void restructureArray(StudentData **newArr, StudentData **arr, size_t l, size_t r, size_t *lastIndex)
+{
+    if (l - r <= 1 || r - l <= 1)
+        return;
+    size_t middle = (r + l) / 2;
+    newArr[*lastIndex] = arr[middle];
+    *lastIndex += 1;
+    restructureArray(newArr, arr, l, middle, lastIndex);
+    restructureArray(newArr, arr, middle, r, lastIndex);
+}
+
+static void compareTimePerfect(size_t elements, FILE *out)
 {
     int rc = SUCCESS;
     struct timespec t1, t2;
@@ -107,12 +118,16 @@ static void compareTimeDense(size_t elements, FILE *out)
         }
 
         qsort(arr, elements, sizeof(StudentData *), studentComparator);
+        StudentData *newArr[elements];
+        size_t lastIndex = 0;
+        restructureArray(newArr, arr, 0, elements, &lastIndex);
+        printf("Items %zu\n", lastIndex);
 
         size_t l_insert = 0;
-        for (size_t j = 0; j < elements; ++j)
+        for (size_t j = 0; j < elements - 1; ++j)
         {
             clock_gettime(CLOCK_MONOTONIC_RAW, &t1);
-            head = treeInsert(head, arr[j], &rc);
+            head = treeInsert(head, newArr[j], &rc);
             clock_gettime(CLOCK_MONOTONIC_RAW, &t2);
             l_insert += difftime(t2.tv_sec, t1.tv_sec) * 1e9 + difftime(t2.tv_nsec, t1.tv_nsec);
         }
@@ -153,12 +168,17 @@ void compareTaDS(FILE *out)
 {
     printf("Required memory for BST depending on its size\n");
     printf("Size\tMemory\n");
-    compareMemory(512, out);
-    compareMemory(1024, out);
-    compareMemory(4096, out);
+    compareMemory(500, out);
+    compareMemory(1000, out);
+    compareMemory(5000, out);
 
     printf("\nBamboo Insert/Remove\n");
-    compareTimeBamboo(512, out);
-    compareTimeBamboo(1024, out);
-    compareTimeBamboo(4096, out);
+    compareTimeBamboo(500, out);
+    compareTimeBamboo(1000, out);
+    compareTimeBamboo(5000, out);
+
+    printf("\nPerfect Insert/Remove\n");
+    compareTimePerfect(500, out);
+    compareTimePerfect(1000, out);
+    compareTimePerfect(5000, out);
 }

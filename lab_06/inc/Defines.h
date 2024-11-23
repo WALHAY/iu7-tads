@@ -6,8 +6,7 @@ typedef enum
     NULLPTR_ERROR,
     ALLOC_ERROR,
     NAN_ERROR,
-    EMPTY_GRAPH,
-    ELEMENT_EXIST
+    EMPTY_GRAPH
 } ERRORS;
 
 typedef enum
