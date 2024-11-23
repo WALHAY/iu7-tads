@@ -22,7 +22,7 @@ int main(int argc, char **argv)
 
             StudentData *data = createData(name, score, &rc);
             if (!rc)
-                head = treeInsert(NULL, head, data, &rc);
+                head = treeInsert(head, data, &rc);
         }
     }
 

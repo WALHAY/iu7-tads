@@ -11,20 +11,18 @@ typedef struct TreeNode TreeNode;
 struct TreeNode
 {
     StudentData *data;
-    TreeNode *parent;
+
     TreeNode *left;
     TreeNode *right;
 };
 
-TreeNode *treeInsert(TreeNode *parent, TreeNode *head, StudentData *data, int *rc);
+TreeNode *treeInsert(TreeNode *head, StudentData *data, int *rc);
 
 TreeNode *treeRemove(TreeNode *head, const char *name);
 
 TreeNode *treeFind(TreeNode *head, const char *prefix);
 
 TreeNode *removeIfLowScore(TreeNode *head);
-
-TreeNode *treeRemoveNode(TreeNode *node);
 
 void depthFirstSearch(TreeNode *head, void (*action)(TreeNode *, void *), void *param);
 

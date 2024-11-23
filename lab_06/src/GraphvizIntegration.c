@@ -20,8 +20,8 @@ static void addNodeToDot(TreeNode *node, void *stream)
 {
     FILE *file = stream;
 
-    addSingleNode(node, node->right, file);
     addSingleNode(node, node->left, file);
+    addSingleNode(node, node->right, file);
 }
 
 bool prepareGraph(TreeNode *head, const char *graphName, const char *path)

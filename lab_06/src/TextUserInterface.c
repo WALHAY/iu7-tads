@@ -109,7 +109,7 @@ int executeOperation(TreeNode **head_ptr)
     switch (option)
     {
         case ADD:
-            *head_ptr = treeInsert(NULL, head, inputStudentData(&rc), &rc);
+            *head_ptr = treeInsert(head, inputStudentData(&rc), &rc);
             break;
         case FIND:
             {
@@ -124,16 +124,7 @@ int executeOperation(TreeNode **head_ptr)
         case REMOVE:
             {
                 char *prefix = inputString("surname prefix");
-                TreeNode *node = treeFind(head, prefix);
-                if (node)
-                {
-                    printf("To remove: \n -\t");
-                    printStudent(node->data);
-
-                    *head_ptr = treeRemoveNode(node);
-                }
-                else
-                    printf("Student not found!\n");
+                *head_ptr = treeRemove(head, prefix);
                 break;
             }
             break;
