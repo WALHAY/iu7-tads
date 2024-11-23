@@ -10,6 +10,7 @@ endif
 SRC_PATH := ./src
 OUT_PATH := ./out
 INC_PATH := ./inc
+IMG_PATH := ./img
 
 SRCS := $(wildcard $(SRC_PATH)/*.c)
 OBJS := $(subst $(SRC_PATH), $(OUT_PATH), $(SRCS:.c=.o))
@@ -24,3 +25,4 @@ $(OUT_PATH)/%.o : $(SRC_PATH)/%.c $(INC_PATH)/*.h
 
 clean :
 	rm $(OUT_PATH)/*.o *.exe *.txt
+	rm $(IMG_PATH)/*

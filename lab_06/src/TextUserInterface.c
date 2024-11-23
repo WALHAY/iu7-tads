@@ -1,5 +1,7 @@
 #include "../inc/TextUserInterface.h"
 
+static size_t graphIndex = 0;
+
 static int safeIntInput(int *value)
 {
     char temp[20];
@@ -86,6 +88,8 @@ char *getErrorMessage(int rc)
             return "Error: Failed to allocate memory!";
         case NAN_ERROR:
             return "Error: Not A Number!";
+        case EMPTY_GRAPH:
+            return "Error: Tree is empty!";
     }
     return "Error: No Error?";
 }
@@ -129,10 +133,16 @@ int executeOperation(TreeNode **head_ptr)
             }
             break;
         case PRINT:
+            if (!head)
+                return EMPTY_GRAPH;
             depthFirstSearch(head, printNode, NULL);
             break;
         case SHOW_GRAPH:
-            drawGraph(head, "TreeViz");
+            if (!head)
+                return EMPTY_GRAPH;
+            char graphName[255];
+            sprintf(graphName, "BST_%zu", graphIndex++);
+            drawGraph(head, graphName);
             break;
         case REMOVE_LOW:
             *head_ptr = removeIfLowScore(head);
