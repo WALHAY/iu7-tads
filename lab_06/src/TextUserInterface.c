@@ -147,12 +147,13 @@ int executeOperation(TreeNode **head_ptr)
                 return EMPTY_GRAPH;
             char graphName[255];
             sprintf(graphName, "BST_%zu", graphIndex++);
-            drawGraph(head, graphName);
+            drawGraph(head, graphName, true);
             break;
         case REMOVE_LOW:
             *head_ptr = removeIfLowScore(head);
             break;
         case COMPARE_TADS:
+            compareTaDS(stdout);
             break;
         case EXIT:
             exit(SUCCESS);

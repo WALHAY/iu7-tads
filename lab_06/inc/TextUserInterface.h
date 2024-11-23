@@ -1,6 +1,7 @@
 #pragma once
 
 #include "BinaryTree.h"
+#include "Comparison.h"
 #include "Defines.h"
 #include "GraphvizIntegration.h"
 #include <errno.h>
@@ -8,7 +9,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 
 int executeOperation(TreeNode **head_ptr);
 

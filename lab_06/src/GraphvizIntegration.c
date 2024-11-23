@@ -46,7 +46,7 @@ bool prepareGraph(TreeNode *head, const char *graphName, const char *path)
     return true;
 }
 
-void drawGraph(TreeNode *node, const char *filename)
+void drawGraph(TreeNode *node, const char *filename, bool open)
 {
     char path[strlen(filename) + 30];
     sprintf(path, "./out/%s.dot", filename);
@@ -59,7 +59,13 @@ void drawGraph(TreeNode *node, const char *filename)
     }
 
     char command[(strlen(filename) * 2 + 100)];
-    sprintf(command, "dot -Tsvg %s -o ./img/%s.svg && inkview ./img/%s.svg", path, filename, filename);
+    sprintf(command, "dot -Tsvg %s -o ./img/%s.svg", path, filename);
+    if (open)
+    {
+        char openCmd[strlen(filename) * 2 + 100];
+        sprintf(openCmd, "inkview ./img/%s.svg", filename);
+        system(openCmd);
+    }
 
     system(command);
 }
