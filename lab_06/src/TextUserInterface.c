@@ -90,8 +90,10 @@ char *getErrorMessage(int rc)
     return "Error: No Error?";
 }
 
-void printNode(TreeNode *node)
+void printNode(TreeNode *node, void *param)
 {
+    if (param)
+        return;
     StudentData *data = node->data;
     printf("%s %f\n", data->name, data->score);
 }
@@ -99,9 +101,9 @@ void printNode(TreeNode *node)
 int executeOperation(TreeNode **head_ptr)
 {
     TreeNode *head = *head_ptr;
-    char *opts[] = {"Add student",  "Find Student", "Remove Student", "Print Tree", "Remove Low Score",
-                    "Compare TaDS", "Exit"};
-    OPCODES option = inputEnum(7, opts);
+    char *opts[] = {"Add student", "Find Student",     "Remove Student", "Print Tree",
+                    "Draw Graph",  "Remove Low Score", "Compare TaDS",   "Exit"};
+    OPCODES option = inputEnum(8, opts);
     printf("Executing: %s\n", opts[option]);
     int rc = SUCCESS;
     switch (option)
@@ -136,7 +138,10 @@ int executeOperation(TreeNode **head_ptr)
             }
             break;
         case PRINT:
-            depthFirstSearch(head, printNode);
+            depthFirstSearch(head, printNode, NULL);
+            break;
+        case SHOW_GRAPH:
+            drawGraph(head, "TreeViz");
             break;
         case REMOVE_LOW:
             *head_ptr = removeIfLowScore(head);

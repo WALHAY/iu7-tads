@@ -26,6 +26,6 @@ TreeNode *removeIfLowScore(TreeNode *head);
 
 TreeNode *treeRemoveNode(TreeNode *node);
 
-void depthFirstSearch(TreeNode *head, void (*action)(TreeNode *));
+void depthFirstSearch(TreeNode *head, void (*action)(TreeNode *, void *), void *param);
 
 void freeNode(TreeNode *node);

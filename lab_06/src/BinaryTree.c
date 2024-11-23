@@ -111,13 +111,13 @@ TreeNode *treeFind(TreeNode *head, const char *prefix)
     return NULL;
 }
 
-void depthFirstSearch(TreeNode *head, void (*action)(TreeNode *))
+void depthFirstSearch(TreeNode *head, void (*action)(TreeNode *, void *), void *param)
 {
     if (!head)
         return;
-    depthFirstSearch(head->left, action);
-    depthFirstSearch(head->right, action);
-    action(head);
+    action(head, param);
+    depthFirstSearch(head->left, action, param);
+    depthFirstSearch(head->right, action, param);
 }
 
 void freeNode(TreeNode *node)

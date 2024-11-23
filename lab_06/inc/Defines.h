@@ -14,6 +14,7 @@ typedef enum
     FIND,
     REMOVE,
     PRINT,
+    SHOW_GRAPH,
     REMOVE_LOW,
     COMPARE_TADS,
     EXIT

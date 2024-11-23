@@ -2,11 +2,13 @@
 
 #include "BinaryTree.h"
 #include "Defines.h"
+#include "GraphvizIntegration.h"
 #include <errno.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 int executeOperation(TreeNode **head_ptr);
 
