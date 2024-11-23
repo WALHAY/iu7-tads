@@ -1,24 +1,27 @@
 #include "../inc/GraphvizIntegration.h"
 
-static void addNodeToDot(TreeNode *node, void *steam)
+static size_t nullIndex = 0;
+
+static void addSingleNode(TreeNode *from, TreeNode *to, FILE *stream)
 {
-    FILE *file = steam;
 
-    if (node->left)
+    if (!to)
     {
-        fprintf(file, "%s", node->data->name);
-        fprintf(file, " -> ");
-        fprintf(file, "%s", node->left->data->name);
-        fprintf(file, ";\n");
+        fprintf(stream, "null%zu [shape=point];\n", nullIndex);
     }
+    fprintf(stream, "%s -> ", from->data->name);
+    if (to)
+        fprintf(stream, "%s;\n", to->data->name);
+    else
+        fprintf(stream, "null%zu;\n", nullIndex++);
+}
 
-    if (node->right)
-    {
-        fprintf(file, "%s", node->data->name);
-        fprintf(file, " -> ");
-        fprintf(file, "%s [tooltip=%lf]", node->right->data->name, node->right->data->score);
-        fprintf(file, ";\n");
-    }
+static void addNodeToDot(TreeNode *node, void *stream)
+{
+    FILE *file = stream;
+
+    addSingleNode(node, node->right, file);
+    addSingleNode(node, node->left, file);
 }
 
 bool prepareGraph(TreeNode *head, const char *graphName, const char *path)
