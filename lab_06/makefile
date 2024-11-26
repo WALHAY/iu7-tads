@@ -25,3 +25,4 @@ $(OUT_PATH)/%.o : $(SRC_PATH)/%.c $(INC_PATH)/*.h
 clean :
 	rm $(OUT_PATH)/*.o *.exe *.txt
 	rm $(IMG_PATH)/*
+	rm $(OUT_PATH)/*.dot
