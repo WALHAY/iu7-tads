@@ -6,12 +6,12 @@ static void addSingleNode(TreeNode *from, TreeNode *to, FILE *stream)
 {
 
     if (!to)
-    {
         fprintf(stream, "null%zu [shape=point];\n", nullIndex);
-    }
     fprintf(stream, "%s -> ", from->data->name);
     if (to)
+    {
         fprintf(stream, "%s;\n", to->data->name);
+    }
     else
         fprintf(stream, "null%zu;\n", nullIndex++);
 }
@@ -60,12 +60,12 @@ void drawGraph(TreeNode *node, const char *filename, bool open)
 
     char command[(strlen(filename) * 2 + 100)];
     sprintf(command, "dot -Tsvg %s -o ./img/%s.svg", path, filename);
+
+    system(command);
     if (open)
     {
         char openCmd[strlen(filename) * 2 + 100];
-        sprintf(openCmd, "inkview ./img/%s.svg", filename);
+        sprintf(openCmd, "open ./img/%s.svg", filename);
         system(openCmd);
     }
-
-    system(command);
 }
