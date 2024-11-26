@@ -76,7 +76,7 @@ TreeNode *filterTree(TreeNode *head, bool (*filter)(const StudentData *data))
     if (head->right)
         head->right = filterTree(head->right, filter);
 
-    if (filter(head->data))
+    if (!filter(head->data))
         return treeRemoveNode(head);
 
     return head;
