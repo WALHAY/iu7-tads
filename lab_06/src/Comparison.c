@@ -110,7 +110,7 @@ static void compareTimePerfect(size_t elements, FILE *out)
     struct timespec t1, t2;
     size_t insert = 0;
     size_t remove = 0;
-    static bool drawed = false;
+    bool drawed = false;
     for (size_t i = 0; i < TRIES; ++i)
     {
         TreeNode *head = NULL;
