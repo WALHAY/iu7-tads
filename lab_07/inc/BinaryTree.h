@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Utils.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -21,4 +20,4 @@ TreeNode *treeRemove(TreeNode *root, int value);
 
 TreeNode *treeFind(TreeNode *root, int value);
 
-void treeBFS(TreeNode *node, void (*action)(TreeNode *, void *), void *param);
+void treeDFS(TreeNode *node, void (*action)(TreeNode *, void *), void *param);

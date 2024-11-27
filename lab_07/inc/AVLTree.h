@@ -1,7 +1,6 @@
 #pragma once
 
 #include "BinaryTree.h"
-#include "Utils.h"
 #include <stdbool.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -15,7 +14,7 @@ struct AVLTreeNode
     AVLTreeNode *left;
     AVLTreeNode *right;
 
-    size_t balanceFactor;
+    ssize_t height;
 };
 
 AVLTreeNode *avlTreeInsert(AVLTreeNode *root, int value);

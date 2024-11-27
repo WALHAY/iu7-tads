@@ -1,20 +1,23 @@
 #include "../inc/AVLTree.h"
+#include "../inc/BinaryTree.h"
 #include "../inc/GraphvizIntegration.h"
 
-static int compareInt(const int a, const int b)
+static void printNode(TreeNode *node, void *param)
 {
-    return a > b ? 1 : -(a < b);
+    printf("%d\n", node->value);
 }
 
-int main(int argc, char **argv)
+int main(void)
 {
-    Node *node = NULL;
-    node = treeInsert(node, 15, compareInt);
-    node = treeInsert(node, 14, compareInt);
-    node = treeInsert(node, 13, compareInt);
-    node = treeInsert(node, 12, compareInt);
-    node = treeInsert(node, 11, compareInt);
-    node = treeInsert(node, 10, compareInt);
-    drawGraph(node, "llll", true);
+    AVLTreeNode *root = NULL;
+    root = avlTreeInsert(root, 1);
+    root = avlTreeInsert(root, 2);
+    root = avlTreeInsert(root, 3);
+    root = avlTreeInsert(root, 4);
+    root = avlTreeInsert(root, 5);
+    root = avlTreeInsert(root, 6);
+    root = avlTreeInsert(root, 7);
+    treeDFS((TreeNode *)root, printNode, NULL);
+    drawGraph((TreeNode *)root, "nigga", true);
     return 0;
 }

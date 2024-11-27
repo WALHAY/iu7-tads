@@ -23,11 +23,10 @@ TreeNode *treeInsert(TreeNode *root, int value)
     if (!root)
         return createTreeNode(value);
 
-    int comparison = compareInt(value, root->value);
-    if (!comparison)
+    if (root->value == value)
         return root;
 
-    if (comparison < 0)
+    if (value < root->value)
         root->left = treeInsert(root->left, value);
     else
         root->right = treeInsert(root->right, value);
@@ -47,10 +46,9 @@ TreeNode *treeRemove(TreeNode *root, int value)
     if (!root)
         return root;
 
-    int comparison = compareInt(value, root->value);
-    if (comparison < 0)
+    if (value < root->value)
         root->left = treeRemove(root->left, value);
-    else if (comparison > 0)
+    else if (value > root->value)
         root->right = treeRemove(root->right, value);
     else
     {
@@ -80,13 +78,22 @@ TreeNode *treeFind(TreeNode *root, int value)
     if (!root)
         return NULL;
 
-    int comparison = compareInt(value, root->value);
-    if (comparison == 0)
+    if (value == root->value)
         return root;
-    else if (comparison < 0)
+    else if (value < root->value)
         return treeFind(root->left, value);
     else
         return treeFind(root->right, value);
 
     return NULL;
+}
+
+void treeDFS(TreeNode *node, void (*action)(TreeNode *, void *), void *param)
+{
+    if (!node)
+        return;
+
+    action(node, param);
+    treeDFS(node->left, action, param);
+    treeDFS(node->right, action, param);
 }
