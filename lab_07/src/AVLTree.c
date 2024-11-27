@@ -1,20 +1,20 @@
 #include "../inc/AVLTree.h"
 
-#define MAX(a, b) ((a > b) ? (a) : (b))
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
 
-static size_t getHeight(const Node *node)
+static int getHeight(const Node *node)
 {
     return node ? node->height : 0;
 }
 
-static ssize_t getBalanceFactor(const Node *node)
+static int getBalanceFactor(const Node *node)
 {
-    return (ssize_t)getHeight(node->left) - getHeight(node->right);
+    return getHeight(node->right) - getHeight(node->left);
 }
 
-static size_t recalculateHeight(Node *node)
+static void recalculateHeight(Node *node)
 {
-    return (getHeight(node->left), getHeight(node->right));
+    node->height = MAX(getHeight(node->left), getHeight(node->right)) + 1;
 }
 
 static Node *createNode(int value)
@@ -25,6 +25,7 @@ static Node *createNode(int value)
         newNode->value = value;
         newNode->left = NULL;
         newNode->right = NULL;
+        newNode->height = 1;
     }
     return newNode;
 }
@@ -35,25 +36,20 @@ Node *treeInsert(Node *node, int value, int (*comparator)(const int, const int))
         return createNode(value);
 
     int cmp = comparator(value, node->value);
-    if (cmp <)
+    if (!cmp)
+        return node;
 
-        return NULL;
+    if (cmp < 0)
+        node->left = treeInsert(node->left, value, comparator);
+    else
+        node->right = treeInsert(node->right, value, comparator);
+
+    return treeBalance(node);
 }
 
 Node *treeRemove(Node *root, int value, int (*comparator)(const int, const int))
 {
     return NULL;
-}
-
-void depthFirstSearch(Node *node, void (*action)(Node *, void *), void *param)
-{
-
-    if (!node)
-        return;
-
-    action(node, param);
-    depthFirstSearch(node->left, action, param);
-    depthFirstSearch(node->right, action, param);
 }
 
 Node *treeBalance(Node *node)
@@ -65,6 +61,7 @@ Node *treeBalance(Node *node)
             node->right = treeRotateRight(node->right);
         return treeRotateRight(node);
     }
+
     if (getBalanceFactor(node) == -2)
     {
         if (getBalanceFactor(node->left) > 0)
@@ -72,6 +69,16 @@ Node *treeBalance(Node *node)
         return treeRotateLeft(node);
     }
     return node;
+}
+
+void treeBFS(Node *node, void (*action)(Node *, void *), void *param)
+{
+    if (!node)
+        return;
+
+    action(node, param);
+    treeBFS(node->left, action, param);
+    treeBFS(node->right, action, param);
 }
 
 Node *treeRotateLeft(Node *node)

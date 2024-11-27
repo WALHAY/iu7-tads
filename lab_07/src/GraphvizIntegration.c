@@ -37,7 +37,7 @@ bool prepareGraph(Node *head, const char *graphName, const char *path)
             "edge [fontsize=10];\n",
             graphName);
 
-    depthFirstSearch(head, addNodeToDot, graphFile);
+    treeBFS(head, addNodeToDot, graphFile);
 
     fprintf(graphFile, "}\n");
     fclose(graphFile);
@@ -58,12 +58,12 @@ void drawGraph(Node *node, const char *filename, bool open)
 
     char command[(strlen(filename) * 2 + 100)];
     sprintf(command, "dot -Tsvg %s -o ./img/%s.svg", path, filename);
+    system(command);
+
     if (open)
     {
         char openCmd[strlen(filename) * 2 + 100];
-        sprintf(openCmd, "inkview ./img/%s.svg", filename);
+        sprintf(openCmd, "open ./img/%s.svg", filename);
         system(openCmd);
     }
-
-    system(command);
 }

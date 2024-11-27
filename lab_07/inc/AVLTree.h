@@ -19,7 +19,7 @@ Node *treeInsert(Node *root, int value, int (*comparator)(const int, const int))
 
 Node *treeRemove(Node *root, int value, int (*comparator)(const int, const int));
 
-void depthFirstSearch(Node *node, void (*action)(Node *, void *), void *param);
+void treeBFS(Node *node, void (*action)(Node *, void *), void *param);
 
 Node *treeBalance(Node *root);
 
