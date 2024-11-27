@@ -2,101 +2,46 @@
 
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 
-static int getHeight(const Node *node)
+static AVLTreeNode *createAVLTreeNode(int value)
 {
-    return node ? node->height : 0;
-}
-
-static int getBalanceFactor(const Node *node)
-{
-    return getHeight(node->right) - getHeight(node->left);
-}
-
-static void recalculateHeight(Node *node)
-{
-    node->height = MAX(getHeight(node->left), getHeight(node->right)) + 1;
-}
-
-static Node *createNode(int value)
-{
-    Node *newNode = malloc(sizeof(Node));
-    if (newNode)
+    AVLTreeNode *newAVLTreeNode = malloc(sizeof(AVLTreeNode));
+    if (newAVLTreeNode)
     {
-        newNode->value = value;
-        newNode->left = NULL;
-        newNode->right = NULL;
-        newNode->height = 1;
+        newAVLTreeNode->value = value;
+        newAVLTreeNode->left = NULL;
+        newAVLTreeNode->right = NULL;
+        newAVLTreeNode->balanceFactor = 0;
     }
-    return newNode;
+    return newAVLTreeNode;
 }
 
-Node *treeInsert(Node *node, int value, int (*comparator)(const int, const int))
+static AVLTreeNode *treeRotateLeft(AVLTreeNode *node)
 {
-    if (!node)
-        return createNode(value);
-
-    int cmp = comparator(value, node->value);
-    if (!cmp)
-        return node;
-
-    if (cmp < 0)
-        node->left = treeInsert(node->left, value, comparator);
-    else
-        node->right = treeInsert(node->right, value, comparator);
-
-    return treeBalance(node);
-}
-
-Node *treeRemove(Node *root, int value, int (*comparator)(const int, const int))
-{
-    return NULL;
-}
-
-Node *treeBalance(Node *node)
-{
-    recalculateHeight(node);
-    if (getBalanceFactor(node) == 2)
-    {
-        if (getBalanceFactor(node->right) < 0)
-            node->right = treeRotateRight(node->right);
-        return treeRotateRight(node);
-    }
-
-    if (getBalanceFactor(node) == -2)
-    {
-        if (getBalanceFactor(node->left) > 0)
-            node->left = treeRotateLeft(node->left);
-        return treeRotateLeft(node);
-    }
-    return node;
-}
-
-void treeBFS(Node *node, void (*action)(Node *, void *), void *param)
-{
-    if (!node)
-        return;
-
-    action(node, param);
-    treeBFS(node->left, action, param);
-    treeBFS(node->right, action, param);
-}
-
-Node *treeRotateLeft(Node *node)
-{
-    Node *temp = node->right;
+    AVLTreeNode *temp = node->right;
     node->right = temp->left;
     temp->left = node;
-    recalculateHeight(node);
-    recalculateHeight(temp);
     return temp;
 }
 
-Node *treeRotateRight(Node *node)
+static AVLTreeNode *treeRotateRight(AVLTreeNode *node)
 {
-    Node *temp = node->left;
+    AVLTreeNode *temp = node->left;
     node->left = temp->right;
     temp->right = node;
-    recalculateHeight(node);
-    recalculateHeight(temp);
     return temp;
+}
+
+AVLTreeNode *avlTreeInsert(AVLTreeNode *node, int value)
+{
+    return avlTreeBalance((AVLTreeNode *)treeInsert((TreeNode *)node, value));
+}
+
+AVLTreeNode *avlTreeRemove(AVLTreeNode *root, int value)
+{
+    return avlTreeBalance((AVLTreeNode *)treeRemove((TreeNode *)root, value));
+}
+
+AVLTreeNode *avlTreeBalance(AVLTreeNode *node)
+{
+    return node;
 }

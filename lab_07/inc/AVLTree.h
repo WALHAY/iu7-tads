@@ -1,28 +1,25 @@
 #pragma once
 
+#include "BinaryTree.h"
+#include "Utils.h"
 #include <stdbool.h>
 #include <stdlib.h>
 #include <unistd.h>
 
-typedef struct Node Node;
+typedef struct AVLTreeNode AVLTreeNode;
 
-struct Node
+struct AVLTreeNode
 {
     int value;
-    size_t height;
 
-    Node *left;
-    Node *right;
+    AVLTreeNode *left;
+    AVLTreeNode *right;
+
+    size_t balanceFactor;
 };
 
-Node *treeInsert(Node *root, int value, int (*comparator)(const int, const int));
+AVLTreeNode *avlTreeInsert(AVLTreeNode *root, int value);
 
-Node *treeRemove(Node *root, int value, int (*comparator)(const int, const int));
+AVLTreeNode *avlTreeRemove(AVLTreeNode *root, int value);
 
-void treeBFS(Node *node, void (*action)(Node *, void *), void *param);
-
-Node *treeBalance(Node *root);
-
-Node *treeRotateLeft(Node *node);
-
-Node *treeRotateRight(Node *node);
+AVLTreeNode *avlTreeBalance(AVLTreeNode *root);
