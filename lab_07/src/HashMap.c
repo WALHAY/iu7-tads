@@ -1,4 +1,5 @@
 #include "../inc/HashMap.h"
+#include <stdio.h>
 
 #define MAX_OFFSET 5
 
@@ -24,16 +25,45 @@ HashMap *createHashMap(size_t size)
     return map;
 }
 
-void hashMapInsert(HashMap *map, const char *key, int value)
+static size_t hashMapInsertEntry(HashMap *map, const MapEntry *entry)
 {
-    hash_t hash = getStringHash(key);
+    size_t fails = 0;
+
+    hash_t hash = getStringHash(entry->key);
 
     size_t index = hash % map->size;
+    while (index + fails < map->size && map->data[index + fails] != NULL)
+    {
+        const MapEntry *local = map->data[index + fails];
+        if (!strcmp(entry->key, local->key))
+            return 0;
+        fails++;
+    }
 
-    while (map->data[index] != NULL)
-        index++;
+    map->data[index + fails] = entry;
+    return index + fails >= map->size ? MAX_FAILS : fails;
+}
 
-    map->data[index] = createMapEntry(key, value);
+static void rebuildHashMap(HashMap *map)
+{
+    size_t oldSize = map->size;
+    const MapEntry **oldEntries = map->data;
+
+    map->size *= LOAD_FACTOR;
+    map->data = calloc(map->size, sizeof(MapEntry *));
+
+    for (size_t i = 0; i < oldSize; ++i)
+    {
+        const MapEntry *entry = oldEntries[i];
+        if (entry)
+            hashMapInsertEntry(map, entry);
+    }
+}
+
+void hashMapInsert(HashMap *map, const char *key, int value)
+{
+    if (hashMapInsertEntry(map, createMapEntry(key, value)) >= MAX_FAILS)
+        rebuildHashMap(map);
 }
 
 bool hashMapFind(HashMap *map, const char *key, int *value)

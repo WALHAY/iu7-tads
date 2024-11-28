@@ -4,6 +4,9 @@
 #include <stdbool.h>
 #include <string.h>
 
+#define LOAD_FACTOR 2
+#define MAX_FAILS 4
+
 typedef struct
 {
     const char *key;
@@ -13,7 +16,7 @@ typedef struct
 typedef struct
 {
     size_t size;
-    MapEntry **data;
+    const MapEntry **data;
 } HashMap;
 
 HashMap *createHashMap(size_t size);
