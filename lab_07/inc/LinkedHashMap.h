@@ -1,11 +1,10 @@
 #pragma once
 
+#include "../inc/Hash.h"
 #include <math.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
-
-typedef long long int hash_t;
 
 typedef struct HashMapNode HashMapNode;
 
@@ -22,7 +21,7 @@ typedef struct
     HashMapNode **data;
 } LinkedHashMap;
 
-LinkedHashMap *createHashMap(size_t size);
+LinkedHashMap *createLinkedHashMap(size_t size);
 
 void linkedHashMapInsert(LinkedHashMap *hashMap, const char *key, int value);
 

@@ -12,32 +12,15 @@ static HashMapNode *createHashMapNode(const char *key, int value)
     return node;
 }
 
-LinkedHashMap *createHashMap(size_t size)
+LinkedHashMap *createLinkedHashMap(size_t size)
 {
     LinkedHashMap *map = malloc(sizeof(LinkedHashMap));
     if (map)
     {
-        map->data = malloc(sizeof(HashMapNode *) * size);
+        map->data = calloc(size, sizeof(HashMapNode *));
         map->size = size;
     }
     return map;
-}
-
-static hash_t getStringHash(const char *string)
-{
-    hash_t hash = 0;
-    size_t index = 0;
-    while (string[index] != '\0')
-    {
-        hash += string[index] * pow(31, index);
-        index++;
-    }
-    return hash;
-}
-
-static hash_t getIntHash(int key)
-{
-    return key;
 }
 
 static HashMapNode *listInsert(HashMapNode *head, const char *key, int value)
