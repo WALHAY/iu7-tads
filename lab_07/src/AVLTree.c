@@ -93,5 +93,5 @@ AVLTreeNode *avlTreeInsert(AVLTreeNode *root, int value)
 
 AVLTreeNode *avlTreeRemove(AVLTreeNode *root, int value)
 {
-    return NULL;
+    return value ? root : NULL;
 }

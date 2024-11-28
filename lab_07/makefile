@@ -15,7 +15,7 @@ SRCS := $(wildcard $(SRC_PATH)/*.c)
 OBJS := $(subst $(SRC_PATH), $(OUT_PATH), $(SRCS:.c=.o))
 
 app.exe : $(OBJS) 
-	$(CC) $(CFLAGS) -o $@ $^
+	$(CC) $(CFLAGS) -o $@ $^ -lm
 
 $(OUT_PATH)/%.o : $(SRC_PATH)/%.c $(INC_PATH)/*.h
 	$(CC) $(CFLAGS) -c $< -o $@

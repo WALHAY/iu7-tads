@@ -1,4 +1,5 @@
 #include "../inc/LinkedHashMap.h"
+#include <stdio.h>
 
 static HashMapNode *createHashMapNode(const char *key, int value)
 {
@@ -23,36 +24,70 @@ LinkedHashMap *createLinkedHashMap(size_t size)
     return map;
 }
 
-static HashMapNode *listInsert(HashMapNode *head, const char *key, int value)
+static size_t listInsert(HashMapNode **head_ptr, HashMapNode *node)
 {
-    if (!head)
-        return createHashMapNode(key, value);
+    if (!*head_ptr)
+    {
+        *head_ptr = node;
+        return 1;
+    }
 
-    if (!strcmp(head->key, key))
-        return head;
-
-    head->next = listInsert(head->next, key, value);
-
-    return head;
+    size_t size = 1;
+    HashMapNode *head = *head_ptr;
+    while (head && head->next)
+    {
+        head = head->next;
+        size++;
+    }
+    head->next = node;
+    return size;
 }
 
 static HashMapNode *listFind(HashMapNode *head, const char *key)
 {
-    if (!head)
-        return NULL;
+    while (head)
+    {
+        if (!strcmp(key, head->key))
+            return head;
+        head = head->next;
+    }
+    return NULL;
+}
 
-    if (!strcmp(key, head->key))
-        return head;
+static size_t linkedHashMapInsertNode(LinkedHashMap *hashMap, HashMapNode *node)
+{
+    hash_t keyHash = getStringHash(node->key);
+    size_t index = keyHash % hashMap->size;
+    return listInsert(&hashMap->data[index], node);
+}
 
-    return listFind(head->next, key);
+static void rebuildLinkedHashMap(LinkedHashMap *hashMap)
+{
+    size_t oldSize = hashMap->size;
+    HashMapNode **oldData = hashMap->data;
+
+    hashMap->size *= LOAD_FACTOR;
+    hashMap->data = calloc(hashMap->size, sizeof(HashMapNode *));
+
+    for (size_t i = 0; i < oldSize; ++i)
+    {
+        HashMapNode *node = oldData[i];
+        while (node)
+        {
+            HashMapNode *next = node->next;
+            node->next = NULL;
+
+            linkedHashMapInsertNode(hashMap, node);
+
+            node = next;
+        }
+    }
 }
 
 void linkedHashMapInsert(LinkedHashMap *hashMap, const char *key, int value)
 {
-    hash_t keyHash = getStringHash(key);
-    size_t index = keyHash % hashMap->size;
-
-    hashMap->data[index] = listInsert(hashMap->data[index], key, value);
+    if (linkedHashMapInsertNode(hashMap, createHashMapNode(key, value)) >= MAX_LIST_SIZE)
+        rebuildLinkedHashMap(hashMap);
 }
 
 bool linkedHashMapFind(LinkedHashMap *hashMap, const char *key, int *value)

@@ -6,6 +6,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define LOAD_FACTOR 2
+#define MAX_LIST_SIZE 2
+
 typedef struct HashMapNode HashMapNode;
 
 struct HashMapNode

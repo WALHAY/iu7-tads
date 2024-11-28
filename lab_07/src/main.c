@@ -22,22 +22,23 @@ int main(void)
     // treeDFS((TreeNode *)root, printNode, NULL);
     // drawGraph((TreeNode *)root, "nigga", true);
     //
-    //
-    // LinkedHashMap *hashMap = createHashMap(4);
+    LinkedHashMap *hashMap = createLinkedHashMap(2);
 
-    // linkedHashMapInsert(hashMap, "ab", 8);
-    // linkedHashMapInsert(hashMap, "bb", 4);
-    // linkedHashMapInsert(hashMap, "Hh", 1);
+    linkedHashMapInsert(hashMap, "a", 8);
+    printf("size %zu\n", hashMap->size);
+    linkedHashMapInsert(hashMap, "b", 8);
+    printf("size %zu\n", hashMap->size);
+    linkedHashMapInsert(hashMap, "c", 8);
+    printf("size %zu\n", hashMap->size);
+    linkedHashMapInsert(hashMap, "d", 8);
+    printf("size %zu\n", hashMap->size);
+    linkedHashMapInsert(hashMap, "e", 8);
+    printf("size %zu\n", hashMap->size);
+
+    // HashMap *map = createHashMap(4);
+    // hashMapInsert(map, "Hi", 4);
     // int value = 0;
-    // if (linkedHashMapFind(hashMap, "Hi", &value))
+    // if (hashMapFind(map, "Hih", &value))
     //     printf("Found: %d\n", value);
-    // if (linkedHashMapFind(hashMap, "Hh", &value))
-    //     printf("Found: %d\n", value);
-    //
-    HashMap *map = createHashMap(4);
-    hashMapInsert(map, "Hi", 4);
-    int value = 0;
-    if (hashMapFind(map, "Hih", &value))
-        printf("Found: %d\n", value);
     return 0;
 }
