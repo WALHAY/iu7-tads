@@ -68,7 +68,7 @@ char *getErrorMessage(int rc)
     return "Error: No Error?";
 }
 
-static int executeLinkedHashMapOperation(LinkedHashMap **linkedHashMap)
+static void executeLinkedHashMapOperation(LinkedHashMap **linkedHashMap)
 {
     bool exit = false;
     while (!exit)
@@ -82,7 +82,7 @@ static int executeLinkedHashMapOperation(LinkedHashMap **linkedHashMap)
                 if (linkedHashMap)
                 {
                     if (*linkedHashMap)
-                        freeLinkedHashMap(*linkedHashMap);
+                        freeLinkedHashMap(linkedHashMap);
                     *linkedHashMap = createLinkedHashMap(INITIAL_SIZE);
                 }
                 break;
@@ -115,7 +115,6 @@ static int executeLinkedHashMapOperation(LinkedHashMap **linkedHashMap)
                 exit = true;
         }
     }
-    return 0;
 }
 
 static int executeHashMapOperation(HashMap **hashMap)
@@ -123,8 +122,48 @@ static int executeHashMapOperation(HashMap **hashMap)
     bool exit = false;
     while (!exit)
     {
+        char *opts[] = {"New Open Hash Map", "Add Element", "Find Element", "Print Hash Map", "Back"};
+        HASHMAP_OPS option = inputEnum(5, opts);
+        printf("Open Hash Map: %s\n", opts[option]);
+        switch (option)
+        {
+            case NEW:
+                if (hashMap)
+                {
+                    if (*hashMap)
+                        freeHashMap(hashMap);
+                    *hashMap = createHashMap(INITIAL_SIZE);
+                }
+                break;
+            case ADD:
+                if (hashMap && *hashMap)
+                {
+                    char *key = inputString("key");
+                    int value = inputValue("value", false, false, 0, 0);
+                    hashMapInsert(*hashMap, key, value);
+                }
+                else
+                    printf("Error: Create hash map first!\n");
+                break;
+
+            case FIND:
+                {
+                    char *key = inputString("key to find");
+                    int value = 0;
+                    if (hashMapFind(*hashMap, key, &value))
+                        printf("Value: %d\n", value);
+                    else
+                        printf("Key not found!\n");
+                }
+                break;
+            case PRINT:
+                printHashMap(*hashMap);
+                break;
+            case MAP_BACK:
+            default:
+                exit = true;
+        }
     }
-    return 0;
 }
 
 static int executeBinaryTreeOperation(TreeNode **binTree)

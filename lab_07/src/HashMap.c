@@ -83,3 +83,28 @@ bool hashMapFind(HashMap *map, const char *key, int *value)
 
     return false;
 }
+
+static void printMapEntry(const MapEntry *entry)
+{
+    if (entry)
+        printf("Hash: %llu\nKey: %s\nValue: %d\n", getStringHash(entry->key), entry->key, entry->value);
+}
+
+void printHashMap(HashMap *hashMap)
+{
+    for (size_t i = 0; i < hashMap->size; ++i)
+        printMapEntry(hashMap->data[i]);
+}
+
+void freeHashMap(HashMap **hashMap)
+{
+    if (hashMap && *hashMap)
+    {
+        for (size_t i = 0; i < (*hashMap)->size; ++i)
+        {
+            const MapEntry *entry = (*hashMap)->data[i];
+            printMapEntry(entry);
+        }
+        *hashMap = NULL;
+    }
+}

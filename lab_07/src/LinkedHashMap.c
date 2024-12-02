@@ -119,10 +119,14 @@ static void freeList(HashMapNode *node)
     }
 }
 
-void freeLinkedHashMap(LinkedHashMap *hashMap)
+void freeLinkedHashMap(LinkedHashMap **hashMap)
 {
-    for (size_t i = 0; i < hashMap->size; ++i)
-        freeList(hashMap->data[i]);
+    if (hashMap && *hashMap)
+    {
+        for (size_t i = 0; i < (*hashMap)->size; ++i)
+            freeList((*hashMap)->data[i]);
+        *hashMap = NULL;
+    }
 }
 
 static void printNode(HashMapNode *node)

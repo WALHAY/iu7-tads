@@ -24,3 +24,7 @@ HashMap *createHashMap(size_t size);
 void hashMapInsert(HashMap *map, const char *key, int value);
 
 bool hashMapFind(HashMap *map, const char *key, int *value);
+
+void printHashMap(HashMap *hashMap);
+
+void freeHashMap(HashMap **hashMap);
