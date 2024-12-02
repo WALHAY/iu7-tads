@@ -1,8 +1,0 @@
-digraph llll {
-node [shape=circle, fontname="Arial", fontsize=12];
-edge [fontsize=10];
-null0 [shape=point];
-15 -> null0;
-null1 [shape=point];
-15 -> null1;
-}
