@@ -142,3 +142,14 @@ AVLTreeNode *avlTreeFind(AVLTreeNode *root, char *key, int *value)
 {
     return (AVLTreeNode *)treeFind((TreeNode *)root, key, value);
 }
+
+void avlTreeFree(AVLTreeNode **root)
+{
+    if (!root || !*root)
+        return;
+
+    avlTreeFree(&(*root)->left);
+    avlTreeFree(&(*root)->right);
+    freeNode(*root);
+    *root = NULL;
+}

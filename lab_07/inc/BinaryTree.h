@@ -23,3 +23,5 @@ TreeNode *treeRemove(TreeNode *root, char *key);
 TreeNode *treeFind(TreeNode *root, char *key, int *value);
 
 void treeDFS(TreeNode *node, void (*action)(TreeNode *, void *), void *param);
+
+void treeFree(TreeNode **root);

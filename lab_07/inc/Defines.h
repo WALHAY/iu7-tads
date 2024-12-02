@@ -29,3 +29,13 @@ typedef enum
     PRINT,
     MAP_BACK
 } HASHMAP_OPS;
+
+typedef enum
+{
+    TNEW,
+    TADD,
+    TFIND,
+    TREMOVE,
+    TDRAW,
+    TBACK
+} TREE_OPS;

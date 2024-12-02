@@ -4,13 +4,12 @@ static size_t nullIndex = 0;
 
 static void addSingleNode(TreeNode *from, TreeNode *to, FILE *stream)
 {
-
     if (!to)
         fprintf(stream, "null%zu [shape=point];\n", nullIndex);
-    fprintf(stream, "%d -> ", from->value);
+    fprintf(stream, "%s -> ", from->key);
     if (to)
     {
-        fprintf(stream, "%d;\n", to->value);
+        fprintf(stream, "%s;\n", to->key);
     }
     else
         fprintf(stream, "null%zu;\n", nullIndex++);
@@ -65,7 +64,7 @@ void drawGraph(TreeNode *node, const char *filename, bool open)
     if (open)
     {
         char openCmd[strlen(filename) * 2 + 100];
-        sprintf(openCmd, "open ./img/%s.jpg", filename);
+        sprintf(openCmd, "inkview ./img/%s.jpg", filename);
         system(openCmd);
     }
 }

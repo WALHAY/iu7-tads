@@ -16,7 +16,11 @@ static TreeNode *createTreeNode(char *key, int value)
 static void freeNode(TreeNode *node)
 {
     if (node)
+    {
+        if (node->key)
+            free(node->key);
         free(node);
+    }
 }
 
 TreeNode *treeInsert(TreeNode *root, char *key, int value)
@@ -97,4 +101,15 @@ void treeDFS(TreeNode *node, void (*action)(TreeNode *, void *), void *param)
     action(node, param);
     treeDFS(node->left, action, param);
     treeDFS(node->right, action, param);
+}
+
+void treeFree(TreeNode **root)
+{
+    if (!root || !*root)
+        return;
+
+    treeFree(&(*root)->left);
+    treeFree(&(*root)->right);
+    freeNode(*root);
+    *root = NULL;
 }

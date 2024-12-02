@@ -26,3 +26,5 @@ AVLTreeNode *avlTreeRemove(AVLTreeNode *root, char *key);
 AVLTreeNode *avlTreeFind(AVLTreeNode *root, char *key, int *value);
 
 AVLTreeNode *avlTreeBalance(AVLTreeNode *root);
+
+void avlTreeFree(AVLTreeNode **root);

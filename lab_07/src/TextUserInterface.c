@@ -73,7 +73,7 @@ static void executeLinkedHashMapOperation(LinkedHashMap **linkedHashMap)
     bool exit = false;
     while (!exit)
     {
-        char *opts[] = {"New Open Hash Map", "Add Element", "Find Element", "Print Hash Map", "Back"};
+        char *opts[] = {"New Open Hash Map", "Add Element", "Find Element", "Print Elements", "Back"};
         HASHMAP_OPS option = inputEnum(5, opts);
         printf("Open Hash Map: %s\n", opts[option]);
         switch (option)
@@ -96,8 +96,8 @@ static void executeLinkedHashMapOperation(LinkedHashMap **linkedHashMap)
                 else
                     printf("Error: Create hash map first!\n");
                 break;
-
             case FIND:
+                if (linkedHashMap && *linkedHashMap)
                 {
                     char *key = inputString("key to find");
                     int value = 0;
@@ -117,14 +117,14 @@ static void executeLinkedHashMapOperation(LinkedHashMap **linkedHashMap)
     }
 }
 
-static int executeHashMapOperation(HashMap **hashMap)
+static void executeHashMapOperation(HashMap **hashMap)
 {
     bool exit = false;
     while (!exit)
     {
-        char *opts[] = {"New Open Hash Map", "Add Element", "Find Element", "Print Hash Map", "Back"};
+        char *opts[] = {"New Closed Hash Map", "Add Element", "Find Element", "Print Elements", "Back"};
         HASHMAP_OPS option = inputEnum(5, opts);
-        printf("Open Hash Map: %s\n", opts[option]);
+        printf("Closed Hash Map: %s\n", opts[option]);
         switch (option)
         {
             case NEW:
@@ -145,7 +145,6 @@ static int executeHashMapOperation(HashMap **hashMap)
                 else
                     printf("Error: Create hash map first!\n");
                 break;
-
             case FIND:
                 {
                     char *key = inputString("key to find");
@@ -166,22 +165,97 @@ static int executeHashMapOperation(HashMap **hashMap)
     }
 }
 
-static int executeBinaryTreeOperation(TreeNode **binTree)
+static void executeBinaryTreeOperation(TreeNode **binTree)
 {
     bool exit = false;
     while (!exit)
     {
+        char *opts[] = {"New Binary Tree", "Add Element", "Find Element", "Remove Element", "Draw Tree", "Back"};
+        TREE_OPS option = inputEnum(6, opts);
+        printf("Binary Tree: %s\n", opts[option]);
+        switch (option)
+        {
+            case TNEW:
+                treeFree(binTree);
+                break;
+            case TADD:
+                {
+                    char *key = inputString("key");
+                    int value = inputValue("value", false, false, 0, 0);
+                    *binTree = treeInsert(*binTree, key, value);
+                }
+                break;
+            case TFIND:
+                {
+                    char *key = inputString("key to find");
+                    int value = 0;
+                    if (treeFind(*binTree, key, &value))
+                        printf("Value: %d\n", value);
+                    else
+                        printf("Key not found!\n");
+                }
+                break;
+            case TREMOVE:
+                {
+                    char *key = inputString("key to remove");
+                    *binTree = treeRemove(*binTree, key);
+                }
+                break;
+            case TDRAW:
+                drawGraph(*binTree, "binaryTree", true);
+                break;
+            case TBACK:
+            default:
+                exit = true;
+        }
     }
-    return 0;
 }
 
-static int executeAvlTreeOperation(AVLTreeNode **avlTree)
+static void executeAvlTreeOperation(AVLTreeNode **avlTree)
 {
     bool exit = false;
     while (!exit)
     {
+        char *opts[] = {"New AVL Tree", "Add Element", "Find Element", "Remove Element", "Draw Tree", "Back"};
+        TREE_OPS option = inputEnum(6, opts);
+        printf("AVL Tree: %s\n", opts[option]);
+        switch (option)
+        {
+            case TNEW:
+                if (avlTree && *avlTree)
+                    avlTreeFree(avlTree);
+                break;
+            case TADD:
+                {
+                    char *key = inputString("key");
+                    int value = inputValue("value", false, false, 0, 0);
+                    *avlTree = avlTreeInsert(*avlTree, key, value);
+                }
+                break;
+            case TFIND:
+                {
+                    char *key = inputString("key to find");
+                    int value = 0;
+                    if (avlTreeFind(*avlTree, key, &value))
+                        printf("Value: %d\n", value);
+                    else
+                        printf("Key not found!\n");
+                }
+                break;
+            case TREMOVE:
+                {
+                    char *key = inputString("key to remove");
+                    *avlTree = avlTreeRemove(*avlTree, key);
+                }
+                break;
+            case TDRAW:
+                drawGraph((TreeNode *)*avlTree, "avlTree", true);
+                break;
+            case TBACK:
+            default:
+                exit = true;
+        }
     }
-    return 0;
 }
 
 int executeOperation(HashMap **hashMap, LinkedHashMap **linkedHashMap, AVLTreeNode **avlTree, TreeNode **node)
