@@ -64,7 +64,7 @@ void drawGraph(TreeNode *node, const char *filename, bool open)
     if (open)
     {
         char openCmd[strlen(filename) * 2 + 100];
-        sprintf(openCmd, "inkview ./img/%s.jpg", filename);
+        sprintf(openCmd, "open ./img/%s.jpg", filename);
         system(openCmd);
     }
 }

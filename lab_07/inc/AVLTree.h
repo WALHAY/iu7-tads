@@ -23,7 +23,7 @@ AVLTreeNode *avlTreeInsert(AVLTreeNode *root, char *key, int value);
 
 AVLTreeNode *avlTreeRemove(AVLTreeNode *root, char *key);
 
-AVLTreeNode *avlTreeFind(AVLTreeNode *root, char *key, int *value);
+AVLTreeNode *avlTreeFind(AVLTreeNode *root, char *key);
 
 AVLTreeNode *avlTreeBalance(AVLTreeNode *root);
 

@@ -186,9 +186,9 @@ static void executeBinaryTreeOperation(TreeNode **binTree)
             case TFIND:
                 {
                     char *key = inputString("key to find");
-                    int value = 0;
-                    if (treeFind(*binTree, key, &value))
-                        printf("Value: %d\n", value);
+                    TreeNode *node = treeFind(*binTree, key);
+                    if (node)
+                        printf("Value: %d\n", node->value);
                     else
                         printf("Key not found!\n");
                 }
@@ -234,8 +234,9 @@ static void executeAvlTreeOperation(AVLTreeNode **avlTree)
                 {
                     char *key = inputString("key to find");
                     int value = 0;
-                    if (avlTreeFind(*avlTree, key, &value))
-                        printf("Value: %d\n", value);
+                    AVLTreeNode *node = avlTreeFind(*avlTree, key);
+                    if (node)
+                        printf("Value: %d\n", node->value);
                     else
                         printf("Key not found!\n");
                 }
@@ -277,7 +278,7 @@ int executeOperation(HashMap **hashMap, LinkedHashMap **linkedHashMap, AVLTreeNo
             executeBinaryTreeOperation(node);
             break;
         case COMPARISON:
-            compareTaDS(stdout);
+            compareTaDS();
             break;
         case EXIT:
         default:

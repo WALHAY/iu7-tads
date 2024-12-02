@@ -78,7 +78,7 @@ TreeNode *treeRemove(TreeNode *root, char *key)
     return root;
 }
 
-TreeNode *treeFind(TreeNode *root, char *key, int *value)
+TreeNode *treeFind(TreeNode *root, char *key)
 {
     if (!root)
         return NULL;
@@ -86,9 +86,9 @@ TreeNode *treeFind(TreeNode *root, char *key, int *value)
     if (!strcmp(key, root->key))
         return root;
     else if (strcmp(key, root->key) < 0)
-        return treeFind(root->left, key, value);
+        return treeFind(root->left, key);
     else
-        return treeFind(root->right, key, value);
+        return treeFind(root->right, key);
 
     return NULL;
 }
