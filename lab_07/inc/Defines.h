@@ -13,12 +13,19 @@ typedef enum
 
 typedef enum
 {
-    ADD,
-    FIND,
-    REMOVE,
-    PRINT,
-    SHOW_GRAPH,
-    REMOVE_LOW,
-    COMPARE_TADS,
+    CLOSED_HASH_MAP,
+    OPEN_HASH_MAP,
+    AVL_TREE,
+    BIN_TREE,
+    COMPARISON,
     EXIT
 } OPCODES;
+
+typedef enum
+{
+    NEW,
+    ADD,
+    FIND,
+    PRINT,
+    MAP_BACK
+} HASHMAP_OPS;

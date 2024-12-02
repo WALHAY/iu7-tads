@@ -99,3 +99,40 @@ bool linkedHashMapFind(LinkedHashMap *hashMap, const char *key, int *value)
     *value = node ? node->value : 0;
     return node;
 }
+
+static void freeNode(HashMapNode *node)
+{
+    if (node)
+    {
+        if (node->key)
+            free((char *)node->key);
+        free(node);
+    }
+}
+
+static void freeList(HashMapNode *node)
+{
+    if (node)
+    {
+        freeList(node->next);
+        freeNode(node);
+    }
+}
+
+void freeLinkedHashMap(LinkedHashMap *hashMap)
+{
+    for (size_t i = 0; i < hashMap->size; ++i)
+        freeList(hashMap->data[i]);
+}
+
+static void printNode(HashMapNode *node)
+{
+    if (node)
+        printf("Hash: %llu\nKey: %s\nValue: %d\n", getStringHash(node->key), node->key, node->value);
+}
+
+void printLinkedHashMap(LinkedHashMap *hashMap)
+{
+    for (size_t i = 0; i < hashMap->size; ++i)
+        printNode(hashMap->data[i]);
+}

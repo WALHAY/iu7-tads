@@ -13,7 +13,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-int executeOperation();
+int executeOperation(HashMap **hashMap, LinkedHashMap **linkedHashMap, AVLTreeNode **avlTree, TreeNode **node);
 
 size_t inputEnum(size_t max_options, char **options);
 

@@ -29,3 +29,7 @@ LinkedHashMap *createLinkedHashMap(size_t size);
 void linkedHashMapInsert(LinkedHashMap *hashMap, const char *key, int value);
 
 bool linkedHashMapFind(LinkedHashMap *hashMap, const char *key, int *value);
+
+void freeLinkedHashMap(LinkedHashMap *hashMap);
+
+void printLinkedHashMap(LinkedHashMap *hashMape);
