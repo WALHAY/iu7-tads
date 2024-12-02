@@ -2,17 +2,24 @@
 
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 
-static AVLTreeNode *createAVLTreeNode(int value)
+static AVLTreeNode *createAVLTreeNode(char *key, int value)
 {
     AVLTreeNode *newAVLTreeNode = malloc(sizeof(AVLTreeNode));
     if (newAVLTreeNode)
     {
+        newAVLTreeNode->key = strdup(key);
         newAVLTreeNode->value = value;
         newAVLTreeNode->left = NULL;
         newAVLTreeNode->right = NULL;
         newAVLTreeNode->height = 1;
     }
     return newAVLTreeNode;
+}
+
+static void freeNode(AVLTreeNode *node)
+{
+    if (node)
+        free(node);
 }
 
 static inline ssize_t getHeight(const AVLTreeNode *node)
@@ -56,19 +63,18 @@ AVLTreeNode *avlTreeBalance(AVLTreeNode *node)
     ssize_t bf = getBalanceFactor(node);
     int key = node->value;
 
-    // Left Left Case
     if (bf > 1 && key < node->left->value)
         return treeRotateRight(node);
-    // Right Right Case
+
     if (bf < -1 && key > node->right->value)
         return treeRotateLeft(node);
-    // Left Right Case
+
     if (bf > 1 && key > node->left->value)
     {
         node->left = treeRotateLeft(node->left);
         return treeRotateLeft(node);
     }
-    // Right Left Case
+
     if (bf < -1 && key < node->right->value)
     {
         node->right = treeRotateRight(node->right);
@@ -77,21 +83,62 @@ AVLTreeNode *avlTreeBalance(AVLTreeNode *node)
     return node;
 }
 
-AVLTreeNode *avlTreeInsert(AVLTreeNode *root, int value)
+AVLTreeNode *avlTreeInsert(AVLTreeNode *root, char *key, int value)
 {
     if (!root)
-        return createAVLTreeNode(value);
+        return createAVLTreeNode(key, value);
 
     if (value < root->value)
-        root->left = avlTreeInsert(root->left, value);
+        root->left = avlTreeInsert(root->left, key, value);
     else if (value > root->value)
-        root->right = avlTreeInsert(root->right, value);
+        root->right = avlTreeInsert(root->right, key, value);
 
     recalculateHeight(root);
     return avlTreeBalance(root);
 }
 
-AVLTreeNode *avlTreeRemove(AVLTreeNode *root, int value)
+static AVLTreeNode *treeGetSmallest(AVLTreeNode *root)
 {
-    return value ? root : NULL;
+    while (root && root->left)
+        root = root->left;
+    return root;
+}
+
+AVLTreeNode *avlTreeRemove(AVLTreeNode *root, char *key)
+{
+    if (!root)
+        return root;
+
+    if (strcmp(key, root->key) < 0)
+        root->left = avlTreeRemove(root->left, key);
+    else if (strcmp(key, root->key) > 0)
+        root->right = avlTreeRemove(root->right, key);
+    else
+    {
+        if (!root->left)
+        {
+            AVLTreeNode *temp = root->right;
+            freeNode(root);
+            return temp;
+        }
+
+        if (!root->right)
+        {
+            AVLTreeNode *temp = root->left;
+            freeNode(root);
+            return temp;
+        }
+
+        AVLTreeNode *successor = treeGetSmallest(root->right);
+        root->value = successor->value;
+        root->right = avlTreeRemove(root->right, successor->key);
+    }
+
+    recalculateHeight(root);
+    return avlTreeBalance(root);
+}
+
+AVLTreeNode *avlTreeFind(AVLTreeNode *root, char *key, int *value)
+{
+    return (AVLTreeNode *)treeFind((TreeNode *)root, key, value);
 }
