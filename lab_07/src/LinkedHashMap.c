@@ -1,6 +1,18 @@
 #include "../inc/LinkedHashMap.h"
 #include <stdio.h>
 
+static int coll = 0;
+
+int getCollAmountLinked(void)
+{
+    return coll;
+}
+
+void clearCollLinked(void)
+{
+    coll = 0;
+}
+
 static HashMapNode *createHashMapNode(const char *key, int value)
 {
     HashMapNode *node = malloc(sizeof(HashMapNode));

@@ -19,6 +19,10 @@ struct AVLTreeNode
     int height;
 };
 
+int getCompAmountAvl(void);
+
+void clearCompAvl(void);
+
 AVLTreeNode *avlTreeInsert(AVLTreeNode *root, char *key, int value);
 
 AVLTreeNode *avlTreeRemove(AVLTreeNode *root, char *key);

@@ -16,6 +16,10 @@ struct TreeNode
     TreeNode *right;
 };
 
+int getCompAmount(void);
+
+void clearComp(void);
+
 TreeNode *treeInsert(TreeNode *root, char *key, int value);
 
 TreeNode *treeRemove(TreeNode *root, char *key);

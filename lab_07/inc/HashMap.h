@@ -19,6 +19,10 @@ typedef struct
     const MapEntry **data;
 } HashMap;
 
+int getCollAmount(void);
+
+void clearColl(void);
+
 HashMap *createHashMap(size_t size);
 
 void hashMapInsert(HashMap *map, const char *key, int value);

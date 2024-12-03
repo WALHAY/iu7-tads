@@ -45,15 +45,17 @@ void getBinTreeData(size_t size)
     TreeNode *node = NULL;
 
     size_t avg_insert = 0;
+    size_t avg_comp = 0;
     for (size_t i = 0; i < size; ++i)
     {
-
+        clearComp();
         char *key = pairs[i].key;
         int value = pairs[i].value;
         clock_gettime(CLOCK_MONOTONIC_RAW, &t1);
         node = treeInsert(node, key, value);
         clock_gettime(CLOCK_MONOTONIC_RAW, &t2);
         avg_insert += difftime(t2.tv_sec, t1.tv_sec) * 1e9 + difftime(t2.tv_nsec, t1.tv_nsec);
+        avg_comp += getCompAmount();
     }
     avg_insert /= size;
 
@@ -64,13 +66,14 @@ void getBinTreeData(size_t size)
         char *key = pairs[i].key;
         int value = 0;
         clock_gettime(CLOCK_MONOTONIC_RAW, &t1);
-        treeFind(node, key, &value);
+        treeFind(node, key);
         clock_gettime(CLOCK_MONOTONIC_RAW, &t2);
         avg_find += difftime(t2.tv_sec, t1.tv_sec) * 1e9 + difftime(t2.tv_nsec, t1.tv_nsec);
     }
     avg_find /= size;
+    avg_comp /= size;
 
-    printf("%zu\t%zu\t%zu\t%zu\t%zu\n", size, mem, avg_insert, avg_find, 0UL);
+    printf("%zu\t%zu\t%zu\t%zu\t%zu\n", size, mem, avg_insert, avg_find, avg_comp);
 }
 
 void getAvlTreeData(size_t size)
@@ -85,15 +88,17 @@ void getAvlTreeData(size_t size)
     AVLTreeNode *node = NULL;
 
     size_t avg_insert = 0;
+    size_t avg_comp = 0;
     for (size_t i = 0; i < size; ++i)
     {
-
+        clearCompAvl();
         char *key = pairs[i].key;
         int value = pairs[i].value;
         clock_gettime(CLOCK_MONOTONIC_RAW, &t1);
         node = avlTreeInsert(node, key, value);
         clock_gettime(CLOCK_MONOTONIC_RAW, &t2);
         avg_insert += difftime(t2.tv_sec, t1.tv_sec) * 1e9 + difftime(t2.tv_nsec, t1.tv_nsec);
+        avg_comp += getCompAmountAvl();
     }
     avg_insert /= size;
 
@@ -103,13 +108,14 @@ void getAvlTreeData(size_t size)
         char *key = pairs[i].key;
         int value = 0;
         clock_gettime(CLOCK_MONOTONIC_RAW, &t1);
-        avlTreeFind(node, key, &value);
+        avlTreeFind(node, key);
         clock_gettime(CLOCK_MONOTONIC_RAW, &t2);
         avg_find += difftime(t2.tv_sec, t1.tv_sec) * 1e9 + difftime(t2.tv_nsec, t1.tv_nsec);
     }
     avg_find /= size;
+    avg_comp /= size;
 
-    printf("%zu\t%zu\t%zu\t%zu\t%zu\n", size, mem, avg_insert, avg_find, 0UL);
+    printf("%zu\t%zu\t%zu\t%zu\t%zu\n", size, mem, avg_insert, avg_find, avg_comp);
 }
 
 void getOpenHashMapData(size_t size)
@@ -191,15 +197,26 @@ void getClosedHashMapData(size_t size)
     printf("%zu\t%zu\t%zu\t%zu\t%zu\n", size, mem, avg_insert, avg_find, 0UL);
 }
 
-void compareTaDS()
+void compareTaDS(void)
 {
+    size_t n = 500;
     printf("Type\t\tSize\tMemory\tInsert\tFind\tComparisons\n");
     printf("Bin Tree\t");
-    getBinTreeData(500);
+    getBinTreeData(n);
     printf("AVL Tree\t");
-    getAvlTreeData(500);
+    getAvlTreeData(n);
     printf("Open Hash Map\t");
-    getOpenHashMapData(500);
+    getOpenHashMapData(n);
     printf("Closed Hash Map\t");
-    getClosedHashMapData(500);
+    getClosedHashMapData(n);
+    n = 5000;
+    printf("\n\nType\t\tSize\tMemory\tInsert\tFind\tComparisons\n");
+    printf("Bin Tree\t");
+    getBinTreeData(n);
+    printf("AVL Tree\t");
+    getAvlTreeData(n);
+    printf("Open Hash Map\t");
+    getOpenHashMapData(n);
+    printf("Closed Hash Map\t");
+    getClosedHashMapData(n);
 }

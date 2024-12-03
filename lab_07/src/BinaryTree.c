@@ -1,5 +1,17 @@
 #include "../inc/BinaryTree.h"
 
+static int comp = 0;
+
+int getCompAmount(void)
+{
+    return comp;
+}
+
+void clearComp(void)
+{
+    comp = 0;
+}
+
 static TreeNode *createTreeNode(char *key, int value)
 {
     TreeNode *newTreeNode = malloc(sizeof(TreeNode));
@@ -28,13 +40,16 @@ TreeNode *treeInsert(TreeNode *root, char *key, int value)
     if (!root)
         return createTreeNode(key, value);
 
-    if (root->value == value)
-        return root;
-
-    if (value < root->value)
+    if (strcmp(key, root->key) < 0)
+    {
+        comp += 1;
         root->left = treeInsert(root->left, key, value);
-    else
+    }
+    else if (strcmp(key, root->key) > 0)
+    {
+        comp += 2;
         root->right = treeInsert(root->right, key, value);
+    }
 
     return root;
 }

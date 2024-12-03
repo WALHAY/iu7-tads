@@ -1,5 +1,17 @@
 #include "../inc/AVLTree.h"
 
+static int comp = 0;
+
+int getCompAmountAvl(void)
+{
+    return comp;
+}
+
+void clearCompAvl(void)
+{
+    comp = 0;
+}
+
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 
 static AVLTreeNode *createAVLTreeNode(char *key, int value)
@@ -89,9 +101,15 @@ AVLTreeNode *avlTreeInsert(AVLTreeNode *root, char *key, int value)
         return createAVLTreeNode(key, value);
 
     if (strcmp(key, root->key) < 0)
+    {
+        comp++;
         root->left = avlTreeInsert(root->left, key, value);
+    }
     else if (strcmp(key, root->key) > 0)
+    {
+        comp += 2;
         root->right = avlTreeInsert(root->right, key, value);
+    }
     else
         return root;
 

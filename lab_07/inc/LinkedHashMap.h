@@ -24,6 +24,10 @@ typedef struct
     HashMapNode **data;
 } LinkedHashMap;
 
+int getCollAmountLinked(void);
+
+void clearCollLinked(void);
+
 LinkedHashMap *createLinkedHashMap(size_t size);
 
 void linkedHashMapInsert(LinkedHashMap *hashMap, const char *key, int value);

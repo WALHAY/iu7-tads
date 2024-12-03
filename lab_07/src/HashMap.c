@@ -3,6 +3,18 @@
 
 #define MAX_OFFSET 5
 
+static int coll = 0;
+
+int getCollAmount(void)
+{
+    return coll;
+}
+
+void clearColl(void)
+{
+    coll = 0;
+}
+
 static MapEntry *createMapEntry(const char *key, int value)
 {
     MapEntry *entry = malloc(sizeof(MapEntry));
@@ -48,7 +60,6 @@ static void rebuildHashMap(HashMap *map)
 {
     size_t oldSize = map->size;
     const MapEntry **oldEntries = map->data;
-
     map->size *= LOAD_FACTOR;
     map->data = calloc(map->size, sizeof(MapEntry *));
 
@@ -108,3 +119,4 @@ void freeHashMap(HashMap **hashMap)
         *hashMap = NULL;
     }
 }
+
