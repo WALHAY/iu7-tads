@@ -45,13 +45,13 @@ static size_t hashMapInsertEntry(HashMap *map, const MapEntry *entry)
     hash_t hash = getStringHash(entry->key);
 
     size_t index = hash % map->size;
-    while (map->data[index + fails])
+    while (map->data && map->data[index + fails])
     {
         const MapEntry *local = map->data[index + fails];
         if (!strcmp(entry->key, local->key))
             return 0;
         fails++;
-        if (index + fails > map->size && fails > MAX_FAILS)
+        if (index + fails >= map->size && fails >= MAX_FAILS)
             return MAX_FAILS;
     }
 
