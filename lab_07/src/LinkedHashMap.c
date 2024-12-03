@@ -13,12 +13,11 @@ void clearCompLinked(void)
     comp = 0;
 }
 
-static HashMapNode *createHashMapNode(const char *key, int value)
+static HashMapNode *createHashMapNode(int value)
 {
     HashMapNode *node = malloc(sizeof(HashMapNode));
     if (node)
     {
-        node->key = strdup(key);
         node->value = value;
         node->next = NULL;
     }
@@ -55,11 +54,11 @@ static size_t listInsert(HashMapNode **head_ptr, HashMapNode *node)
     return size;
 }
 
-static HashMapNode *listFind(HashMapNode *head, const char *key)
+static HashMapNode *listFind(HashMapNode *head, int value)
 {
     while (head)
     {
-        if (!strcmp(key, head->key))
+        if (head->value == value)
             return head;
         head = head->next;
     }
@@ -69,7 +68,7 @@ static HashMapNode *listFind(HashMapNode *head, const char *key)
 static size_t linkedHashMapInsertNode(LinkedHashMap *hashMap, HashMapNode *node)
 {
     comp++;
-    hash_t keyHash = getStringHash(node->key);
+    hash_t keyHash = getIntHash(node->value);
     size_t index = keyHash % hashMap->size;
     return listInsert(&hashMap->data[index], node);
 }
@@ -97,30 +96,24 @@ static void rebuildLinkedHashMap(LinkedHashMap *hashMap)
     }
 }
 
-void linkedHashMapInsert(LinkedHashMap *hashMap, const char *key, int value)
+void linkedHashMapInsert(LinkedHashMap *hashMap, int value)
 {
-    if (linkedHashMapInsertNode(hashMap, createHashMapNode(key, value)) >= MAX_LIST_SIZE)
+    if (linkedHashMapInsertNode(hashMap, createHashMapNode(value)) >= MAX_LIST_SIZE)
         rebuildLinkedHashMap(hashMap);
 }
 
-bool linkedHashMapFind(LinkedHashMap *hashMap, const char *key, int *value)
+bool linkedHashMapFind(LinkedHashMap *hashMap, int value)
 {
-    hash_t keyHash = getStringHash(key);
+    hash_t keyHash = getIntHash(value);
     size_t index = keyHash % hashMap->size;
 
-    HashMapNode *node = listFind(hashMap->data[index], key);
-    *value = node ? node->value : 0;
-    return node;
+    return listFind(hashMap->data[index], value);
 }
 
 static void freeNode(HashMapNode *node)
 {
     if (node)
-    {
-        if (node->key)
-            free((char *)node->key);
         free(node);
-    }
 }
 
 static void freeList(HashMapNode *node)
@@ -145,7 +138,7 @@ void freeLinkedHashMap(LinkedHashMap **hashMap)
 static void printNode(HashMapNode *node)
 {
     if (node)
-        printf("Hash: %llu\nKey: %s\nValue: %d\n\n", getStringHash(node->key), node->key, node->value);
+        printf("Hash: %llu\nValue: %d\n\n", getIntHash(node->value), node->value);
 }
 
 void printLinkedHashMap(LinkedHashMap *hashMap)

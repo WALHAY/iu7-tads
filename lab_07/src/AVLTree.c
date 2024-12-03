@@ -14,12 +14,11 @@ void clearCompAvl(void)
 
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 
-static AVLTreeNode *createAVLTreeNode(char *key, int value)
+static AVLTreeNode *createAVLTreeNode(int value)
 {
     AVLTreeNode *newAVLTreeNode = malloc(sizeof(AVLTreeNode));
     if (newAVLTreeNode)
     {
-        newAVLTreeNode->key = strdup(key);
         newAVLTreeNode->value = value;
         newAVLTreeNode->left = NULL;
         newAVLTreeNode->right = NULL;
@@ -92,20 +91,16 @@ AVLTreeNode *avlTreeBalance(AVLTreeNode *node)
     return node;
 }
 
-AVLTreeNode *avlTreeInsert(AVLTreeNode *root, char *key, int value)
+AVLTreeNode *avlTreeInsert(AVLTreeNode *root, int value)
 {
-    if (!key || *key == 0)
-        return root;
-
     if (!root)
-        return createAVLTreeNode(key, value);
+        return createAVLTreeNode(value);
 
-    int comparison = strcmp(key, root->key);
     comp++;
-    if (comparison < 0)
-        root->left = avlTreeInsert(root->left, key, value);
-    else if (comparison > 0)
-        root->right = avlTreeInsert(root->right, key, value);
+    if (value < root->value)
+        root->left = avlTreeInsert(root->left, value);
+    else if (value > root->value)
+        root->right = avlTreeInsert(root->right, value);
     else
         return root;
 
@@ -122,16 +117,15 @@ static AVLTreeNode *treeGetSmallest(AVLTreeNode *root)
     return root;
 }
 
-AVLTreeNode *avlTreeRemove(AVLTreeNode *root, char *key)
+AVLTreeNode *avlTreeRemove(AVLTreeNode *root, int value)
 {
     if (!root)
         return root;
 
-    int comparison = strcmp(key, root->key);
-    if (comparison < 0)
-        root->left = avlTreeRemove(root->left, key);
-    else if (comparison > 0)
-        root->right = avlTreeRemove(root->right, key);
+    if (value < root->value)
+        root->left = avlTreeRemove(root->left, value);
+    else if (value > root->value)
+        root->right = avlTreeRemove(root->right, value);
     else
     {
         if (!root->left)
@@ -149,9 +143,8 @@ AVLTreeNode *avlTreeRemove(AVLTreeNode *root, char *key)
         }
 
         AVLTreeNode *successor = treeGetSmallest(root->right);
-        root->key = successor->key;
         root->value = successor->value;
-        root->right = avlTreeRemove(root->right, successor->key);
+        root->right = avlTreeRemove(root->right, successor->value);
     }
     if (!root)
         return root;
@@ -159,9 +152,9 @@ AVLTreeNode *avlTreeRemove(AVLTreeNode *root, char *key)
     return avlTreeBalance(root);
 }
 
-AVLTreeNode *avlTreeFind(AVLTreeNode *root, char *key)
+AVLTreeNode *avlTreeFind(AVLTreeNode *root, int value)
 {
-    return (AVLTreeNode *)treeFind((TreeNode *)root, key);
+    return (AVLTreeNode *)treeFind((TreeNode *)root, value);
 }
 
 void avlTreeFree(AVLTreeNode **root)

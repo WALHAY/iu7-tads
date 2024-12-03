@@ -9,14 +9,8 @@
 
 typedef struct
 {
-    const char *key;
-    int value;
-} MapEntry;
-
-typedef struct
-{
     size_t size;
-    const MapEntry **data;
+    int *data;
 } HashMap;
 
 int getCompAmountHash(void);
@@ -25,9 +19,9 @@ void clearCompHash(void);
 
 HashMap *createHashMap(size_t size);
 
-void hashMapInsert(HashMap *map, const char *key, int value);
+void hashMapInsert(HashMap *map, int value);
 
-bool hashMapFind(HashMap *map, const char *key, int *value);
+bool hashMapFind(HashMap *map, int value);
 
 void printHashMap(HashMap *hashMap);
 

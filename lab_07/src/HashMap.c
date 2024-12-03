@@ -15,99 +15,67 @@ void clearCompHash(void)
     comp = 0;
 }
 
-static MapEntry *createMapEntry(const char *key, int value)
-{
-    MapEntry *entry = malloc(sizeof(MapEntry));
-    if (entry)
-    {
-        entry->key = strdup(key);
-        entry->value = value;
-    }
-    return entry;
-}
-
 HashMap *createHashMap(size_t size)
 {
     HashMap *map = malloc(sizeof(HashMap));
     if (map)
     {
         map->size = size;
-        map->data = calloc(size, sizeof(MapEntry *));
+        map->data = calloc(size, sizeof(int));
     }
     return map;
 }
 
-static size_t hashMapInsertEntry(HashMap *map, const MapEntry *entry)
+static size_t hashMapInsertValue(HashMap *map, int value)
 {
     comp++;
     size_t fails = 0;
 
-    hash_t hash = getStringHash(entry->key);
+    hash_t hash = getIntHash(value);
 
     size_t index = hash % map->size;
-    while (map->data && map->data[index + fails])
+    while (map->data[index + fails])
     {
-        const MapEntry *local = map->data[index + fails];
-        if (!strcmp(entry->key, local->key))
-            return 0;
-        fails++;
-        if (index + fails >= map->size && fails >= MAX_FAILS)
+        if (++fails + index > map->size || fails >= MAX_FAILS)
             return MAX_FAILS;
     }
 
-    map->data[index + fails] = entry;
+    map->data[index + fails] = value;
     return fails;
 }
 
 static void rebuildHashMap(HashMap *map)
 {
     size_t oldSize = map->size;
-    const MapEntry **oldEntries = map->data;
+    const int *oldData = map->data;
     map->size *= LOAD_FACTOR;
-    map->data = calloc(map->size, sizeof(MapEntry *));
+    map->data = calloc(map->size, sizeof(int));
 
     for (size_t i = 0; i < oldSize; ++i)
-    {
-        const MapEntry *entry = oldEntries[i];
-        if (entry)
-            hashMapInsertEntry(map, entry);
-    }
+        hashMapInsertValue(map, oldData[i]);
 }
 
-void hashMapInsert(HashMap *map, const char *key, int value)
+void hashMapInsert(HashMap *map, int value)
 {
-    if (hashMapInsertEntry(map, createMapEntry(key, value)) >= MAX_FAILS)
+    if (hashMapInsertValue(map, value) >= MAX_FAILS)
         rebuildHashMap(map);
 }
 
-bool hashMapFind(HashMap *map, const char *key, int *value)
+bool hashMapFind(HashMap *map, int value)
 {
-    hash_t hash = getStringHash(key);
+    hash_t hash = getIntHash(value);
 
     size_t index = hash % map->size;
 
-    for (size_t offset = 0; offset < MAX_OFFSET && index + offset < map->size && map->data[index + offset]; ++offset)
-    {
-        if (!strcmp(map->data[index + offset]->key, key))
-        {
-            *value = map->data[index + offset]->value;
+    for (size_t offset = 0; offset < MAX_FAILS && index + offset < map->size; ++offset)
+        if (value == map->data[index + offset])
             return true;
-        }
-    }
 
     return false;
 }
 
-static void printMapEntry(const MapEntry *entry)
-{
-    if (entry)
-        printf("Hash: %llu\nKey: %s\nValue: %d\n\n", getStringHash(entry->key), entry->key, entry->value);
-}
-
 void printHashMap(HashMap *hashMap)
 {
-    for (size_t i = 0; i < hashMap->size; ++i)
-        printMapEntry(hashMap->data[i]);
 }
 
 void freeHashMap(HashMap **hashMap)
@@ -116,8 +84,6 @@ void freeHashMap(HashMap **hashMap)
     {
         for (size_t i = 0; i < (*hashMap)->size; ++i)
         {
-            const MapEntry *entry = (*hashMap)->data[i];
-            printMapEntry(entry);
         }
         *hashMap = NULL;
     }

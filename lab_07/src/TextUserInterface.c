@@ -101,9 +101,8 @@ static void executeLinkedHashMapOperation(LinkedHashMap **linkedHashMap)
             case ADD:
                 if (linkedHashMap && *linkedHashMap)
                 {
-                    char *key = inputString("key");
-                    int value = inputValue("value", false, false, 0, 0);
-                    linkedHashMapInsert(*linkedHashMap, key, value);
+                    int value = inputValue("value to insert", false, false, 0, 0);
+                    linkedHashMapInsert(*linkedHashMap, value);
                 }
                 else
                     printf("Error: Create hash map first!\n");
@@ -111,12 +110,10 @@ static void executeLinkedHashMapOperation(LinkedHashMap **linkedHashMap)
             case FIND:
                 if (linkedHashMap && *linkedHashMap)
                 {
-                    char *key = inputString("key to find");
-                    int value = 0;
-                    if (linkedHashMapFind(*linkedHashMap, key, &value))
-                        printf("Value: %d\n", value);
+                    if (linkedHashMapFind(*linkedHashMap, inputValue("value to find", 0, 0, 0, 0)))
+                        printf("Element found!\n");
                     else
-                        printf("Key not found!\n");
+                        printf("Element not found!\n");
                 }
                 break;
             case PRINT:
@@ -164,9 +161,8 @@ static void executeHashMapOperation(HashMap **hashMap)
             case ADD:
                 if (hashMap && *hashMap)
                 {
-                    char *key = inputString("key");
-                    int value = inputValue("value", false, false, 0, 0);
-                    hashMapInsert(*hashMap, key, value);
+                    int value = inputValue("value to insert", false, false, 0, 0);
+                    hashMapInsert(*hashMap, value);
                 }
                 else
                     printf("Error: Create hash map first!\n");
@@ -174,9 +170,8 @@ static void executeHashMapOperation(HashMap **hashMap)
             case FIND:
                 {
                     char *key = inputString("key to find");
-                    int value = 0;
-                    if (hashMapFind(*hashMap, key, &value))
-                        printf("Value: %d\n", value);
+                    if (hashMapFind(*hashMap, inputValue("value to find", 0, 0, 0, 0)))
+                        printf("Element found!\n");
                     else
                         printf("Key not found!\n");
                 }
@@ -219,27 +214,19 @@ static void executeBinaryTreeOperation(TreeNode **binTree)
                 treeFree(binTree);
                 break;
             case TADD:
-                {
-                    char *key = inputString("key");
-                    int value = inputValue("value", false, false, 0, 0);
-                    *binTree = treeInsert(*binTree, key, value);
-                }
+                *binTree = treeInsert(*binTree, inputValue("value to insert", false, false, 0, 0));
                 break;
             case TFIND:
                 {
-                    char *key = inputString("key to find");
-                    TreeNode *node = treeFind(*binTree, key);
+                    TreeNode *node = treeFind(*binTree, inputValue("value to find", 0, 0, 0, 0));
                     if (node)
-                        printf("Value: %d\n", node->value);
+                        printf("Element found!\n");
                     else
-                        printf("Key not found!\n");
+                        printf("Element not found!\n");
                 }
                 break;
             case TREMOVE:
-                {
-                    char *key = inputString("key to remove");
-                    *binTree = treeRemove(*binTree, key);
-                }
+                *binTree = treeRemove(*binTree, inputValue("value to remove", 0, 0, 0, 0));
                 break;
             case TDRAW:
                 drawGraph(*binTree, "binaryTree", true);
@@ -280,28 +267,19 @@ static void executeAvlTreeOperation(AVLTreeNode **avlTree)
                     avlTreeFree(avlTree);
                 break;
             case TADD:
-                {
-                    char *key = inputString("key");
-                    int value = inputValue("value", false, false, 0, 0);
-                    *avlTree = avlTreeInsert(*avlTree, key, value);
-                }
+                *avlTree = avlTreeInsert(*avlTree, inputValue("value to insert", false, false, 0, 0));
                 break;
             case TFIND:
                 {
-                    char *key = inputString("key to find");
-                    int value = 0;
-                    AVLTreeNode *node = avlTreeFind(*avlTree, key);
+                    AVLTreeNode *node = avlTreeFind(*avlTree, inputValue("value to find", 0, 0, 0, 0));
                     if (node)
-                        printf("Value: %d\n", node->value);
+                        printf("Element found!\n\n");
                     else
                         printf("Key not found!\n");
                 }
                 break;
             case TREMOVE:
-                {
-                    char *key = inputString("key to remove");
-                    *avlTree = avlTreeRemove(*avlTree, key);
-                }
+                *avlTree = avlTreeRemove(*avlTree, inputValue("value to remove", 0, 0, 0, 0));
                 break;
             case TDRAW:
                 drawGraph((TreeNode *)*avlTree, "avlTree", true);

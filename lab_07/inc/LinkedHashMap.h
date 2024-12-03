@@ -13,7 +13,6 @@ typedef struct HashMapNode HashMapNode;
 
 struct HashMapNode
 {
-    const char *key;
     int value;
     HashMapNode *next;
 };
@@ -30,9 +29,9 @@ void clearCompLinked(void);
 
 LinkedHashMap *createLinkedHashMap(size_t size);
 
-void linkedHashMapInsert(LinkedHashMap *hashMap, const char *key, int value);
+void linkedHashMapInsert(LinkedHashMap *hashMap, int value);
 
-bool linkedHashMapFind(LinkedHashMap *hashMap, const char *key, int *value);
+bool linkedHashMapFind(LinkedHashMap *hashMap, int value);
 
 void freeLinkedHashMap(LinkedHashMap **hashMap);
 

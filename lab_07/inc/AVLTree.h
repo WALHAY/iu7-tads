@@ -10,7 +10,6 @@ typedef struct AVLTreeNode AVLTreeNode;
 
 struct AVLTreeNode
 {
-    char *key;
     int value;
 
     AVLTreeNode *left;
@@ -23,11 +22,11 @@ int getCompAmountAvl(void);
 
 void clearCompAvl(void);
 
-AVLTreeNode *avlTreeInsert(AVLTreeNode *root, char *key, int value);
+AVLTreeNode *avlTreeInsert(AVLTreeNode *root, int value);
 
-AVLTreeNode *avlTreeRemove(AVLTreeNode *root, char *key);
+AVLTreeNode *avlTreeRemove(AVLTreeNode *root, int value);
 
-AVLTreeNode *avlTreeFind(AVLTreeNode *root, char *key);
+AVLTreeNode *avlTreeFind(AVLTreeNode *root, int value);
 
 AVLTreeNode *avlTreeBalance(AVLTreeNode *root);
 

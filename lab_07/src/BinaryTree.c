@@ -12,12 +12,11 @@ void clearComp(void)
     comp = 0;
 }
 
-static TreeNode *createTreeNode(char *key, int value)
+static TreeNode *createTreeNode(int value)
 {
     TreeNode *newTreeNode = malloc(sizeof(TreeNode));
     if (newTreeNode)
     {
-        newTreeNode->key = strdup(key);
         newTreeNode->value = value;
         newTreeNode->left = NULL;
         newTreeNode->right = NULL;
@@ -28,24 +27,19 @@ static TreeNode *createTreeNode(char *key, int value)
 static void freeNode(TreeNode *node)
 {
     if (node)
-    {
-        if (node->key)
-            free(node->key);
         free(node);
-    }
 }
 
-TreeNode *treeInsert(TreeNode *root, char *key, int value)
+TreeNode *treeInsert(TreeNode *root, int value)
 {
     if (!root)
-        return createTreeNode(key, value);
+        return createTreeNode(value);
 
-    int comparison = strcmp(key, root->key);
     comp++;
-    if (comparison < 0)
-        root->left = treeInsert(root->left, key, value);
-    else if (comparison > 0)
-        root->right = treeInsert(root->right, key, value);
+    if (value < root->value)
+        root->left = treeInsert(root->left, value);
+    else if (value > root->value)
+        root->right = treeInsert(root->right, value);
 
     return root;
 }
@@ -57,16 +51,15 @@ static TreeNode *treeGetSmallest(TreeNode *root)
     return root;
 }
 
-TreeNode *treeRemove(TreeNode *root, char *key)
+TreeNode *treeRemove(TreeNode *root, int value)
 {
     if (!root)
         return root;
 
-    int comparison = strcmp(key, root->key);
-    if (comparison < 0)
-        root->left = treeRemove(root->left, key);
-    else if (comparison > 0)
-        root->right = treeRemove(root->right, key);
+    if (value < root->value)
+        root->left = treeRemove(root->left, value);
+    else if (value > root->value)
+        root->right = treeRemove(root->right, value);
     else
     {
         if (!root->left)
@@ -84,24 +77,23 @@ TreeNode *treeRemove(TreeNode *root, char *key)
         }
 
         TreeNode *successor = treeGetSmallest(root->right);
-        root->key = successor->key;
         root->value = successor->value;
-        root->right = treeRemove(root->right, successor->key);
+        root->right = treeRemove(root->right, successor->value);
     }
     return root;
 }
 
-TreeNode *treeFind(TreeNode *root, char *key)
+TreeNode *treeFind(TreeNode *root, int value)
 {
     if (!root)
         return NULL;
 
-    if (!strcmp(key, root->key))
+    if (value == root->value)
         return root;
-    else if (strcmp(key, root->key) < 0)
-        return treeFind(root->left, key);
+    else if (value < root->value)
+        return treeFind(root->left, value);
     else
-        return treeFind(root->right, key);
+        return treeFind(root->right, value);
 
     return NULL;
 }
