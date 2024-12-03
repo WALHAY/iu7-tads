@@ -3,16 +3,16 @@
 
 #define MAX_OFFSET 5
 
-static int coll = 0;
+static int comp = 0;
 
-int getCollAmount(void)
+int getCompAmountHash(void)
 {
-    return coll;
+    return comp;
 }
 
-void clearColl(void)
+void clearCompHash(void)
 {
-    coll = 0;
+    comp = 0;
 }
 
 static MapEntry *createMapEntry(const char *key, int value)
@@ -39,12 +39,13 @@ HashMap *createHashMap(size_t size)
 
 static size_t hashMapInsertEntry(HashMap *map, const MapEntry *entry)
 {
+    comp++;
     size_t fails = 0;
 
     hash_t hash = getStringHash(entry->key);
 
     size_t index = hash % map->size;
-    while (map->data[index + fails] != NULL)
+    while (map->data[index + fails])
     {
         const MapEntry *local = map->data[index + fails];
         if (!strcmp(entry->key, local->key))
@@ -55,7 +56,6 @@ static size_t hashMapInsertEntry(HashMap *map, const MapEntry *entry)
     }
 
     map->data[index + fails] = entry;
-    coll += fails;
     return fails;
 }
 

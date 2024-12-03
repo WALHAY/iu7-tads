@@ -24,9 +24,9 @@ typedef struct
     HashMapNode **data;
 } LinkedHashMap;
 
-int getCollAmountLinked(void);
+int getCompAmountLinked(void);
 
-void clearCollLinked(void);
+void clearCompLinked(void);
 
 LinkedHashMap *createLinkedHashMap(size_t size);
 

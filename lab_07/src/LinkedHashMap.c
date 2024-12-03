@@ -1,16 +1,16 @@
 #include "../inc/LinkedHashMap.h"
 #include <stdio.h>
 
-static int coll = 0;
+static int comp = 0;
 
-int getCollAmountLinked(void)
+int getCompAmountLinked(void)
 {
-    return coll;
+    return comp;
 }
 
-void clearCollLinked(void)
+void clearCompLinked(void)
 {
-    coll = 0;
+    comp = 0;
 }
 
 static HashMapNode *createHashMapNode(const char *key, int value)
@@ -48,7 +48,6 @@ static size_t listInsert(HashMapNode **head_ptr, HashMapNode *node)
     HashMapNode *head = *head_ptr;
     while (head && head->next)
     {
-        coll++;
         head = head->next;
         size++;
     }
@@ -69,6 +68,7 @@ static HashMapNode *listFind(HashMapNode *head, const char *key)
 
 static size_t linkedHashMapInsertNode(LinkedHashMap *hashMap, HashMapNode *node)
 {
+    comp++;
     hash_t keyHash = getStringHash(node->key);
     size_t index = keyHash % hashMap->size;
     return listInsert(&hashMap->data[index], node);

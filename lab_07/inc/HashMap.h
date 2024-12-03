@@ -19,9 +19,9 @@ typedef struct
     const MapEntry **data;
 } HashMap;
 
-int getCollAmount(void);
+int getCompAmountHash(void);
 
-void clearColl(void);
+void clearCompHash(void);
 
 HashMap *createHashMap(size_t size);
 
