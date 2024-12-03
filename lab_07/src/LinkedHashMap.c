@@ -145,7 +145,7 @@ void freeLinkedHashMap(LinkedHashMap **hashMap)
 static void printNode(HashMapNode *node)
 {
     if (node)
-        printf("Hash: %llu\nKey: %s\nValue: %d\n", getStringHash(node->key), node->key, node->value);
+        printf("Hash: %llu\nKey: %s\nValue: %d\n\n", getStringHash(node->key), node->key, node->value);
 }
 
 void printLinkedHashMap(LinkedHashMap *hashMap)

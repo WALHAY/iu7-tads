@@ -23,6 +23,7 @@ typedef enum
 
 typedef enum
 {
+    FROM_FILE,
     NEW,
     ADD,
     FIND,
@@ -32,6 +33,7 @@ typedef enum
 
 typedef enum
 {
+    TFROM_FILE,
     TNEW,
     TADD,
     TFIND,

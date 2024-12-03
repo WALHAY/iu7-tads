@@ -4,6 +4,7 @@
 #include "BinaryTree.h"
 #include "Comparison.h"
 #include "Defines.h"
+#include "FileIO.h"
 #include "GraphvizIntegration.h"
 #include "HashMap.h"
 #include "LinkedHashMap.h"

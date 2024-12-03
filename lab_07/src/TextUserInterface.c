@@ -71,11 +71,25 @@ static void executeLinkedHashMapOperation(LinkedHashMap **linkedHashMap)
     bool exit = false;
     while (!exit)
     {
-        char *opts[] = {"New Open Hash Map", "Add Element", "Find Element", "Print Elements", "Back"};
-        HASHMAP_OPS option = inputEnum(5, opts);
+        char *opts[] = {"Import from file", "New Open Hash Map", "Add Element",
+                        "Find Element",     "Print Elements",    "Back"};
+        HASHMAP_OPS option = inputEnum(6, opts);
         printf("Open Hash Map: %s\n", opts[option]);
         switch (option)
         {
+            case FROM_FILE:
+                if (linkedHashMap)
+                {
+                    if (*linkedHashMap)
+                        freeLinkedHashMap(linkedHashMap);
+
+                    FILE *file = openFile(inputString("file to import"), "r");
+                    if (file)
+                        *linkedHashMap = linkedHashMapFromFile(file);
+                    else
+                        printf("Error: Failed to open file!\n");
+                }
+                break;
             case NEW:
                 if (linkedHashMap)
                 {
@@ -120,11 +134,25 @@ static void executeHashMapOperation(HashMap **hashMap)
     bool exit = false;
     while (!exit)
     {
-        char *opts[] = {"New Closed Hash Map", "Add Element", "Find Element", "Print Elements", "Back"};
-        HASHMAP_OPS option = inputEnum(5, opts);
+        char *opts[] = {"Import from file", "New Closed Hash Map", "Add Element",
+                        "Find Element",     "Print Elements",      "Back"};
+        HASHMAP_OPS option = inputEnum(6, opts);
         printf("Closed Hash Map: %s\n", opts[option]);
         switch (option)
         {
+            case FROM_FILE:
+                if (hashMap)
+                {
+                    if (*hashMap)
+                        freeHashMap(hashMap);
+
+                    FILE *file = openFile(inputString("file to import"), "r");
+                    if (file)
+                        *hashMap = hashMapFromFile(file);
+                    else
+                        printf("Error: Failed to open file!\n");
+                }
+                break;
             case NEW:
                 if (hashMap)
                 {
@@ -168,11 +196,25 @@ static void executeBinaryTreeOperation(TreeNode **binTree)
     bool exit = false;
     while (!exit)
     {
-        char *opts[] = {"New Binary Tree", "Add Element", "Find Element", "Remove Element", "Draw Tree", "Back"};
-        TREE_OPS option = inputEnum(6, opts);
+        char *opts[] = {"Import from file", "New Binary Tree", "Add Element", "Find Element",
+                        "Remove Element",   "Draw Tree",       "Back"};
+        TREE_OPS option = inputEnum(7, opts);
         printf("Binary Tree: %s\n", opts[option]);
         switch (option)
         {
+            case TFROM_FILE:
+                if (binTree)
+                {
+                    if (*binTree)
+                        treeFree(binTree);
+
+                    FILE *file = openFile(inputString("file to import"), "r");
+                    if (file)
+                        *binTree = binaryTreeFromFile(file);
+                    else
+                        printf("Error: Failed to open file!\n");
+                }
+                break;
             case TNEW:
                 treeFree(binTree);
                 break;
@@ -214,11 +256,25 @@ static void executeAvlTreeOperation(AVLTreeNode **avlTree)
     bool exit = false;
     while (!exit)
     {
-        char *opts[] = {"New AVL Tree", "Add Element", "Find Element", "Remove Element", "Draw Tree", "Back"};
-        TREE_OPS option = inputEnum(6, opts);
+        char *opts[] = {"Import from file", "New AVL Tree", "Add Element", "Find Element",
+                        "Remove Element",   "Draw Tree",    "Back"};
+        TREE_OPS option = inputEnum(7, opts);
         printf("AVL Tree: %s\n", opts[option]);
         switch (option)
         {
+            case TFROM_FILE:
+                if (avlTree)
+                {
+                    if (*avlTree)
+                        avlTreeFree(avlTree);
+
+                    FILE *file = openFile(inputString("file to import"), "r");
+                    if (file)
+                        *avlTree = avlTreeFromFile(file);
+                    else
+                        printf("Error: Failed to open file!\n");
+                }
+                break;
             case TNEW:
                 if (avlTree && *avlTree)
                     avlTreeFree(avlTree);

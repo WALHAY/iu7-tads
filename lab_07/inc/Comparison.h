@@ -2,6 +2,7 @@
 
 #include "AVLTree.h"
 #include "BinaryTree.h"
+#include "Defines.h"
 #include "GraphvizIntegration.h"
 #include "HashMap.h"
 #include "LinkedHashMap.h"

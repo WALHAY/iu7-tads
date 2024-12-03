@@ -101,7 +101,7 @@ bool hashMapFind(HashMap *map, const char *key, int *value)
 static void printMapEntry(const MapEntry *entry)
 {
     if (entry)
-        printf("Hash: %llu\nKey: %s\nValue: %d\n", getStringHash(entry->key), entry->key, entry->value);
+        printf("Hash: %llu\nKey: %s\nValue: %d\n\n", getStringHash(entry->key), entry->key, entry->value);
 }
 
 void printHashMap(HashMap *hashMap)
@@ -122,4 +122,3 @@ void freeHashMap(HashMap **hashMap)
         *hashMap = NULL;
     }
 }
-

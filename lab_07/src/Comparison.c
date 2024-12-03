@@ -1,5 +1,4 @@
 #include "../inc/Comparison.h"
-#include "../inc/Defines.h"
 
 static char *randomString(int value)
 {
@@ -125,7 +124,7 @@ void getOpenHashMapData(size_t size)
     Pair pairs[size];
     generatePairs(size, pairs);
 
-    LinkedHashMap *linkedHashMap = createLinkedHashMap(size);
+    LinkedHashMap *linkedHashMap = createLinkedHashMap(INITIAL_SIZE);
 
     size_t avg_insert = 0;
     size_t avg_collisions = 0;
@@ -167,7 +166,7 @@ void getClosedHashMapData(size_t size)
     Pair pairs[size];
     generatePairs(size, pairs);
 
-    HashMap *hashMap = createHashMap(size);
+    HashMap *hashMap = createHashMap(INITIAL_SIZE);
 
     size_t avg_insert = 0;
     size_t avg_collisions = 0;

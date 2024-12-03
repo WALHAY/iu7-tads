@@ -8,9 +8,7 @@ static void addSingleNode(TreeNode *from, TreeNode *to, FILE *stream)
         fprintf(stream, "null%zu [shape=point];\n", nullIndex);
     fprintf(stream, "%s -> ", from->key);
     if (to)
-    {
         fprintf(stream, "%s;\n", to->key);
-    }
     else
         fprintf(stream, "null%zu;\n", nullIndex++);
 }

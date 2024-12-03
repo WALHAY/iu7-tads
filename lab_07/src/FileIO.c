@@ -17,18 +17,14 @@ void closeFile(FILE **file)
 LinkedHashMap *linkedHashMapFromFile(FILE *file)
 {
     LinkedHashMap *linkedHashMap = createLinkedHashMap(INITIAL_SIZE);
-    char *str = NULL;
-    size_t size = 0;
     size_t n = 50;
     size_t index = 0;
-    while (!feof(file) && getline(&str, &size, stdin) != -1)
+    int value = 0;
+    while (fscanf(file, "%d", &value) == 1)
     {
         char index_str[n];
         snprintf(index_str, n, "%zu", index++);
-        int value = atoi(str);
         linkedHashMapInsert(linkedHashMap, index_str, value);
-        if (str)
-            free(str);
     }
     return linkedHashMap;
 }
@@ -37,18 +33,14 @@ HashMap *hashMapFromFile(FILE *file)
 {
 
     HashMap *hashMap = createHashMap(INITIAL_SIZE);
-    char *str = NULL;
-    size_t size = 0;
     size_t n = 50;
     size_t index = 0;
-    while (!feof(file) && getline(&str, &size, stdin) != -1)
+    int value = 0;
+    while (fscanf(file, "%d", &value) == 1)
     {
         char index_str[n];
         snprintf(index_str, n, "%zu", index++);
-        int value = atoi(str);
-        hashMapInsert(hashMap, str, value);
-        if (str)
-            free(str);
+        hashMapInsert(hashMap, index_str, value);
     }
     return hashMap;
 }
@@ -56,18 +48,14 @@ HashMap *hashMapFromFile(FILE *file)
 AVLTreeNode *avlTreeFromFile(FILE *file)
 {
     AVLTreeNode *avlTree = NULL;
-    char *str = NULL;
-    size_t size = 0;
     size_t n = 50;
     size_t index = 0;
-    while (!feof(file) && getline(&str, &size, stdin) != -1)
+    int value = 0;
+    while (fscanf(file, "%d", &value) == 1)
     {
         char index_str[n];
         snprintf(index_str, n, "%zu", index++);
-        int value = atoi(str);
-        avlTree = avlTreeInsert(avlTree, str, value);
-        if (str)
-            free(str);
+        avlTree = avlTreeInsert(avlTree, index_str, value);
     }
     return avlTree;
 }
@@ -75,18 +63,14 @@ AVLTreeNode *avlTreeFromFile(FILE *file)
 TreeNode *binaryTreeFromFile(FILE *file)
 {
     TreeNode *node = NULL;
-    char *str = NULL;
-    size_t size = 0;
     size_t n = 50;
     size_t index = 0;
-    while (!feof(file) && getline(&str, &size, stdin) != -1)
+    int value = 0;
+    while (fscanf(file, "%d", &value) == 1)
     {
         char index_str[n];
         snprintf(index_str, n, "%zu", index++);
-        int value = atoi(str);
-        node = treeInsert(node, str, value);
-        if (str)
-            free(str);
+        node = treeInsert(node, index_str, value);
     }
     return node;
 }
