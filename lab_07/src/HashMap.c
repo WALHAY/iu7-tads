@@ -72,7 +72,7 @@ bool hashMapFind(HashMap *map, const char *key, int *value)
 
     size_t index = hash % map->size;
 
-    for (size_t offset = 0; offset < MAX_OFFSET && index + offset < map->size; ++offset)
+    for (size_t offset = 0; offset < MAX_OFFSET && index + offset < map->size && map->data[index + offset]; ++offset)
     {
         if (!strcmp(map->data[index + offset]->key, key))
         {
