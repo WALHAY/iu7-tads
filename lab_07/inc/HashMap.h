@@ -9,8 +9,14 @@
 
 typedef struct
 {
+    int value;
+    bool used;
+} Pair;
+
+typedef struct
+{
     size_t size;
-    int *data;
+    Pair *data;
 } HashMap;
 
 int getCompAmountHash(void);
