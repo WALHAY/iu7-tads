@@ -24,7 +24,7 @@ typedef struct
 
 static void generatePairs(size_t size, Pair *pairs)
 {
-    srand(time(NULL));
+    srand(rand());
     for (size_t i = 0; i < size; ++i)
     {
         int value = rand();
@@ -125,7 +125,7 @@ void getOpenHashMapData(size_t size)
     Pair pairs[size];
     generatePairs(size, pairs);
 
-    LinkedHashMap *linkedHashMap = createLinkedHashMap(INITIAL_SIZE);
+    LinkedHashMap *linkedHashMap = createLinkedHashMap(size);
 
     size_t avg_insert = 0;
     size_t avg_collisions = 0;
@@ -167,7 +167,7 @@ void getClosedHashMapData(size_t size)
     Pair pairs[size];
     generatePairs(size, pairs);
 
-    HashMap *hashMap = createHashMap(INITIAL_SIZE);
+    HashMap *hashMap = createHashMap(size);
 
     size_t avg_insert = 0;
     size_t avg_collisions = 0;
