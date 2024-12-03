@@ -48,6 +48,7 @@ static size_t listInsert(HashMapNode **head_ptr, HashMapNode *node)
     HashMapNode *head = *head_ptr;
     while (head && head->next)
     {
+        coll++;
         head = head->next;
         size++;
     }

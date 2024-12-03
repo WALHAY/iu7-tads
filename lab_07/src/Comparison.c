@@ -73,7 +73,7 @@ void getBinTreeData(size_t size)
     avg_find /= size;
     avg_comp /= size;
 
-    printf("%zu\t%zu\t%zu\t%zu\t%zu\n", size, mem, avg_insert, avg_find, avg_comp);
+    printf("%zu\t%zu\t%zu\t%zu\t%zu\t-\n", size, mem, avg_insert, avg_find, avg_comp);
 }
 
 void getAvlTreeData(size_t size)
@@ -115,7 +115,7 @@ void getAvlTreeData(size_t size)
     avg_find /= size;
     avg_comp /= size;
 
-    printf("%zu\t%zu\t%zu\t%zu\t%zu\n", size, mem, avg_insert, avg_find, avg_comp);
+    printf("%zu\t%zu\t%zu\t%zu\t%zu\t-\n", size, mem, avg_insert, avg_find, avg_comp);
 }
 
 void getOpenHashMapData(size_t size)
@@ -128,15 +128,17 @@ void getOpenHashMapData(size_t size)
     LinkedHashMap *linkedHashMap = createLinkedHashMap(INITIAL_SIZE);
 
     size_t avg_insert = 0;
+    size_t avg_collisions = 0;
     for (size_t i = 0; i < size; ++i)
     {
-
+        clearCollLinked();
         char *key = pairs[i].key;
         int value = pairs[i].value;
         clock_gettime(CLOCK_MONOTONIC_RAW, &t1);
         linkedHashMapInsert(linkedHashMap, key, value);
         clock_gettime(CLOCK_MONOTONIC_RAW, &t2);
         avg_insert += difftime(t2.tv_sec, t1.tv_sec) * 1e9 + difftime(t2.tv_nsec, t1.tv_nsec);
+        avg_collisions += getCollAmountLinked();
     }
     avg_insert /= size;
 
@@ -151,10 +153,11 @@ void getOpenHashMapData(size_t size)
         avg_find += difftime(t2.tv_sec, t1.tv_sec) * 1e9 + difftime(t2.tv_nsec, t1.tv_nsec);
     }
     avg_find /= size;
+    avg_collisions /= 1;
 
     size_t mem = sizeof(LinkedHashMap) + sizeof(HashMapNode) * size;
 
-    printf("%zu\t%zu\t%zu\t%zu\t%zu\n", size, mem, avg_insert, avg_find, 0UL);
+    printf("%zu\t%zu\t%zu\t%zu\t-\t%zu\n", size, mem, avg_insert, avg_find, avg_collisions);
 }
 
 void getClosedHashMapData(size_t size)
@@ -167,22 +170,23 @@ void getClosedHashMapData(size_t size)
     HashMap *hashMap = createHashMap(INITIAL_SIZE);
 
     size_t avg_insert = 0;
+    size_t avg_collisions = 0;
     for (size_t i = 0; i < size; ++i)
     {
-
+        clearColl();
         char *key = pairs[i].key;
         int value = pairs[i].value;
         clock_gettime(CLOCK_MONOTONIC_RAW, &t1);
         hashMapInsert(hashMap, key, value);
         clock_gettime(CLOCK_MONOTONIC_RAW, &t2);
         avg_insert += difftime(t2.tv_sec, t1.tv_sec) * 1e9 + difftime(t2.tv_nsec, t1.tv_nsec);
+        avg_collisions += getCollAmount();
     }
     avg_insert /= size;
 
     size_t avg_find = 0;
     for (size_t i = 0; i < size; ++i)
     {
-
         char *key = pairs[i].key;
         int value = 0;
         clock_gettime(CLOCK_MONOTONIC_RAW, &t1);
@@ -191,16 +195,17 @@ void getClosedHashMapData(size_t size)
         avg_find += difftime(t2.tv_sec, t1.tv_sec) * 1e9 + difftime(t2.tv_nsec, t1.tv_nsec);
     }
     avg_find /= size;
+    avg_collisions /= 1;
 
     size_t mem = sizeof(HashMap) + sizeof(MapEntry) * hashMap->size;
 
-    printf("%zu\t%zu\t%zu\t%zu\t%zu\n", size, mem, avg_insert, avg_find, 0UL);
+    printf("%zu\t%zu\t%zu\t%zu\t-\t%zu\n", size, mem, avg_insert, avg_find, avg_collisions);
 }
 
 void compareTaDS(void)
 {
     size_t n = 500;
-    printf("Type\t\tSize\tMemory\tInsert\tFind\tComparisons\n");
+    printf("Type\t\tSize\tMemory\tInsert\tFind\tComp\tColl\n");
     printf("Bin Tree\t");
     getBinTreeData(n);
     printf("AVL Tree\t");
@@ -210,7 +215,7 @@ void compareTaDS(void)
     printf("Closed Hash Map\t");
     getClosedHashMapData(n);
     n = 5000;
-    printf("\n\nType\t\tSize\tMemory\tInsert\tFind\tComparisons\n");
+    printf("\n\nType\t\tSize\tMemory\tInsert\tFind\tComp\tColl\n");
     printf("Bin Tree\t");
     getBinTreeData(n);
     printf("AVL Tree\t");
