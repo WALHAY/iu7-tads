@@ -24,6 +24,7 @@ typedef struct
 
 static void generatePairs(size_t size, Pair *pairs)
 {
+    srand(time(NULL));
     for (size_t i = 0; i < size; ++i)
     {
         int value = rand();
@@ -145,7 +146,7 @@ void getOpenHashMapData(size_t size)
     }
     avg_find /= size;
 
-    size_t mem = sizeof(HashMap) + sizeof(MapEntry) * linkedHashMap->size;
+    size_t mem = sizeof(LinkedHashMap) + sizeof(HashMapNode) * size;
 
     printf("%zu\t%zu\t%zu\t%zu\t%zu\n", size, mem, avg_insert, avg_find, 0UL);
 }
