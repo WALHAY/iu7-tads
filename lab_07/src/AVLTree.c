@@ -100,16 +100,12 @@ AVLTreeNode *avlTreeInsert(AVLTreeNode *root, char *key, int value)
     if (!root)
         return createAVLTreeNode(key, value);
 
-    if (strcmp(key, root->key) < 0)
-    {
-        comp++;
+    int comparison = strcmp(key, root->key);
+    comp++;
+    if (comparison < 0)
         root->left = avlTreeInsert(root->left, key, value);
-    }
-    else if (strcmp(key, root->key) > 0)
-    {
-        comp += 2;
+    else if (comparison > 0)
         root->right = avlTreeInsert(root->right, key, value);
-    }
     else
         return root;
 
@@ -131,9 +127,10 @@ AVLTreeNode *avlTreeRemove(AVLTreeNode *root, char *key)
     if (!root)
         return root;
 
-    if (strcmp(key, root->key) < 0)
+    int comparison = strcmp(key, root->key);
+    if (comparison < 0)
         root->left = avlTreeRemove(root->left, key);
-    else if (strcmp(key, root->key) > 0)
+    else if (comparison > 0)
         root->right = avlTreeRemove(root->right, key);
     else
     {
@@ -152,9 +149,12 @@ AVLTreeNode *avlTreeRemove(AVLTreeNode *root, char *key)
         }
 
         AVLTreeNode *successor = treeGetSmallest(root->right);
+        root->key = successor->key;
         root->value = successor->value;
         root->right = avlTreeRemove(root->right, successor->key);
     }
+    if (!root)
+        return root;
 
     return avlTreeBalance(root);
 }

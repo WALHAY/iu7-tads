@@ -40,16 +40,12 @@ TreeNode *treeInsert(TreeNode *root, char *key, int value)
     if (!root)
         return createTreeNode(key, value);
 
-    if (strcmp(key, root->key) < 0)
-    {
-        comp += 1;
+    int comparison = strcmp(key, root->key);
+    comp++;
+    if (comparison < 0)
         root->left = treeInsert(root->left, key, value);
-    }
-    else if (strcmp(key, root->key) > 0)
-    {
-        comp += 2;
+    else if (comparison > 0)
         root->right = treeInsert(root->right, key, value);
-    }
 
     return root;
 }
@@ -66,9 +62,10 @@ TreeNode *treeRemove(TreeNode *root, char *key)
     if (!root)
         return root;
 
-    if (strcmp(key, root->key) < 0)
+    int comparison = strcmp(key, root->key);
+    if (comparison < 0)
         root->left = treeRemove(root->left, key);
-    else if (strcmp(key, root->key) > 0)
+    else if (comparison > 0)
         root->right = treeRemove(root->right, key);
     else
     {
@@ -87,6 +84,7 @@ TreeNode *treeRemove(TreeNode *root, char *key)
         }
 
         TreeNode *successor = treeGetSmallest(root->right);
+        root->key = successor->key;
         root->value = successor->value;
         root->right = treeRemove(root->right, successor->key);
     }
