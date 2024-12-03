@@ -1,7 +1,5 @@
 #include "../inc/TextUserInterface.h"
 
-static size_t graphIndex = 0;
-
 static int safeIntInput(int *value)
 {
     char temp[20];
@@ -65,7 +63,7 @@ char *inputString(char *title)
 
 char *getErrorMessage(int rc)
 {
-    return "Error: No Error?";
+    return rc ? "Error: Unknown Error" : "";
 }
 
 static void executeLinkedHashMapOperation(LinkedHashMap **linkedHashMap)
@@ -277,6 +275,9 @@ int executeOperation(HashMap **hashMap, LinkedHashMap **linkedHashMap, AVLTreeNo
             break;
         case BIN_TREE:
             executeBinaryTreeOperation(node);
+            break;
+        case COMPARISON:
+            compareTaDS(stdout);
             break;
         case EXIT:
         default:

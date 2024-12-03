@@ -16,7 +16,7 @@ struct AVLTreeNode
     AVLTreeNode *left;
     AVLTreeNode *right;
 
-    ssize_t height;
+    int height;
 };
 
 AVLTreeNode *avlTreeInsert(AVLTreeNode *root, char *key, int value);

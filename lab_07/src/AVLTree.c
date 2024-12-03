@@ -22,69 +22,69 @@ static void freeNode(AVLTreeNode *node)
         free(node);
 }
 
-static inline ssize_t getHeight(const AVLTreeNode *node)
+static inline int getHeight(const AVLTreeNode *node)
 {
     return node ? node->height : 0;
 }
 
-static ssize_t getBalanceFactor(const AVLTreeNode *node)
+static int getBalanceFactor(const AVLTreeNode *node)
 {
-    return node ? getHeight(node->left) - getHeight(node->right) : 0;
+    return node ? getHeight(node->right) - getHeight(node->left) : 0;
 }
 
 static void recalculateHeight(AVLTreeNode *node)
 {
     if (node)
-        node->height = MAX(getHeight(node->left), getHeight(node->right)) + 1;
+        node->height = MAX(getHeight(node->right), getHeight(node->left)) + 1;
 }
 
 static AVLTreeNode *treeRotateRight(AVLTreeNode *node)
-{
-    AVLTreeNode *temp = node->right;
-    node->right = temp->left;
-    temp->left = node;
-    recalculateHeight(node);
-    temp->height = MAX(getHeight(temp->right), getHeight(node)) + 1;
-    return temp;
-}
-
-static AVLTreeNode *treeRotateLeft(AVLTreeNode *node)
 {
     AVLTreeNode *temp = node->left;
     node->left = temp->right;
     temp->right = node;
     recalculateHeight(node);
-    temp->height = MAX(getHeight(temp->left), getHeight(node)) + 1;
+    recalculateHeight(temp);
+    return temp;
+}
+
+static AVLTreeNode *treeRotateLeft(AVLTreeNode *node)
+{
+    AVLTreeNode *temp = node->right;
+    node->right = temp->left;
+    temp->left = node;
+    recalculateHeight(node);
+    recalculateHeight(temp);
     return temp;
 }
 
 AVLTreeNode *avlTreeBalance(AVLTreeNode *node)
 {
-    ssize_t bf = getBalanceFactor(node);
-    int key = node->value;
-
-    if (bf > 1 && key < node->left->value)
-        return treeRotateRight(node);
-
-    if (bf < -1 && key > node->right->value)
-        return treeRotateLeft(node);
-
-    if (bf > 1 && key > node->left->value)
+    recalculateHeight(node);
+    if (getBalanceFactor(node) >= 2)
     {
-        node->left = treeRotateLeft(node->left);
+        if (getBalanceFactor(node->right) < 0)
+            node->right = treeRotateRight(node->right);
+
         return treeRotateLeft(node);
     }
 
-    if (bf < -1 && key < node->right->value)
+    if (getBalanceFactor(node) <= -2)
     {
-        node->right = treeRotateRight(node->right);
+        if (getBalanceFactor(node->left) > 0)
+            node->left = treeRotateLeft(node->left);
+
         return treeRotateRight(node);
     }
+
     return node;
 }
 
 AVLTreeNode *avlTreeInsert(AVLTreeNode *root, char *key, int value)
 {
+    if (!key || *key == 0)
+        return root;
+
     if (!root)
         return createAVLTreeNode(key, value);
 
@@ -92,6 +92,11 @@ AVLTreeNode *avlTreeInsert(AVLTreeNode *root, char *key, int value)
         root->left = avlTreeInsert(root->left, key, value);
     else if (value > root->value)
         root->right = avlTreeInsert(root->right, key, value);
+    else
+        return root;
+
+    if (!root)
+        return root;
 
     recalculateHeight(root);
     return avlTreeBalance(root);
