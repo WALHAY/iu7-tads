@@ -39,6 +39,7 @@ static size_t listInsert(HashMapNode **head_ptr, HashMapNode *node)
 {
     if (!*head_ptr)
     {
+        comp++;
         *head_ptr = node;
         return 1;
     }
@@ -50,6 +51,7 @@ static size_t listInsert(HashMapNode **head_ptr, HashMapNode *node)
         head = head->next;
         size++;
     }
+    comp += size;
     head->next = node;
     return size;
 }
@@ -67,7 +69,6 @@ static HashMapNode *listFind(HashMapNode *head, int value)
 
 static size_t linkedHashMapInsertNode(LinkedHashMap *hashMap, HashMapNode *node)
 {
-    comp++;
     hash_t keyHash = getIntHash(node->value);
     size_t index = keyHash % hashMap->size;
     return listInsert(&hashMap->data[index], node);
