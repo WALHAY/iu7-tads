@@ -1,5 +1,7 @@
 #include "../inc/TextUserInterface.h"
 
+static char *findResult[2] = {"Not Found", "Found"};
+
 static int safeIntInput(int *value)
 {
     char temp[20];
@@ -66,251 +68,68 @@ char *getErrorMessage(int rc)
     return rc ? "Error: Unknown Error" : "";
 }
 
-static void executeLinkedHashMapOperation(LinkedHashMap **linkedHashMap)
-{
-    bool exit = false;
-    while (!exit)
-    {
-        char *opts[] = {"Import from file", "New Open Hash Map", "Add Element",
-                        "Find Element",     "Print Elements",    "Back"};
-        HASHMAP_OPS option = inputEnum(6, opts);
-        printf("Open Hash Map: %s\n", opts[option]);
-        switch (option)
-        {
-            case FROM_FILE:
-                if (linkedHashMap)
-                {
-                    if (*linkedHashMap)
-                        freeLinkedHashMap(linkedHashMap);
-
-                    FILE *file = openFile(inputString("file to import"), "r");
-                    if (file)
-                        *linkedHashMap = linkedHashMapFromFile(file);
-                    else
-                        printf("Error: Failed to open file!\n");
-                }
-                break;
-            case NEW:
-                if (linkedHashMap)
-                {
-                    if (*linkedHashMap)
-                        freeLinkedHashMap(linkedHashMap);
-                    *linkedHashMap = createLinkedHashMap(INITIAL_SIZE);
-                }
-                break;
-            case ADD:
-                if (linkedHashMap && *linkedHashMap)
-                {
-                    int value = inputValue("value to insert", false, false, 0, 0);
-                    linkedHashMapInsert(*linkedHashMap, value);
-                }
-                else
-                    printf("Error: Create hash map first!\n");
-                break;
-            case FIND:
-                if (linkedHashMap && *linkedHashMap)
-                {
-                    if (linkedHashMapFind(*linkedHashMap, inputValue("value to find", 0, 0, 0, 0)))
-                        printf("Element found!\n");
-                    else
-                        printf("Element not found!\n");
-                }
-                break;
-            case PRINT:
-                printLinkedHashMap(*linkedHashMap);
-                break;
-            case MAP_BACK:
-            default:
-                exit = true;
-        }
-    }
-}
-
-static void executeHashMapOperation(HashMap **hashMap)
-{
-    bool exit = false;
-    while (!exit)
-    {
-        char *opts[] = {"Import from file", "New Closed Hash Map", "Add Element",
-                        "Find Element",     "Print Elements",      "Back"};
-        HASHMAP_OPS option = inputEnum(6, opts);
-        printf("Closed Hash Map: %s\n", opts[option]);
-        switch (option)
-        {
-            case FROM_FILE:
-                if (hashMap)
-                {
-                    if (*hashMap)
-                        freeHashMap(hashMap);
-
-                    FILE *file = openFile(inputString("file to import"), "r");
-                    if (file)
-                        *hashMap = hashMapFromFile(file);
-                    else
-                        printf("Error: Failed to open file!\n");
-                }
-                break;
-            case NEW:
-                if (hashMap)
-                {
-                    if (*hashMap)
-                        freeHashMap(hashMap);
-                    *hashMap = createHashMap(INITIAL_SIZE);
-                }
-                break;
-            case ADD:
-                if (hashMap && *hashMap)
-                {
-                    int value = inputValue("value to insert", false, false, 0, 0);
-                    hashMapInsert(*hashMap, value);
-                }
-                else
-                    printf("Error: Create hash map first!\n");
-                break;
-            case FIND:
-                {
-                    char *key = inputString("key to find");
-                    if (hashMapFind(*hashMap, inputValue("value to find", 0, 0, 0, 0)))
-                        printf("Element found!\n");
-                    else
-                        printf("Key not found!\n");
-                }
-                break;
-            case PRINT:
-                printHashMap(*hashMap);
-                break;
-            case MAP_BACK:
-            default:
-                exit = true;
-        }
-    }
-}
-
-static void executeBinaryTreeOperation(TreeNode **binTree)
-{
-    bool exit = false;
-    while (!exit)
-    {
-        char *opts[] = {"Import from file", "New Binary Tree", "Add Element", "Find Element",
-                        "Remove Element",   "Draw Tree",       "Back"};
-        TREE_OPS option = inputEnum(7, opts);
-        printf("Binary Tree: %s\n", opts[option]);
-        switch (option)
-        {
-            case TFROM_FILE:
-                if (binTree)
-                {
-                    if (*binTree)
-                        treeFree(binTree);
-
-                    FILE *file = openFile(inputString("file to import"), "r");
-                    if (file)
-                        *binTree = binaryTreeFromFile(file);
-                    else
-                        printf("Error: Failed to open file!\n");
-                }
-                break;
-            case TNEW:
-                treeFree(binTree);
-                break;
-            case TADD:
-                *binTree = treeInsert(*binTree, inputValue("value to insert", false, false, 0, 0));
-                break;
-            case TFIND:
-                {
-                    TreeNode *node = treeFind(*binTree, inputValue("value to find", 0, 0, 0, 0));
-                    if (node)
-                        printf("Element found!\n");
-                    else
-                        printf("Element not found!\n");
-                }
-                break;
-            case TREMOVE:
-                *binTree = treeRemove(*binTree, inputValue("value to remove", 0, 0, 0, 0));
-                break;
-            case TDRAW:
-                drawGraph(*binTree, "binaryTree", true);
-                break;
-            case TBACK:
-            default:
-                exit = true;
-        }
-    }
-}
-
-static void executeAvlTreeOperation(AVLTreeNode **avlTree)
-{
-    bool exit = false;
-    while (!exit)
-    {
-        char *opts[] = {"Import from file", "New AVL Tree", "Add Element", "Find Element",
-                        "Remove Element",   "Draw Tree",    "Back"};
-        TREE_OPS option = inputEnum(7, opts);
-        printf("AVL Tree: %s\n", opts[option]);
-        switch (option)
-        {
-            case TFROM_FILE:
-                if (avlTree)
-                {
-                    if (*avlTree)
-                        avlTreeFree(avlTree);
-
-                    FILE *file = openFile(inputString("file to import"), "r");
-                    if (file)
-                        *avlTree = avlTreeFromFile(file);
-                    else
-                        printf("Error: Failed to open file!\n");
-                }
-                break;
-            case TNEW:
-                if (avlTree && *avlTree)
-                    avlTreeFree(avlTree);
-                break;
-            case TADD:
-                *avlTree = avlTreeInsert(*avlTree, inputValue("value to insert", false, false, 0, 0));
-                break;
-            case TFIND:
-                {
-                    AVLTreeNode *node = avlTreeFind(*avlTree, inputValue("value to find", 0, 0, 0, 0));
-                    if (node)
-                        printf("Element found!\n\n");
-                    else
-                        printf("Key not found!\n");
-                }
-                break;
-            case TREMOVE:
-                *avlTree = avlTreeRemove(*avlTree, inputValue("value to remove", 0, 0, 0, 0));
-                break;
-            case TDRAW:
-                drawGraph((TreeNode *)*avlTree, "avlTree", true);
-                break;
-            case TBACK:
-            default:
-                exit = true;
-        }
-    }
-}
-
 int executeOperation(HashMap **hashMap, LinkedHashMap **linkedHashMap, AVLTreeNode **avlTree, TreeNode **node)
 {
-    char *opts[] = {"Closed Hash Map", "Open Hash Map", "AVL Tree", "Binary Search Tree", "Comparison", "Exit"};
-    OPCODES option = inputEnum(6, opts);
+    char *opts[] = {"Import from file", "Create new structures", "Add value", "Find value",
+                    "Remove value",     "Print Data/Draw graph", "Exit"};
+    OPCODES option = inputEnum(7, opts);
     printf("Executing: %s\n", opts[option]);
     int rc = SUCCESS;
     switch (option)
     {
-        case CLOSED_HASH_MAP:
-            executeHashMapOperation(hashMap);
+        case FROM_FILE:
+            {
+                FILE *file = NULL;
+                char *filename = inputString("filename to import");
+                if (filename && !file)
+                    file = openFile(filename, "r");
+
+                if (file)
+                {
+                    *hashMap = hashMapFromFile(file);
+                    *linkedHashMap = linkedHashMapFromFile(file);
+                    *avlTree = avlTreeFromFile(file);
+                    *node = binaryTreeFromFile(file);
+                }
+                else
+                    rc = IO_ERROR;
+            }
             break;
-        case OPEN_HASH_MAP:
-            executeLinkedHashMapOperation(linkedHashMap);
+        case NEW:
+            if (hashMap)
+                freeHashMap(hashMap);
+
+            if (linkedHashMap)
+                freeLinkedHashMap(linkedHashMap);
+
+            if (node)
+                treeFree(node);
+
+            if (avlTree)
+                avlTreeFree(avlTree);
+
+            *hashMap = createHashMap(INITIAL_SIZE);
+            *linkedHashMap = createLinkedHashMap(INITIAL_SIZE);
             break;
-        case AVL_TREE:
-            executeAvlTreeOperation(avlTree);
+        case ADD:
+            {
+                int value = inputValue("value to insert", false, false, 0, 0);
+                hashMapInsert(*hashMap, value);
+                linkedHashMapInsert(*linkedHashMap, value);
+                *avlTree = avlTreeInsert(*avlTree, value);
+                *node = treeInsert(*node, value);
+            }
             break;
-        case BIN_TREE:
-            executeBinaryTreeOperation(node);
-            break;
+        case FIND:
+            {
+                int value = inputValue("value to find", false, false, 0, 0);
+                printf("Closed Hash Map: %s\n", findResult[hashMapFind(*hashMap, value)]);
+                printf("Open Hash Map: %s\n", findResult[linkedHashMapFind(*linkedHashMap, value)]);
+                printf("AVL Tree: %s\n", findResult[avlTreeFind(*avlTree, value) != NULL]);
+                printf("Binary Search Tree: %s\n\n", findResult[treeFind(*node, value) != NULL]);
+            }
+        case REMOVE:
+        case PRINT:
         case COMPARISON:
             compareTaDS();
             break;
