@@ -84,8 +84,14 @@ bool hashMapFind(HashMap *map, int value)
     size_t index = hash % map->size;
 
     for (size_t offset = 0; offset < MAX_COLLISIONS; ++offset)
+    {
+        if (!map->data[index].used)
+            break;
+
+        comp++;
         if (value == map->data[(index + offset) % map->size].value)
             return true;
+    }
 
     return false;
 }

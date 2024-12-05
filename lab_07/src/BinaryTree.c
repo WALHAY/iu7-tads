@@ -88,6 +88,7 @@ TreeNode *treeFind(TreeNode *root, int value)
     if (!root)
         return NULL;
 
+    comp++;
     if (value == root->value)
         return root;
     else if (value < root->value)

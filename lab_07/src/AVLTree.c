@@ -96,7 +96,6 @@ AVLTreeNode *avlTreeInsert(AVLTreeNode *root, int value)
     if (!root)
         return createAVLTreeNode(value);
 
-    comp++;
     if (value < root->value)
         root->left = avlTreeInsert(root->left, value);
     else if (value > root->value)
@@ -154,7 +153,18 @@ AVLTreeNode *avlTreeRemove(AVLTreeNode *root, int value)
 
 AVLTreeNode *avlTreeFind(AVLTreeNode *root, int value)
 {
-    return (AVLTreeNode *)treeFind((TreeNode *)root, value);
+    if (!root)
+        return NULL;
+
+    comp++;
+    if (value == root->value)
+        return root;
+    else if (value < root->value)
+        return avlTreeFind(root->left, value);
+    else
+        return avlTreeFind(root->right, value);
+
+    return NULL;
 }
 
 void avlTreeFree(AVLTreeNode **root)

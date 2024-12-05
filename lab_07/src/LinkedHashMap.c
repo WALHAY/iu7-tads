@@ -35,26 +35,19 @@ LinkedHashMap *createLinkedHashMap(size_t size)
     return map;
 }
 
-static size_t listInsert(HashMapNode **head_ptr, int value)
+static void listInsert(HashMapNode **head_ptr, int value)
 {
     HashMapNode *new = createHashMapNode(value);
     if (!*head_ptr)
     {
-        comp++;
         *head_ptr = new;
-        return 1;
+        return;
     }
 
-    size_t size = 1;
     HashMapNode *head = *head_ptr;
     while (head && head->next)
-    {
         head = head->next;
-        size++;
-    }
-    comp += size;
     head->next = new;
-    return size;
 }
 
 static bool listRemove(HashMapNode **head_ptr, int value)
@@ -85,6 +78,7 @@ static HashMapNode *listFind(HashMapNode *head, int value)
 {
     while (head)
     {
+        comp++;
         if (head->value == value)
             return head;
         head = head->next;
