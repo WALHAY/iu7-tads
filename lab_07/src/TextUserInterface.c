@@ -71,9 +71,9 @@ char *getErrorMessage(int rc)
 
 int executeOperation(HashMap **hashMap, LinkedHashMap **linkedHashMap, AVLTreeNode **avlTree, TreeNode **node)
 {
-    char *opts[] = {"Import from file", "Create new structures", "Add value",  "Find value",
-                    "Remove value",     "Print Data/Draw graph", "Comparison", "Exit"};
-    OPCODES option = inputEnum(8, opts);
+    char *opts[] = {"Import from file", "Create new structures", "Add value",  "Find value", "Remove value",
+                    "Print hash maps",  "Draw graphs",           "Comparison", "Exit"};
+    OPCODES option = inputEnum(9, opts);
     printf("Executing: %s\n", opts[option]);
     int rc = SUCCESS;
     switch (option)
@@ -144,14 +144,14 @@ int executeOperation(HashMap **hashMap, LinkedHashMap **linkedHashMap, AVLTreeNo
             }
             break;
         case PRINT:
-            {
-                printf("Closed Hash Map:\n");
-                printHashMap(*hashMap);
-                printf("\nOpen Hash Map:\n");
-                printLinkedHashMap(*linkedHashMap);
-                drawGraph(*node, "binaryTree", true);
-                drawGraph((TreeNode *)*avlTree, "avlTree", true);
-            }
+            printf("Open Hash Map:\n");
+            printLinkedHashMap(*linkedHashMap);
+            printf("\nClosed Hash Map:\n");
+            printHashMap(*hashMap);
+            break;
+        case DRAW_GRAPH:
+            drawGraph(*node, "binaryTree", true);
+            drawGraph((TreeNode *)*avlTree, "avlTree", true);
             break;
         case COMPARISON:
             compareTaDS();

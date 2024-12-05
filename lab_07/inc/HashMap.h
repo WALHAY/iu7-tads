@@ -1,11 +1,12 @@
 #pragma once
 
 #include "../inc/Hash.h"
+#include "../inc/PrimeNumber.h"
 #include <stdbool.h>
 #include <string.h>
 
-#define LOAD_FACTOR 2
-#define MAX_FAILS 4
+#define LOAD_FACTOR 1.2
+#define MAX_COLLISIONS 10
 
 typedef struct
 {

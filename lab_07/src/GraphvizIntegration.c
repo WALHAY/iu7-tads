@@ -46,7 +46,7 @@ bool prepareGraph(TreeNode *head, const char *graphName, const char *path)
 void drawGraph(TreeNode *node, const char *filename, bool open)
 {
     char path[strlen(filename) + 30];
-    sprintf(path, "./out/%s.dot", filename);
+    snprintf(path, strlen(filename) + 30, "./out/%s.dot", filename);
 
     bool status = prepareGraph(node, filename, path);
     if (!status)
@@ -56,13 +56,13 @@ void drawGraph(TreeNode *node, const char *filename, bool open)
     }
 
     char command[(strlen(filename) * 2 + 100)];
-    sprintf(command, "dot -Tjpg %s -o ./img/%s.jpg", path, filename);
+    snprintf(command, strlen(filename) * 2 + 100, "dot -Tjpg %s -o ./img/%s.jpg", path, filename);
 
     system(command);
     if (open)
     {
         char openCmd[strlen(filename) * 2 + 100];
-        sprintf(openCmd, "open ./img/%s.jpg", filename);
+        snprintf(openCmd, strlen(filename) * 2 + 100, "open ./img/%s.jpg", filename);
         system(openCmd);
     }
 }

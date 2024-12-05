@@ -103,7 +103,7 @@ static void rebuildLinkedHashMap(LinkedHashMap *hashMap)
     size_t oldSize = hashMap->size;
     HashMapNode **oldData = hashMap->data;
 
-    hashMap->size *= LOAD_FACTOR;
+    hashMap->size = getNextPrime(hashMap->size * LOAD_FACTOR);
     hashMap->data = calloc(hashMap->size, sizeof(HashMapNode *));
 
     for (size_t i = 0; i < oldSize; ++i)
@@ -167,14 +167,18 @@ void freeLinkedHashMap(LinkedHashMap **hashMap)
     }
 }
 
-static void printNode(HashMapNode *node)
+static void printList(HashMapNode *node, size_t size)
 {
     if (node)
-        printf("Hash: %llu\nValue: %d\n\n", getIntHash(node->value), node->value);
+    {
+        printf("Hash: %llu\nValue: %d\n\n", getIntHash(node->value) % size, node->value);
+        printList(node->next, size);
+    }
 }
 
 void printLinkedHashMap(LinkedHashMap *hashMap)
 {
+    printf("Current size: %zu\n", hashMap->size);
     for (size_t i = 0; i < hashMap->size; ++i)
-        printNode(hashMap->data[i]);
+        printList(hashMap->data[i], hashMap->size);
 }

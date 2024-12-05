@@ -1,13 +1,14 @@
 #pragma once
 
 #include "../inc/Hash.h"
+#include "../inc/PrimeNumber.h"
 #include <math.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
 
-#define LOAD_FACTOR 2
-#define MAX_LIST_SIZE 4
+#define LOAD_FACTOR 1.2
+#define MAX_LIST_SIZE 10
 
 typedef struct HashMapNode HashMapNode;
 

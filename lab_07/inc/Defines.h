@@ -1,6 +1,6 @@
 #pragma once
 
-#define INITIAL_SIZE 8
+#define INITIAL_SIZE 13
 
 typedef enum
 {
@@ -19,6 +19,7 @@ typedef enum
     FIND,
     REMOVE,
     PRINT,
+    DRAW_GRAPH,
     COMPARISON,
     EXIT
 } OPCODES;

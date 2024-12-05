@@ -15,7 +15,6 @@ void getBinTreeData(size_t size)
 
     size_t mem = sizeof(TreeNode) * size;
 
-    Pair pairs[size];
     size_t avg_insert = 0;
     size_t avg_comp = 0;
     size_t avg_find = 0;
@@ -93,6 +92,7 @@ void getOpenHashMapData(size_t size)
     size_t avg_comp = 0;
     size_t avg_find = 0;
     int arr[size];
+    size_t avg_mem = 0;
     for (size_t j = 0; j < TRIES; ++j)
     {
         LinkedHashMap *linkedHashMap = createLinkedHashMap(INITIAL_SIZE);
@@ -106,6 +106,10 @@ void getOpenHashMapData(size_t size)
             avg_insert += difftime(t2.tv_sec, t1.tv_sec) * 1e9 + difftime(t2.tv_nsec, t1.tv_nsec);
             avg_comp += getCompAmountLinked();
         }
+        avg_mem += sizeof(HashMapNode) * size;
+        for (size_t i = 0; i < linkedHashMap->size; ++i)
+            if (linkedHashMap->data[i])
+                avg_mem -= sizeof(HashMapNode);
 
         for (size_t i = 0; i < size; ++i)
         {
@@ -116,7 +120,7 @@ void getOpenHashMapData(size_t size)
         }
     }
 
-    size_t mem = sizeof(LinkedHashMap) + sizeof(HashMapNode) * size;
+    size_t mem = sizeof(LinkedHashMap) + (avg_mem / TRIES);
 
     printf("%zu\t%zu\t%zu\t%zu\t%zu\n", size, mem, avg_insert / size / TRIES, avg_find / size / TRIES,
            avg_comp / size / TRIES);
@@ -126,11 +130,10 @@ void getClosedHashMapData(size_t size)
 {
     struct timespec t1, t2;
 
-    Pair pairs[size];
-
     size_t avg_insert = 0;
     size_t avg_comp = 0;
     size_t avg_find = 0;
+    size_t avg_size = 0;
     size_t mem = 0;
     int arr[size];
     for (size_t j = 0; j < TRIES; ++j)
@@ -146,6 +149,7 @@ void getClosedHashMapData(size_t size)
             avg_insert += difftime(t2.tv_sec, t1.tv_sec) * 1e9 + difftime(t2.tv_nsec, t1.tv_nsec);
             avg_comp += getCompAmountHash();
         }
+        avg_size += hashMap->size;
 
         for (size_t i = 0; i < size; ++i)
         {
@@ -154,7 +158,7 @@ void getClosedHashMapData(size_t size)
             clock_gettime(CLOCK_MONOTONIC_RAW, &t2);
             avg_find += difftime(t2.tv_sec, t1.tv_sec) * 1e9 + difftime(t2.tv_nsec, t1.tv_nsec);
         }
-        mem += sizeof(HashMap) + sizeof(Pair) * hashMap->size;
+        mem += sizeof(HashMap) + sizeof(Pair) * (avg_size / TRIES);
     }
 
     printf("%zu\t%zu\t%zu\t%zu\t%zu\n", size, mem / TRIES, avg_insert / size / TRIES, avg_find / size / TRIES,
