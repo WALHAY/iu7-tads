@@ -1,6 +1,6 @@
 CC := gcc
 
-CFLAGS := -Wextra -Wpedantic -Wall -std=gnu99 -g3 -O0
+CFLAGS := -Wextra -Wpedantic -Wall -std=gnu99 -g3 -O0 -fsanitize=address
 ifeq ($(mode), time)
 	CFLAGS += -DALGCOMP
 else

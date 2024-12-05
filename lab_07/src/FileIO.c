@@ -16,6 +16,9 @@ void closeFile(FILE **file)
 
 LinkedHashMap *linkedHashMapFromFile(FILE *file)
 {
+    if (!file)
+        return NULL;
+    rewind(file);
     LinkedHashMap *linkedHashMap = createLinkedHashMap(INITIAL_SIZE);
     int value = 0;
     while (fscanf(file, "%d", &value) == 1)
@@ -25,7 +28,9 @@ LinkedHashMap *linkedHashMapFromFile(FILE *file)
 
 HashMap *hashMapFromFile(FILE *file)
 {
-
+    if (!file)
+        return NULL;
+    rewind(file);
     HashMap *hashMap = createHashMap(INITIAL_SIZE);
     int value = 0;
     while (fscanf(file, "%d", &value) == 1)
@@ -35,6 +40,9 @@ HashMap *hashMapFromFile(FILE *file)
 
 AVLTreeNode *avlTreeFromFile(FILE *file)
 {
+    if (!file)
+        return NULL;
+    rewind(file);
     AVLTreeNode *avlTree = NULL;
     int value = 0;
     while (fscanf(file, "%d", &value) == 1)
@@ -44,6 +52,9 @@ AVLTreeNode *avlTreeFromFile(FILE *file)
 
 TreeNode *binaryTreeFromFile(FILE *file)
 {
+    if (!file)
+        return NULL;
+    rewind(file);
     TreeNode *node = NULL;
     int value = 0;
     while (fscanf(file, "%d", &value) == 1)

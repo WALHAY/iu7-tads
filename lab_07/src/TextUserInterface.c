@@ -1,6 +1,7 @@
 #include "../inc/TextUserInterface.h"
 
 static char *findResult[2] = {"Not Found", "Found"};
+static char *removeResult[2] = {"Not Found", "Removed"};
 
 static int safeIntInput(int *value)
 {
@@ -70,9 +71,9 @@ char *getErrorMessage(int rc)
 
 int executeOperation(HashMap **hashMap, LinkedHashMap **linkedHashMap, AVLTreeNode **avlTree, TreeNode **node)
 {
-    char *opts[] = {"Import from file", "Create new structures", "Add value", "Find value",
-                    "Remove value",     "Print Data/Draw graph", "Exit"};
-    OPCODES option = inputEnum(7, opts);
+    char *opts[] = {"Import from file", "Create new structures", "Add value",  "Find value",
+                    "Remove value",     "Print Data/Draw graph", "Comparison", "Exit"};
+    OPCODES option = inputEnum(8, opts);
     printf("Executing: %s\n", opts[option]);
     int rc = SUCCESS;
     switch (option)
@@ -128,8 +129,30 @@ int executeOperation(HashMap **hashMap, LinkedHashMap **linkedHashMap, AVLTreeNo
                 printf("AVL Tree: %s\n", findResult[avlTreeFind(*avlTree, value) != NULL]);
                 printf("Binary Search Tree: %s\n\n", findResult[treeFind(*node, value) != NULL]);
             }
+            break;
         case REMOVE:
+            {
+                int value = inputValue("value to remove", false, false, 0, 0);
+                printf("Closed Hash Map: %s\n", removeResult[hashMapRemove(*hashMap, value)]);
+                printf("Open Hash Map: %s\n", removeResult[linkedHashMapRemove(*linkedHashMap, value)]);
+                bool avlRemove = avlTreeFind(*avlTree, value);
+                bool nodeRemove = treeFind(*node, value);
+                *avlTree = avlTreeRemove(*avlTree, value);
+                *node = treeRemove(*node, value);
+                printf("AVL Tree: %s\n", removeResult[avlRemove]);
+                printf("Binary Search Tree: %s\n\n", removeResult[nodeRemove]);
+            }
+            break;
         case PRINT:
+            {
+                printf("Closed Hash Map:\n");
+                printHashMap(*hashMap);
+                printf("\nOpen Hash Map:\n");
+                printLinkedHashMap(*linkedHashMap);
+                drawGraph(*node, "binaryTree", true);
+                drawGraph((TreeNode *)*avlTree, "avlTree", true);
+            }
+            break;
         case COMPARISON:
             compareTaDS();
             break;

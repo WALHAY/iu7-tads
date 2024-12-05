@@ -27,6 +27,8 @@ HashMap *createHashMap(size_t size);
 
 void hashMapInsert(HashMap *map, int value);
 
+bool hashMapRemove(HashMap *map, int value);
+
 bool hashMapFind(HashMap *map, int value);
 
 void printHashMap(HashMap *hashMap);

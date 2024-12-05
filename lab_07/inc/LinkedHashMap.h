@@ -31,6 +31,8 @@ LinkedHashMap *createLinkedHashMap(size_t size);
 
 void linkedHashMapInsert(LinkedHashMap *hashMap, int value);
 
+bool linkedHashMapRemove(LinkedHashMap *hashMap, int value);
+
 bool linkedHashMapFind(LinkedHashMap *hashMap, int value);
 
 void freeLinkedHashMap(LinkedHashMap **hashMap);

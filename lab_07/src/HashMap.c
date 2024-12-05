@@ -34,8 +34,8 @@ static size_t hashMapInsertValue(HashMap *map, int value)
 
     size_t index = hash % map->size;
     while (map->data && map->data[index + fails++].used)
-        if (fails + index >= map->size || fails + 1 >= MAX_FAILS)
-            return MAX_FAILS;
+        if (fails + index >= map->size || fails + 1 >= MAX_OFFSET)
+            return MAX_OFFSET;
 
     comp += fails;
     if (map->data && index + fails < map->size)
@@ -56,11 +56,28 @@ static void rebuildHashMap(HashMap *map)
 
 void hashMapInsert(HashMap *map, int value)
 {
-    if (hashMapInsertValue(map, value) >= MAX_FAILS)
+    if (hashMapInsertValue(map, value) >= MAX_OFFSET)
     {
         rebuildHashMap(map);
         hashMapInsertValue(map, value);
     }
+}
+
+bool hashMapRemove(HashMap *map, int value)
+{
+    hash_t hash = getIntHash(value);
+    size_t index = hash % map->size;
+    for (size_t i = 0; i + index < map->size && i < MAX_FAILS; ++i)
+    {
+        if (map->data[i].used)
+        {
+            if (map->data[i].value == value)
+                map->data[i].used = false;
+        }
+        else
+            return false;
+    }
+    return false;
 }
 
 bool hashMapFind(HashMap *map, int value)

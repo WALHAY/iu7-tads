@@ -56,6 +56,30 @@ static size_t listInsert(HashMapNode **head_ptr, HashMapNode *node)
     return size;
 }
 
+static bool listRemove(HashMapNode **head_ptr, int value)
+{
+    if (!head_ptr && !*head_ptr)
+        return false;
+
+    HashMapNode *node = *head_ptr;
+    if (node->value == value)
+    {
+        *head_ptr = node->next;
+        return true;
+    }
+
+    while (node->next)
+    {
+        if (node->next->value == value)
+        {
+            node->next = node->next->next;
+            return true;
+        }
+        node = node->next;
+    }
+    return false;
+}
+
 static HashMapNode *listFind(HashMapNode *head, int value)
 {
     while (head)
@@ -101,6 +125,13 @@ void linkedHashMapInsert(LinkedHashMap *hashMap, int value)
 {
     if (linkedHashMapInsertNode(hashMap, createHashMapNode(value)) >= MAX_LIST_SIZE)
         rebuildLinkedHashMap(hashMap);
+}
+
+bool linkedHashMapRemove(LinkedHashMap *hashMap, int value)
+{
+    hash_t keyHash = getIntHash(value);
+    size_t index = keyHash % hashMap->size;
+    return listRemove(&hashMap->data[index], value);
 }
 
 bool linkedHashMapFind(LinkedHashMap *hashMap, int value)

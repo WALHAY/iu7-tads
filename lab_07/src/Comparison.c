@@ -44,7 +44,7 @@ void getBinTreeData(size_t size)
         }
     }
 
-    printf("%zu\t%zu\t%zu\t%zu\t%zu\t-\n", size, mem, avg_insert / size / TRIES, avg_find / size / TRIES,
+    printf("%zu\t%zu\t%zu\t%zu\t%zu\n", size, mem, avg_insert / size / TRIES, avg_find / size / TRIES,
            avg_comp / size / TRIES);
 }
 
@@ -81,7 +81,7 @@ void getAvlTreeData(size_t size)
         }
     }
 
-    printf("%zu\t%zu\t%zu\t%zu\t%zu\t-\n", size, mem, avg_insert / size / TRIES, avg_find / size / TRIES,
+    printf("%zu\t%zu\t%zu\t%zu\t%zu\n", size, mem, avg_insert / size / TRIES, avg_find / size / TRIES,
            avg_comp / size / TRIES);
 }
 
@@ -164,7 +164,7 @@ void getClosedHashMapData(size_t size)
 void compareTaDS(void)
 {
     size_t n = 500;
-    printf("Type\t\tSize\tMemory\tInsert\tFind\tComp\n");
+    printf("Type\t\tSize\tMemory\tInsert\tFind\tOperations\n");
     printf("Bin Tree\t");
     getBinTreeData(n);
     printf("AVL Tree\t");
@@ -174,7 +174,7 @@ void compareTaDS(void)
     printf("Closed Hash Map\t");
     getClosedHashMapData(n);
     n = 5000;
-    printf("\n\nType\t\tSize\tMemory\tInsert\tFind\tOperaions\n");
+    printf("\n\nType\t\tSize\tMemory\tInsert\tFind\tOperations\n");
     printf("Bin Tree\t");
     getBinTreeData(n);
     printf("AVL Tree\t");
