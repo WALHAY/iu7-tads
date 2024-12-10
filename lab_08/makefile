@@ -1,6 +1,6 @@
 CC := gcc
 
-CFLAGS := -std=gnu99 -g3 -O0 -fsanitize=address
+CFLAGS := -std=gnu99 -g3 -O0
 ifeq ($(mode), time)
 	CFLAGS += -DALGCOMP
 else
@@ -23,5 +23,4 @@ $(OUT_PATH)/%.o : $(SRC_PATH)/%.c $(INC_PATH)/*.h
 .PHONY : clean
 
 clean :
-	rm $(OUT_PATH)/*.o *.exe *.txt
-	rm $(IMG_PATH)/*
+	rm $(OUT_PATH)/*.o $(IMG_PATH)/* *.exe *.txt

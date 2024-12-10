@@ -1,4 +1,5 @@
 #include "../inc/Graph.h"
+#include "../inc/GraphvizIntegration.h"
 #include <stdio.h>
 
 int main(void)
@@ -19,6 +20,8 @@ int main(void)
 
     for (size_t i = 0; i < result->size; ++i)
         printf("%d\n", result->path[i]);
+
+    drawGraph(graph, "Shit");
 
     return 0;
 }
