@@ -3,23 +3,23 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-#define MAX_SIZE 100
-
 typedef struct
 {
+    size_t size;
     int **matrix;
     int *buffer;
-    size_t size;
 } Graph;
 
 typedef struct
 {
-    bool visited[MAX_SIZE];
-    int path[MAX_SIZE];
     size_t size;
+    bool *visited;
+    int *path;
 } Path;
 
 Graph *createGraph(size_t size);
+
+Path *createPath(size_t size);
 
 void addEdge(Graph *graph, int from, int to);
 

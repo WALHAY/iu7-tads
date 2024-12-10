@@ -14,11 +14,11 @@ int main(void)
             printf("%d ", graph->matrix[i][j]);
         printf("\n");
     }
-    Path result;
-    findMaxSimplePath(graph, &result);
+    Path *result = createPath(size);
+    findMaxSimplePath(graph, result);
 
-    for (size_t i = 0; i < result.size; ++i)
-        printf("%d\n", result.path[i]);
+    for (size_t i = 0; i < result->size; ++i)
+        printf("%d\n", result->path[i]);
 
     return 0;
 }

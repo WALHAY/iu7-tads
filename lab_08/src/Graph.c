@@ -15,6 +15,18 @@ Graph *createGraph(size_t size)
     return graph;
 }
 
+Path *createPath(size_t size)
+{
+    Path *path = malloc(sizeof(Path));
+    if (path)
+    {
+        path->size = 0;
+        path->visited = malloc(size * sizeof(bool));
+        path->path = malloc(size * sizeof(int));
+    }
+    return path;
+}
+
 void addEdge(Graph *graph, int from, int to)
 {
     if (from >= graph->size || to >= graph->size)
@@ -44,7 +56,7 @@ void findMaxSimplePath(Graph *graph, Path *result)
 {
     for (size_t vertex = 0; vertex < graph->size; ++vertex)
     {
-        Path currentPath = {NULL};
-        matrixDFS(graph, &currentPath, result, vertex);
+        Path *currentPath = createPath(graph->size);
+        matrixDFS(graph, currentPath, result, vertex);
     }
 }
