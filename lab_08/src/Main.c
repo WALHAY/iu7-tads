@@ -12,20 +12,15 @@ int main(void)
 
     addEdge(graph, 4, 5);
     addEdge(graph, 5, 6);
-    addEdge(graph, 6, 7);
-    for (size_t i = 0; i < size; ++i)
-    {
-        for (size_t j = 0; j < size; ++j)
-            printf("%d ", graph->matrix[i][j]);
-        printf("\n");
-    }
+    addEdge(graph, 5, 7);
+
     Path *result = createPath(size);
     findMaxSimplePath(graph, result);
 
     for (size_t i = 0; i < result->size; ++i)
         printf("%d\n", result->path[i]);
 
-    drawGraphWithPath(graph, result, "Shit");
+    drawGraphWithPath(graph, result, "Path");
 
     return 0;
 }

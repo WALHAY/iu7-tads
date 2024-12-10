@@ -50,10 +50,10 @@ void drawGraphWithPath(const Graph *graph, const Path *path, const char *name)
 
     for (size_t i = 0; i < graph->size - 1; ++i)
     {
-        printf("i");
         bool zeroEdgeVertex = true;
         for (size_t j = i + 1; j < graph->size; ++j)
         {
+            bool color = false;
             bool skip = false;
             for (size_t k = 0; k < path->size - 1; ++k)
             {
@@ -75,7 +75,7 @@ void drawGraphWithPath(const Graph *graph, const Path *path, const char *name)
             fprintf(graphFile, "%zu;\n", i + 1);
     }
 
-    fprintf(graphFile, "edge [color=green];\n");
+    fprintf(graphFile, "edge [color=red];\n");
     for (size_t i = 0; i < path->size - 1; ++i)
         fprintf(graphFile, "%d -> %d;\n", path->path[i], path->path[i + 1]);
 
