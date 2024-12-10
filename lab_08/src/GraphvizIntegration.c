@@ -3,14 +3,20 @@
 
 void drawGraph(const Graph *graph, const char *name)
 {
+    if (!graph || !name || !graph->size)
+    {
+        printf("Failed to draw graph!");
+        return;
+    }
+
     FILE *graphFile = fopen("./out/graph.dot", "w");
     fprintf(graphFile, "digraph %s {\n", name);
-    // fprintf(graphFile, "edge [color=red];");
+    fprintf(graphFile, "edge [arrowhead=none];\n");
 
     for (size_t i = 0; i < graph->size; ++i)
     {
         bool zeroEdgeVertex = true;
-        for (size_t j = 0; j < graph->size; ++j)
+        for (size_t j = i + 1; j < graph->size - 1; ++j)
         {
             if (graph->matrix[i][j] != 0)
             {
@@ -32,15 +38,33 @@ void drawGraph(const Graph *graph, const char *name)
 
 void drawGraphWithPath(const Graph *graph, const Path *path, const char *name)
 {
-    FILE *graphFile = fopen("./out/graph.dot", "w");
-    fprintf(graphFile, "digraph %s {\n", name);
-
-    for (size_t i = 0; i < graph->size; ++i)
+    if (!graph || !path || !name || !graph->size)
     {
+        printf("Failed to draw graph!");
+        return;
+    }
+
+    FILE *graphFile = fopen("./out/path.dot", "w");
+    fprintf(graphFile, "digraph %s {\n", name);
+    fprintf(graphFile, "edge [arrowhead=none];\n");
+
+    for (size_t i = 0; i < graph->size - 1; ++i)
+    {
+        printf("i");
         bool zeroEdgeVertex = true;
-        for (size_t j = 0; j < graph->size; ++j)
+        for (size_t j = i + 1; j < graph->size; ++j)
         {
-            if (graph->matrix[i][j] != 0)
+            bool skip = false;
+            for (size_t k = 0; k < path->size - 1; ++k)
+            {
+                if ((path->path[k] == i && path->path[k + 1] == j) || (path->path[k] == j && path->path[k + 1] == i))
+                {
+                    zeroEdgeVertex = false;
+                    skip = true;
+                }
+            }
+
+            if (!skip && graph->matrix[i][j] != 0)
             {
                 zeroEdgeVertex = false;
                 fprintf(graphFile, "%zu -> %zu;\n", i, j);
@@ -50,10 +74,14 @@ void drawGraphWithPath(const Graph *graph, const Path *path, const char *name)
         if (zeroEdgeVertex)
             fprintf(graphFile, "%zu;\n", i + 1);
     }
+
+    fprintf(graphFile, "edge [color=green];\n");
+    for (size_t i = 0; i < path->size - 1; ++i)
+        fprintf(graphFile, "%d -> %d;\n", path->path[i], path->path[i + 1]);
+
     fprintf(graphFile, "}\n");
-    system("dot -Tjpg ./out/graph.dot -o ./img/graph.jpg");
-    if (false)
-        printf("Failed to draw graph!\n");
-    else
-        system("open ./img/graph.jpg");
+    fclose(graphFile);
+
+    system("dot -Tjpg ./out/path.dot -o ./img/path.jpg");
+    system("open ./img/path.jpg");
 }

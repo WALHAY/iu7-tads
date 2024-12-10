@@ -9,6 +9,10 @@ int main(void)
     addEdge(graph, 0, 1);
     addEdge(graph, 0, 2);
     addEdge(graph, 2, 3);
+
+    addEdge(graph, 4, 5);
+    addEdge(graph, 5, 6);
+    addEdge(graph, 6, 7);
     for (size_t i = 0; i < size; ++i)
     {
         for (size_t j = 0; j < size; ++j)
@@ -21,7 +25,7 @@ int main(void)
     for (size_t i = 0; i < result->size; ++i)
         printf("%d\n", result->path[i]);
 
-    drawGraph(graph, "Shit");
+    drawGraphWithPath(graph, result, "Shit");
 
     return 0;
 }
