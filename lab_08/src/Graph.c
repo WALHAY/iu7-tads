@@ -1,6 +1,20 @@
 #include "../inc/Graph.h"
 #include <stdio.h>
 
+Graph *createGraph(size_t size)
+{
+    Graph *graph = malloc(sizeof(Graph));
+    if (graph)
+    {
+        graph->size = size;
+        graph->buffer = calloc(size * size, sizeof(int));
+        graph->matrix = malloc(size * sizeof(int *));
+        for (size_t i = 0; i < size; ++i)
+            graph->matrix[i] = graph->buffer + i * size;
+    }
+    return graph;
+}
+
 void addEdge(Graph *graph, int from, int to)
 {
     if (from >= graph->size || to >= graph->size)

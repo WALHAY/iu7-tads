@@ -7,7 +7,8 @@
 
 typedef struct
 {
-    int matrix[MAX_SIZE][MAX_SIZE];
+    int **matrix;
+    int *buffer;
     size_t size;
 } Graph;
 
@@ -17,6 +18,8 @@ typedef struct
     int path[MAX_SIZE];
     size_t size;
 } Path;
+
+Graph *createGraph(size_t size);
 
 void addEdge(Graph *graph, int from, int to);
 
