@@ -15,18 +15,6 @@ Graph *createGraph(size_t size)
     return graph;
 }
 
-// Path *createPath(size_t size)
-// {
-//     Path *path = malloc(sizeof(Path));
-//     if (path)
-//     {
-//         path->size = 0;
-//         path->visited = malloc(size * sizeof(bool));
-//         path->path = malloc(size * sizeof(int));
-//     }
-//     return path;
-// }
-
 Graph *importFromFile(FILE *file)
 {
     if (!file)

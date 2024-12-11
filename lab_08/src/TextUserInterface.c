@@ -103,7 +103,7 @@ void executeOperation(void)
                 printf("Input vertices to remove edge between\n");
                 int first = inputValue("first vertex", true, true, 0, graph->size - 1);
                 int second = inputValue("second vertex", true, true, 0, graph->size - 1);
-                addEdge(graph, first, second);
+                removeEdge(graph, first, second);
             }
             break;
         case DRAW:
