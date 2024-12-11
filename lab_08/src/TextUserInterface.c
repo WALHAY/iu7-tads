@@ -126,13 +126,13 @@ void executeOperation(void)
                     return;
                 }
 
-                Path *result = createPath(graph->size);
-                findMaxSimplePath(graph, result);
+                Path result = {0};
+                findMaxSimplePath(graph, &result);
 
-                for (size_t i = 0; i < result->size; ++i)
-                    printf("%d\n", result->path[i]);
+                for (size_t i = 0; i < result.size; ++i)
+                    printf("%d\n", result.path[i]);
 
-                // drawGraphWithPath(graph, result, "path");
+                drawGraphWithPath(graph, &result, "path");
             }
             break;
         case FROM_FILE:

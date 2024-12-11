@@ -13,14 +13,14 @@ typedef struct
 
 typedef struct
 {
+    bool visited[1000];
+    int path[1000];
     size_t size;
-    bool *visited;
-    int *path;
 } Path;
 
 Graph *createGraph(size_t size);
 
-Path *createPath(size_t size);
+// Path *createPath(size_t size);
 
 Graph *importFromFile(FILE *file);
 
