@@ -111,6 +111,13 @@ void getOpenHashMapData(size_t size)
 
         for (size_t i = 0; i < size; ++i)
         {
+            HashMapNode *head = linkedHashMap->data[i];
+            size_t s = getListSize(head);
+            avg_mem += sizeof(HashMapNode) * s;
+        }
+
+        for (size_t i = 0; i < size; ++i)
+        {
             clearCompLinked();
             clock_gettime(CLOCK_MONOTONIC_RAW, &t1);
             linkedHashMapFind(linkedHashMap, arr[i]);

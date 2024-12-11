@@ -8,7 +8,7 @@
 #include <string.h>
 
 #define LOAD_FACTOR 1.2
-#define MAX_LIST_SIZE 10
+#define MAX_LIST_SIZE 6
 
 typedef struct HashMapNode HashMapNode;
 
@@ -35,6 +35,8 @@ void linkedHashMapInsert(LinkedHashMap *hashMap, int value);
 bool linkedHashMapRemove(LinkedHashMap *hashMap, int value);
 
 bool linkedHashMapFind(LinkedHashMap *hashMap, int value);
+
+size_t getListSize(HashMapNode *head);
 
 void freeLinkedHashMap(LinkedHashMap **hashMap);
 

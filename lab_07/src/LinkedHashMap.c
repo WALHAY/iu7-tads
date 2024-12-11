@@ -86,7 +86,7 @@ static HashMapNode *listFind(HashMapNode *head, int value)
     return NULL;
 }
 
-static size_t getListSize(HashMapNode *head)
+size_t getListSize(HashMapNode *head)
 {
     size_t size = 0;
     while (head)
