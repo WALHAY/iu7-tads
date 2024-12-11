@@ -27,6 +27,23 @@ Path *createPath(size_t size)
     return path;
 }
 
+Graph *importFromFile(FILE *file)
+{
+    if (!file)
+        return NULL;
+
+    size_t size = 0;
+    if (1 != fscanf(file, "%zu\n", &size))
+        return NULL;
+
+    Graph *graph = createGraph(size);
+
+    size_t from, to;
+    while (fscanf(file, "%zu%zu", &from, &to) == 2)
+        addEdge(graph, from, to);
+    return graph;
+}
+
 void addEdge(Graph *graph, int from, int to)
 {
     if (from >= graph->size || to >= graph->size)
@@ -34,6 +51,15 @@ void addEdge(Graph *graph, int from, int to)
 
     graph->matrix[from][to] = 1;
     graph->matrix[to][from] = 1;
+}
+
+void removeEdge(Graph *graph, int from, int to)
+{
+    if (from >= graph->size || to >= graph->size)
+        return;
+
+    graph->matrix[from][to] = 0;
+    graph->matrix[to][from] = 0;
 }
 
 void matrixDFS(Graph *graph, Path *currentPath, Path *maxPath, int vertex)

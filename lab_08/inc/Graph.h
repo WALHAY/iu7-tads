@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdbool.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 typedef struct
@@ -21,7 +22,11 @@ Graph *createGraph(size_t size);
 
 Path *createPath(size_t size);
 
+Graph *importFromFile(FILE *file);
+
 void addEdge(Graph *graph, int from, int to);
+
+void removeEdge(Graph *graph, int from, int to);
 
 void matrixDFS(Graph *graph, Path *currentPath, Path *maxPath, int vertex);
 

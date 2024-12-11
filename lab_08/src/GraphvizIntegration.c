@@ -13,10 +13,10 @@ void drawGraph(const Graph *graph, const char *name)
     fprintf(graphFile, "digraph %s {\n", name);
     fprintf(graphFile, "edge [arrowhead=none];\n");
 
-    for (size_t i = 0; i < graph->size; ++i)
+    for (size_t i = 0; i < graph->size - 1; ++i)
     {
         bool zeroEdgeVertex = true;
-        for (size_t j = i + 1; j < graph->size - 1; ++j)
+        for (size_t j = i + 1; j < graph->size; ++j)
         {
             if (graph->matrix[i][j] != 0)
             {
