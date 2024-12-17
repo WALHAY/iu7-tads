@@ -43,8 +43,8 @@ void getBinTreeData(size_t size)
         }
     }
 
-    printf("%zu\t%zu\t%zu\t%zu\t%zu\n", size, mem, avg_insert / size / TRIES, avg_find / size / TRIES,
-           avg_comp / TRIES);
+    printf("%zu\t%zu\t%zu\t%zu\t%.2f\n", size, mem, avg_insert / size / TRIES, avg_find / size / TRIES,
+           (float)avg_comp / size / TRIES);
 }
 
 void getAvlTreeData(size_t size)
@@ -80,8 +80,8 @@ void getAvlTreeData(size_t size)
         }
     }
 
-    printf("%zu\t%zu\t%zu\t%zu\t%zu\n", size, mem, avg_insert / size / TRIES, avg_find / size / TRIES,
-           avg_comp / TRIES);
+    printf("%zu\t%zu\t%zu\t%zu\t%.2f\n", size, mem, avg_insert / size / TRIES, avg_find / size / TRIES,
+           (float)avg_comp / size / TRIES);
 }
 
 void getOpenHashMapData(size_t size)
@@ -129,8 +129,8 @@ void getOpenHashMapData(size_t size)
 
     size_t mem = sizeof(LinkedHashMap) + (avg_mem / TRIES);
 
-    printf("%zu\t%zu\t%zu\t%zu\t%zu\n", size, mem, avg_insert / size / TRIES, avg_find / size / TRIES,
-           avg_comp / TRIES);
+    printf("%zu\t%zu\t%zu\t%zu\t%.2f\n", size, mem, avg_insert / size / TRIES, avg_find / size / TRIES,
+           (float)avg_comp / size / TRIES);
 }
 
 void getClosedHashMapData(size_t size)
@@ -168,8 +168,8 @@ void getClosedHashMapData(size_t size)
         mem += sizeof(HashMap) + sizeof(Pair) * (avg_size / TRIES);
     }
 
-    printf("%zu\t%zu\t%zu\t%zu\t%zu\n", size, mem / TRIES, avg_insert / size / TRIES, avg_find / size / TRIES,
-           avg_comp / TRIES);
+    printf("%zu\t%zu\t%zu\t%zu\t%.2f\n", size, mem / TRIES, avg_insert / size / TRIES, avg_find / size / TRIES,
+           (float)avg_comp / size / TRIES);
 }
 
 void testSized(size_t size)

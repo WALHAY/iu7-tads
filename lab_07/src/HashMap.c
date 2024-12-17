@@ -68,6 +68,7 @@ bool hashMapRemove(HashMap *map, int value)
     for (size_t offset = 0; offset < MAX_COLLISIONS; ++offset)
     {
         size_t cyclicIndex = (index + offset) % map->size;
+        comp++;
         if (map->data[cyclicIndex].used && map->data[cyclicIndex].value == value)
         {
             map->data[cyclicIndex].used = false;

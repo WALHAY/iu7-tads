@@ -46,7 +46,12 @@ static void listInsert(HashMapNode **head_ptr, int value)
 
     HashMapNode *head = *head_ptr;
     while (head && head->next)
+    {
+        comp++;
+        if (head->value == value)
+            return;
         head = head->next;
+    }
     head->next = new;
 }
 

@@ -6,7 +6,7 @@
 #include <string.h>
 
 #define LOAD_FACTOR 1.2
-#define MAX_COLLISIONS 10
+#define MAX_COLLISIONS 5
 
 typedef struct
 {
