@@ -8,10 +8,17 @@
 #define LOAD_FACTOR 1.2
 #define MAX_COLLISIONS 5
 
+typedef enum status
+{
+    NOT_USED,
+    USED,
+    DELETED
+} Status;
+
 typedef struct
 {
     int value;
-    bool used;
+    Status status;
 } Pair;
 
 typedef struct

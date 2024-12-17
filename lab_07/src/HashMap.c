@@ -32,7 +32,7 @@ static void rebuildHashMap(HashMap *map)
     map->data = calloc(map->size, sizeof(Pair));
 
     for (size_t i = 0; i < oldSize; ++i)
-        if (oldData[i].used)
+        if (oldData[i].status == USED)
             hashMapInsert(map, oldData[i].value);
 }
 
@@ -45,7 +45,8 @@ void hashMapInsert(HashMap *map, int value)
     for (size_t offset = 0; offset < MAX_COLLISIONS; ++offset)
     {
         size_t cyclicIndex = (index + offset) % map->size;
-        if (map->data[cyclicIndex].used)
+        Status status = map->data[cyclicIndex].status;
+        if (status == USED)
         {
             comp++;
             if (map->data[cyclicIndex].value == value)
@@ -53,7 +54,7 @@ void hashMapInsert(HashMap *map, int value)
         }
         else
         {
-            map->data[cyclicIndex] = (Pair){value, true};
+            map->data[cyclicIndex] = (Pair){value, USED};
             return;
         }
     }
@@ -69,9 +70,13 @@ bool hashMapRemove(HashMap *map, int value)
     {
         size_t cyclicIndex = (index + offset) % map->size;
         comp++;
-        if (map->data[cyclicIndex].used && map->data[cyclicIndex].value == value)
+        Status status = map->data[cyclicIndex].status;
+        if (status == DELETED)
+            continue;
+
+        if (status == USED && map->data[cyclicIndex].value == value)
         {
-            map->data[cyclicIndex].used = false;
+            map->data[cyclicIndex].status = DELETED;
             return true;
         }
     }
@@ -86,11 +91,15 @@ bool hashMapFind(HashMap *map, int value)
 
     for (size_t offset = 0; offset < MAX_COLLISIONS; ++offset)
     {
-        if (!map->data[index].used)
+        size_t localIndex = (index + offset) % map->size;
+        if (map->data[localIndex].status == NOT_USED)
             break;
 
+        if (map->data[localIndex].status == DELETED)
+            continue;
+
         comp++;
-        if (value == map->data[(index + offset) % map->size].value)
+        if (value == map->data[localIndex].value)
             return true;
     }
 
@@ -101,8 +110,8 @@ void printHashMap(HashMap *hashMap)
 {
     printf("Current size: %zu\n", hashMap->size);
     for (size_t i = 0; i < hashMap->size; ++i)
-        if (hashMap->data[i].used)
-            printf("Hash: %llu\nValue: %d\n\n", getIntHash(hashMap->data[i].value) % hashMap->size,
+        if (hashMap->data[i].status == USED)
+            printf("Hash: %llu(%zu)\nValue: %d\n\n", getIntHash(hashMap->data[i].value) % hashMap->size, i,
                    hashMap->data[i].value);
 }
 
